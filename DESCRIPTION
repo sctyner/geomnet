@@ -8,4 +8,5 @@ Maintainer: Sam Tyner <sctyner@iastate.ed>
 Description: to come
 License: GPL-3
 Imports:
-    ggplot2
+    ggplot2,
+    proto
