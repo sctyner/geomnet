@@ -9,4 +9,6 @@ Description: to come
 License: GPL-3
 Imports:
     ggplot2,
-    proto
+    proto,
+    sna,
+    network
