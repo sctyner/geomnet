@@ -13,10 +13,10 @@ minx <-  function(x, ...) return(min(x, ...))
 #' library(ggplot2)
 #' ggplot(data=mtcars) + geom_net(aes(x=mpg, y=disp)) 
 geom_net <- function (mapping = NULL, data = NULL, stat = "identity", position = "identity",
-                      na.rm = FALSE, ...) {
+                        na.rm = FALSE, ...) {
   browser()
-  GeomNet$new(mapping = mapping, data = data, stat = stat, position = position, 
-              na.rm = na.rm, ...)
+  GeomNet$new(mapping = mapping, data = data, stat = stat, position = position,
+                na.rm = na.rm, ...)
 }
 
 GeomNet <- proto::proto(ggplot2:::Geom, {
@@ -25,10 +25,11 @@ GeomNet <- proto::proto(ggplot2:::Geom, {
   draw_groups <- function(., ...) .$draw(...)
   draw <- function(., data, coordinates, na.rm = FALSE, ...) {    
     browser()
+    data <- remove_missing(data, na.rm,
+                           c("net"), name = "geom_net")
     # net is network object from network package
     #    if (empty(data)) return(zeroGrob())
     if (empty(net)) return(zeroGrob())
-    
     
     m <- as.matrix.network.adjacency(net) # get sociomatrix #pkg: network
     # get coordinates from Fruchterman and Reingold's force-directed placement algorithm.
@@ -36,13 +37,13 @@ GeomNet <- proto::proto(ggplot2:::Geom, {
     # or get it them from Kamada-Kawai's algorithm: 
     # plotcord <- data.frame(gplot.layout.kamadakawai(m, NULL)) # pkg: sna
     colnames(plotcord) <- c("x","y")
-    nodes_grob <- GeomPoint$draw(plotcord, ...)
+    nodes_grob <- GeomPoint(plotcord, ...)
     
     edglist <- as.matrix.network.edgelist(net) #pkg: network
     edges <- data.frame(plotcord[edglist[,1],], plotcord[edglist[,2],])
     plotcord$elements <- as.factor(get.vertex.attribute(net, "elements")) #pkg: network
     colnames(edges) <-  c("x","y","xend","yend")
-    edges_grob <- GeomSegment$draw(edges, ...) #add $draw like in nodes_grob
+    edges_grob <- GeomSegment(edges, ...)
     
     with(coord_transform(coordinates, data), #got rid of scales b/c we don't have it anywhere else
          ggname(.$my_name(), grobTree(
