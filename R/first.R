@@ -8,13 +8,24 @@
 minx <-  function(x, ...) return(min(x, ...))
 
 #' @export
+#' @example
+#' data(mtcars)
+#' library(ggplot2)
+#' ggplot(data=mtcars) + geom_net(aes(x=mpg, y=disp)) 
+geom_net <- function (mapping = NULL, data = NULL, stat = "identity", position = "identity",
+                      na.rm = FALSE, ...) {
+  browser()
+  GeomNet$new(mapping = mapping, data = data, stat = stat, position = position, 
+              na.rm = na.rm, ...)
+}
+
 GeomNet <- proto::proto(ggplot2:::Geom, {
   objname <- "net"
   
   draw_groups <- function(., ...) .$draw(...)
   draw <- function(., data, coordinates, na.rm = FALSE, ...) {    
     browser()
-    # net is adjacency matrix
+    # net is network object from network package
     #    if (empty(data)) return(zeroGrob())
     if (empty(net)) return(zeroGrob())
     
@@ -24,37 +35,33 @@ GeomNet <- proto::proto(ggplot2:::Geom, {
     plotcord <- data.frame(gplot.layout.fruchtermanreingold(m, NULL))  #pkg: sna
     # or get it them from Kamada-Kawai's algorithm: 
     # plotcord <- data.frame(gplot.layout.kamadakawai(m, NULL)) # pkg: sna
-    colnames(plotcord) = c("x","y")
+    colnames(plotcord) <- c("x","y")
     nodes_grob <- GeomPoint$draw(plotcord, ...)
     
     edglist <- as.matrix.network.edgelist(net) #pkg: network
     edges <- data.frame(plotcord[edglist[,1],], plotcord[edglist[,2],])
     plotcord$elements <- as.factor(get.vertex.attribute(net, "elements")) #pkg: network
     colnames(edges) <-  c("x","y","xend","yend")
-    edges_grob <- GeomSegment(edges, ...)
-    #edges$midX  <- (edges$X1 + edges$X2) / 2
-    #edges$midY  <- (edges$Y1 + edges$Y2) / 2
+    edges_grob <- GeomSegment$draw(edges, ...) #add $draw like in nodes_grob
     
-    
-    
-    with(coord_transform(coordinates, data, scales), 
+    with(coord_transform(coordinates, data), #got rid of scales b/c we don't have it anywhere else
          ggname(.$my_name(), grobTree(
            nodes_grob,
            edges_grob
          )))
   }
-  # draw_legend <- function(., data, ...) {
-  # data <- aesdefaults(data, .$default_aes(), list(...))
+   draw_legend <- function(., data, ...) {
+     data <- aesdefaults(data, .$default_aes(), list(...))
   
-  # with(data,
-  # pointsGrob(0.5, 0.5, size=unit(size, "mm"), pch=shape, 
-  # gp=gpar(
-  # col=alpha(colour, alpha), 
-  # fill=alpha(fill, alpha), 
-  # fontsize = size * .pt)
-  # )
-  # )
-  # }
+    with(data,
+       pointsGrob(0.5, 0.5, size=unit(size, "mm"), pch=shape, 
+       gp=gpar(
+       col=alpha(colour, alpha), 
+       fill=alpha(fill, alpha), 
+       fontsize = size * .pt)
+   )
+   )
+   }
   
   browser()
   default_stat <- function(.) StatIdentity
@@ -62,17 +69,7 @@ GeomNet <- proto::proto(ggplot2:::Geom, {
   default_aes <- function(.) aes(shape=16, colour="black", size=10, fill = NA, alpha = NA) 
 })
 
-#' @export
-#' @example
-#' data(mtcars)
-#' library(ggplot2)
-#' ggplot(data=mtcars) + geom_net(aes(x=mpg, y=disp)) 
-geom_net <- function (mapping = NULL, data = NULL, stat = "identity", position = "identity",
-na.rm = FALSE, ...) {
-  browser()
-  GeomNet$new(mapping = mapping, data = data, stat = stat, position = position, 
-  na.rm = na.rm, ...)
-}
+
 
 
 
@@ -83,7 +80,7 @@ StatNet <- proto::proto(ggplot2:::Stat, {
   calculate_groups <- function(., data, na.rm = FALSE, width = NULL,
                                scale = "area", ...) {
 
-    print("calculate vase")
+    print("calculate net")
         browser()
     data <- remove_missing(data, na.rm, "y", name = "stat_net", finite = TRUE)
     data <- .super$calculate_groups(., data, na.rm = na.rm, width = width, ...)
