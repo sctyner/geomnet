@@ -32,7 +32,9 @@ StatNet <- proto(Stat, {
 
 #calculate function: extracts smaller data frame from original data using just req params. then computes some other stuff.
   calculate <- function(., data, scales, na.rm = FALSE,  layout = TRUE, ...) {  #add requirements here later.
-  	#compute x and y using layout method if x,y are not there. then can assume that x and y are there from now on.
+    browser()
+
+    #compute x and y using layout method if x,y are not there. then can assume that x and y are there from now on.
     library(network,sna) #how/where to call network, sna, pkg here?
     stopifnot(is.data.frame(data))
     #first column of data frame needs to be the 'from' vertex.
@@ -43,14 +45,14 @@ StatNet <- proto(Stat, {
     net <- as.network(edges, matrix.type = "edgelist") #from network package
     m <- as.matrix.network.adjacency(net)
     #change the stuff below later to include multiple layouts (in if else statements?)
-    vert.coord <- data.frame(gplot.layout.kamadakawai(m, NULL)) # from sna package
+    vert.coord <- data.frame(sna::gplot.layout.kamadakawai(m, NULL)) # from sna package
     vert.labels <- unique(c(edges$from,edges$to))
     vert.coord$name <- sort(vert.labels) #needed here?
     edgelist <- as.matrix.network.edgelist(net)
     edge.coord <- data.frame(vert.coord[edgelist[,1],], vert.coord[edgelist[,2],])
     names(edge.coord) <- c('x','y','xend','yend')
     #at the end of this routine, we need to have an x,xend and a y,yend. CHECK!
-    edge.coord
+    data.frame(data, edge.coord)
   }
 
   default_geom <- function(.) GeomNet

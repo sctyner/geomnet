@@ -49,9 +49,10 @@ geom_net <- function (mapping = NULL, data = NULL, nodes, stat = "net", ...) {
 }
 
 GeomNet <- proto(Geom, {
-  draw <- function(., data, scales, coordinates, ...) {
+  draw <- function(., data,  scales, coordinates, ...) {
+    browser()
     linesGrob(data[,c('x','y')], data[,c('xend','yend')], default.units = "native", id = grob_id)
-    pointsGrob(data$x, data$y, pch = 1, size = unit(1, "char"), default.units = "native", name = NULL,
+    pointsGrob(nodes$x, nodes$y, pch = 1, size = unit(1, "char"), default.units = "native", name = NULL,
                gp = gpar(), vp = NULL)
   }
 
@@ -64,5 +65,4 @@ GeomNet <- proto(Geom, {
   default_aes <- function(.) {
     aes(colour = NA, fill = "grey60", size = 0.5, linetype = 1, weight = 1, , alpha = NA, shape = 16)
   }
-
 })
