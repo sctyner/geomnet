@@ -41,16 +41,18 @@
 #' set.vertex.attribute(g, "elements", classes)
 #' plotg(g)
 
-  geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", ...) {
-  GeomNet$new(mapping = mapping, data = data, stat = stat, position = position, ...)
+#geom_map <- function(mapping = NULL, data = NULL, map, stat = "identity", ...) {
+
+geom_net <- function (mapping = NULL, data = NULL, nodes, stat = "net", ...) {
+  GeomNet$new(geom_params = list(nodes = nodes, ...), mapping = mapping,
+              data = data, stat = stat, ...)
 }
 
 GeomNet <- proto(Geom, {
   draw <- function(., data, scales, coordinates, ...) {
-    #Something here.
-    #
-    GeomPoint$draw(data, scales, coordinates, ...)
-    GeomSegment$draw(data, scales, coordinates, ...)
+    linesGrob(data[,c('x','y')], data[,c('xend','yend')], default.units = "native", id = grob_id)
+    pointsGrob(data$x, data$y, pch = 1, size = unit(1, "char"), default.units = "native", name = NULL,
+               gp = gpar(), vp = NULL)
   }
 
   objname <- "net"
@@ -58,7 +60,7 @@ GeomNet <- proto(Geom, {
   guide_geom <- function(.) "point"
 
   default_stat <- function(.) StatNet
-  required_aes <- c('net')
+  required_aes <- c('node_id')
   default_aes <- function(.) {
     aes(colour = NA, fill = "grey60", size = 0.5, linetype = 1, weight = 1, , alpha = NA, shape = 16)
   }
