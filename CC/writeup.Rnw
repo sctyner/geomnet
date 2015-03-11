@@ -1,21 +1,29 @@
 \documentclass[11pt]{article}
+\usepackage{asa}
 \usepackage{xspace}
+\usepackage{natbib}
 \usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 \geometry{a4paper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
 % See the ``Article customise'' template for come common customisations
 
+%\definecolor{Blue}{rgb}{0,0,0.5}
+\newcommand{\hh}[1]{{\color{magenta} #1}}
+\newcommand{\sct}[1]{{\color{purple} #1}}
+
 \title{A Geometry for Network Visualization in \MakeLowercase{\texttt{ggplot2}}}
 \author{Sam Tyner and Heike Hofmann}
 \date{} % delete this line to display the current date
-
 %%% BEGIN DOCUMENT
 \begin{document}
 
 \maketitle
+\begin{abstract}
+Abstract will be here
+\end{abstract}
 
 \section{Introduction}
-\par The three necessary elements of any network visualization are the vertices, the edges, and the layout.  But once those three items are visualized, we usually find our visualization to be lacking.  We may want to color the vertices (or edges) by some sort of grouping variable, or we may want to make vertices of degree 10 twice the size of vertices of degree 5.  Many \texttt{R} packages already exist for network analysis and visualization such as \texttt{igraph} by Gabor Csardi, \texttt{sna} by Carter T. Butts, and \texttt{network} by Carter T. Butts et al. but we have found these packages to have unintuitive or burdensome methods for customizing the colors, sizes, etc of the vertices and edges of the network. For instance, the \texttt{igraph} package allows for coloring vertices by groups but the user must assign the colors to each vertex individually as opposed to assigning color by a grouping factor variable. \\
+\par The three necessary elements of any network visualization are the vertices, the edges, and the layout.  But once those three items are visualized, we usually find our visualization to be lacking.  We may want to color the vertices (or edges) by some sort of grouping variable, or we may want to make vertices of degree 10 twice the size of vertices of degree 5.  Many \texttt{R} packages already exist for network analysis and visualization such as \texttt{igraph} by \citet{igraph}, \texttt{sna} by \citet{sna}, and \texttt{network} by \citet{network.jss, network} but we have found these packages to have unintuitive or burdensome methods for customizing the colors, sizes, etc of the vertices and edges of the network. For instance, the \texttt{igraph} package allows for coloring vertices by groups but the user must assign the colors to each vertex individually as opposed to assigning color by a grouping factor variable. \\
 
 \par The \texttt{GGally} package by Barret Schloerke et al. contains a very useful function written by Fran\c{c}ois Briatte and Moritz Marbach called \texttt{ggnet} that does allow for fairly straightforward customization of these 3 necessary graph attributes.  The \texttt{ggnet} function, however, requires the graph input to be a \texttt{network} object according to the \texttt{network} package.  Our goal is to build off of the \texttt{ggnet} function and present an intuitive \texttt{geom} for network visualization within the \texttt{ggplot2} framework, without the need for objects other than simple data frames.  
   \subsection{Data Structure}
@@ -34,5 +42,7 @@
   \subsection{Layout Aesthetics}
   \emph{There are many layouts to choose from, and the default layout changes according the size of the graph.  For smaller networks, with less than $x$ vertices and $y$ edges, the default layout is INSERT DEFAULT HERE. For larger networks with more than $x$ vertices and $y$ edges, the default layout is INSERT DEFAULT HERE. **Now justify these two statements with research to be done.**} The \texttt{layout} aesthetic can also be changed to any of the layouts also found in the \texttt{igraph} package, such as Kamada-Kawai, circular, or Fructerman-Reingold. Finally, the background color of the graph can be changed with the \texttt{bgfill} aesthetic.  This aesthetic takes only the identity colors, not additional variables.\footnote{Sam's notes: I'm not sure if what I've laid out here is possible or even reasonable.  I have not yet found any research into what layout is best based on number of edges, number of vertices, density of the network, or anything else.} 
 
+\bibliographystyle{asa}
+\bibliography{references}
 
 \end{document}
