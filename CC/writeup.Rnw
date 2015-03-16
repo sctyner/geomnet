@@ -53,9 +53,14 @@ Abstract will be here
 
 \section{Many Many Examples}
 \section{Technical Details}
+\sctq{I have no idea how detailed I should be. I'm going to attempt to be detailed without parsing each line in the code, but I do want to describe how everything works in detailed enough descriptions. I know you'll tell me if I'm too detailed or not detailed enough!}
 \sct{
-In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \texttt{R} script files: a `stat' file and a `geom' file. The stat file performs all the necessary calculations on the two input data frames, and the geom file performs the drawing of the network layer.
-}  
+In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \texttt{R} script files: a `stat' file and a `geom' file. The stat file performs all the necessary calculations on the two input data frames, and the geom file performs the drawing of the network.
+  \subsection{Creating \texttt{stat\_net}}
+  In order to plot the network with only the edge connections and vertex names, we relied on the \texttt{sna} and \texttt{network} packages \citep{sna, network.jss}. First, we used the edges data frame to construct a network object with the \texttt{as.network()} function, then constructed an adjacency matrix from that network using the \texttt{as.matrix.network.adjacency()} function.  This adjacency matrix is then passed to the chosen \texttt{gplot.layout.*()} function from the \texttt{sna} package.  \emph{When the layout argument is changed in the \texttt{geom\_net()} function, the corresponding \texttt{gplot.layout.*()} function in \texttt{sna} is called with a \texttt{do.call()} statement.} This layout function produces a matrix of coordinates of the vertices, which we then transform into a data frame containing the coordinates of the edges using the \texttt{as.matrix.network.edgelist()} function in \texttt{network}.  We are grateful to Moritz Marbach for his \texttt{gplot()} function which we used when creating this process \citep{marbach}.  At the end of the previous routine, we have a data frame with \texttt{x, y, xend,} and \texttt{yend} columns describing the edges and another data frame with \texttt{x,y} columns describing the vertices.  These two data frames, along with the many \texttt{aes()} and other argument options get passed on to the actual network geometry for drawing. 
+  \subsection{Creating \texttt{geom\_net}}
+  We constructed \texttt{geom\_net} using the drawing capabilities of the \texttt{geom\_point}, \texttt{geom\_line}, \emph{and \texttt{geom\_text}} functions that were already in \texttt{ggplot2}.  Using these capabilities, we were able to seamlessly incorporate our network geometry into the \texttt{ggplot2} structure.   We took our edges data frame and used that as our input to the \texttt{GeomSegment} draw function.  Then, on top of that, we plot the vertices by passing our vertex data frame to the \texttt{GeomPoint} draw function. \emph{Finally, we use the \texttt{GeomText} draw function to add the vertex and edge labels when the \texttt{vlabel} and \texttt{elabel} arguments, respectively, are true. *insert more detail here after figuring it out*}
+} \sctq{This doesn't seem very long, but I already feel like there's too much detail! Should I add more?} 
 
 \bibliographystyle{asa}
 \bibliography{references}
