@@ -74,6 +74,13 @@ In this section, we demonstrate the capabilities of \texttt{geom\_net} in a seri
 %<<blood_ex,highlight=TRUE>>=
 %ggplot(data = blood$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = blood$vertices) + expand_limits(x = c(-5,5), y = c(-5,5)) + theme_net #add vlabel later
 %@
+  \emph{Note: would be best with labels and direction}
+}
+<<blood_ex>>=
+library(ggplot2) # this needs to be the ggplot2 with geom_net
+ggplot(data = blood$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = blood$vertices) + expand_limits(x = c(-5,5), y = c(-5,5)) + theme_net #add vlabel later
+@
+\sct{
   \subsection{Email Network}
   \emph{Note: would be best with labels and direction}
 % # <<email_ex>>=
