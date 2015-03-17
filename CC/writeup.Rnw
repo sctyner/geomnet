@@ -25,15 +25,14 @@
 Abstract will be here
 \end{abstract}
 <<chunk_setup, echo=FALSE>>=
-opts_chunk$set(echo=FALSE, message = FALSE)
+opts_chunk$set(tidy = TRUE, echo=FALSE, message = FALSE, fig.height = 4, fig.width = 4, fig.align = 'center')
 @
-<<readingdata, message=FALSE, echo=FALSE>>=
+<<readingdata>>=
  library(knitr)
- library(ggplot2)
+ library(ggplot2) # needs to be the version with geom_net! 
  theme_net <- theme(aspect.ratio = 1, line = element_blank(), panel.background = element_blank(), plot.background = element_blank(), axis.text=element_blank(),axis.title=element_blank())
  data(blood, football, theme_elements)
  email.net <- read.csv("~/Dropbox/ggplot2/email-data.csv") 
- email.net <- subset(email.net, day %in% c(9,13))
  email.names <- data.frame(name = as.factor(unique(c(as.character(email.net$From),as.character(email.net$to))))) 
 @
 
@@ -64,33 +63,35 @@ opts_chunk$set(echo=FALSE, message = FALSE)
   The \texttt{layout} \sct{argument in the \texttt{geom\_net} function} can be changed to any of the layouts also found in the \texttt{sna} package, such as circular, eigen, or Fruchterman-Reingold.  \sctq{Should I insert a table of layouts here? And I took out the thing about the background color because I figure it can just be changed with \texttt{theme()}} %Finally, the background color of the graph can be changed with the \texttt{bgfill} aesthetic.  This aesthetic takes only the identity colors, not additional variables.%\footnote{Sam's notes: I'm not sure if what I've laid out here is possible or even reasonable.  I have not yet found any research into what layout is best based on number of edges, number of vertices, density of the network, or anything else. \hh{You're fine - those are things, which people are going to have strong opinions on without actual backup. You provide the environment for people to easily use network data in a familiar setting.}} 
 
 \section{Many Many Examples}
-\sctq{Format-wise, is it ok if each example is its own subsection?}\\
+\sctq{Format-wise, is it ok if each example is its own subsection? Also, can you check the references I added to the .bib file to make sure I'm creating them correctly? I've just been appending them.}\\
 \sct{
 In this section, we demonstrate the capabilities of \texttt{geom\_net} in a series of examples. 
   \subsection{Blood Donation}
-  \sctq{I had to comment out all the code chunks for now. Not sure why but it won't compile if they're there.}
   \emph{Note: would be best with labels and direction}\\
-  In this network, there are eight nodes and 27 edges.  The nodes represent the eight different blood types possible in humans
-%<<blood_ex,highlight=TRUE>>=
-%ggplot(data = blood$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = blood$vertices) + expand_limits(x = c(-5,5), y = c(-5,5)) + theme_net #add vlabel later
-%@
-  \emph{Note: would be best with labels and direction}
+  In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive and negative types. \sctq{Can I cite wikipedia here? Should I find a more academic source?}  The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a persone whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed.  Loops exist on every vertex in this example, as blood of matching ABO and RhD type can always be received. 
 }
-<<blood_ex>>=
-library(ggplot2) # this needs to be the ggplot2 with geom_net
-ggplot(data = blood$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = blood$vertices) + expand_limits(x = c(-5,5), y = c(-5,5)) + theme_net #add vlabel later
+<<blood_ex, echo=TRUE>>=
+ggplot(data = blood$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = blood$vertices, layout='circle') + expand_limits(x = c(-2,2), y = c(-2,2)) + theme_net #add vlabel & direction later
 @
 \sct{
   \subsection{Email Network}
-  \emph{Note: would be best with labels and direction}
-% # <<email_ex>>=
-% # ggplot(data = email.net, aes(from_id = From, to_id = to, ealpha = 0.1,vsize = 2)) + geom_net(vertices = email.names) + expand_limits(x=c(-1,5), y = c(-1,5)) + facet_wrap(~day) + theme_net
-% # @
+  \emph{Note: would be best with coloring and direction}
+  This email network comes from the 2014 VAST Challenge \citep{emailnet}. It is a directed network of emails between company employees with 55 vertices and 9,063 edges. Each vertex is an employee of the company, and each edge is an email sent from one employee to one or more other employees. The arrow of the directed edge points to the recipient(s) of the email. The network contains two business weeks of emails across the entire company. }
+<<email_ex, fig.cap = 'All emails within a company over a two week period.'>>=
+ggplot(data = email.net, aes(from_id = From, to_id = to, )) + geom_net(vertices = email.names,ealpha = 0.1, vsize = I(2)) + expand_limits(x=c(-1.75,1.75), y = c(-1.75,1.75)) + theme_net #add direction later
+@  
+\sct{This network is plotted in figure \ref{fig:email_ex}.  This plot is very crowded, and it is difficult to distinguish structure in the network when it there is so much over-plotting.  To remedy this, we facet the network by day to examine how the company's communications change throughout the week. }
+<<email_ex_facet, fig.height=8, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.'>>=
+ggplot(data = email.net, aes(from_id = From, to_id = to, )) + geom_net(vertices = email.names,ealpha = 0.1, vsize = I(2)) + expand_limits(x=c(-2,2), y = c(-2,2)) + facet_wrap(~day, nrow = 2) + theme_net #add direction later
+@
+\sct{This plot is shown in figure \ref{fig: email_ex_facet}.  With the facetting, we can see that there are between four and seven employees sending \sctq{or receiving? will know with direction option added later} several emails each day to a majority of the company. We can also see clusters that have formed on the perimeter of each day's network where the employees are communicating heavily with each other, but not much outside of their cluster. We can also see that there is heavier inter-cluster communication on different days.  For example, day 17 has more concentrated in-group communication than day 15. Additionally, we can better distinguish the communication of the outlying employee, who only corresponds with up to four other complany employees on a given day.} \sctq{talk about clusters being different departments within the company?}
   \subsection{\texttt{ggplot2} Theme Elements}
-  \emph{Note: would be best with labels and direction}
-% # <<theme_ex>>=
-% # #ggplot(data = g$edges, aes(from_id = child, to_id = parent)) + geom_net(vertices = g$vertices) + expand_limits(x = c(-5,5), y = c(-5,5)) + theme_net
-% # @
+  \emph{Note: would be best with labels and direction} \\
+  \sct{This example comes from the \texttt{theme()} help page in the \texttt{ggplot2} documentation \citep{ggplot}.  It is a directed network which shows the structure of the inheritance of theme options in the construction of a \texttt{ggplot2} plot.  There are 53 vertices and 36 edges in this network.  There is an arrow from one vertex to another if the element represented by the \emph{to} vertex inherits its values from the \emph{from} vertex.  For example, the \texttt{axis.ticks.x} option inherits its value from the \texttt{axis.ticks} value, which inherits its value from the \texttt{line} option.  Thus, setting the \texttt{line} option to a value such as \texttt{element\_blank()} sets the entire inheritance tree to \texttt{element\_blank()}, and thus no lines appear anywhere on the plot background.}
+<<theme_ex>>=
+ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) + geom_net(vertices = theme_elements$vertices) + expand_limits(x = c(-5,5), y = c(-5,5)) + theme_net #add vlabel & direction later
+@
+\sct{The inheritance structure is plotted in figure \ref{fig:theme_ex}.
   \subsection{Madmen Network (again?? or no?)}
   \sctq{leaving blank for now.}
   \subsection{College Football}
