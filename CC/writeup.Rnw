@@ -12,7 +12,7 @@
 \definecolor{purple}{rgb}{.4,0,.8}
 \newcommand{\hh}[1]{{\color{magenta} #1}}
 \newcommand{\sct}[1]{{\color{purple} #1}}
-\newcommand{\sctq}[1]{{\color{red} #1}} %things in red are my questions for you! 
+\newcommand{\sctq}[1]{{\color{red} #1}} %things in red are questions for you or concerns that i have. 
 
 \title{A Geometry for Network Visualization in \MakeLowercase{\texttt{ggplot2}}}
 \author{Sam Tyner and Heike Hofmann}
@@ -25,7 +25,7 @@
 Abstract will be here
 \end{abstract}
 <<chunk_setup, echo=FALSE>>=
-opts_chunk$set(tidy = TRUE, echo=FALSE, eval = FALSE, message = FALSE, fig.height = 4, fig.width = 4, fig.align = 'center')
+opts_chunk$set(tidy = TRUE, echo=FALSE, eval = TRUE, message = FALSE, fig.height = 4, fig.width = 4, fig.align = 'center')
 @
 <<readingdata>>=
  library(knitr)
@@ -80,10 +80,11 @@ In this section, we demonstrate the capabilities of \texttt{geom\_net} in a seri
   \emph{Note: would be best with labels and direction}\\
   In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive and negative types. \sctq{Can I cite wikipedia here? Should I find a more academic source?}  The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a persone whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed.  Loops exist on every vertex in this example, as blood of matching ABO and RhD type can always be received. 
 }
-<<blood_ex, echo=TRUE>>=
+<<blood_ex, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.">>=
 ggplot(data = blood$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = blood$vertices, layout='circle') + expand_limits(x = c(-2,2), y = c(-2,2)) + theme_net #add vlabel & direction later
 @
 \sct{
+This network is shown in figure \ref{fig:blood_ex}. 
   \subsection{Email Network}
   \emph{Note: would be best with coloring and direction}
   This email network comes from the 2014 VAST Challenge \citep{emailnet}. It is a directed network of emails between company employees with 55 vertices and 9,063 edges. Each vertex is an employee of the company, and each edge is an email sent from one employee to one or more other employees. The arrow of the directed edge points to the recipient(s) of the email. The network contains two business weeks of emails across the entire company. }
