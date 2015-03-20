@@ -25,7 +25,7 @@
 Abstract will be here
 \end{abstract}
 <<chunk_setup, echo=FALSE>>=
-opts_chunk$set(tidy = TRUE, echo=FALSE, eval = TRUE, message = FALSE, fig.height = 4, fig.width = 4, fig.align = 'center')
+opts_chunk$set(tidy = TRUE, echo=FALSE, eval = FALSE, message = FALSE, warning=FALSE,  fig.height = 4, fig.width = 4, fig.align = 'center')
 @
 <<readingdata>>=
  library(knitr)
@@ -43,7 +43,7 @@ opts_chunk$set(tidy = TRUE, echo=FALSE, eval = TRUE, message = FALSE, fig.height
 \par A social network is a network that everyone is a part of in one way or another.  We do not refer here to social media like Facebook or LinkedIn, but rather to the connections we form with other people. To demonstrate the functionality of our geometry for plotting networks, we have chosen an example of a social network from the popular television show Mad Men.  This network was compiled in \citet{madmen}.  In this example network, there are 52 vertices and 87 edges. Each vertex is a character on the show, and there is an edge between every two characters who have had a romantic relationship.
 }
 <<madmen_ex, fig.cap = 'Network of Relationships in Mad Men', echo=TRUE>>=
-ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2)) + geom_net(vertices = madmen$vertices) + expand_limits(x = c(-10,10), y = c(-10,10)) + theme_net
+ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2)) + geom_net(vertices = madmen$vertices, vlabel = TRUE) + expand_limits(x = c(-5,5), y = c(-5,5)) + theme_net
 @
 \sct{
 This network is shown in figure \ref{fig.cap:madmen_ex}. \emph{Notes: add names, color for gender} In the plot, we can see there is one central character who has many more relationships than any other character. This vertex represents the main character of the show, Don Draper. 
@@ -81,7 +81,7 @@ In this section, we demonstrate the capabilities of \texttt{geom\_net} in a seri
   In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive and negative types. \sctq{Can I cite wikipedia here? Should I find a more academic source?}  The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a persone whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed.  Loops exist on every vertex in this example, as blood of matching ABO and RhD type can always be received. 
 }
 <<blood_ex, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.">>=
-ggplot(data = blood$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = blood$vertices, layout='circle') + expand_limits(x = c(-2,2), y = c(-2,2)) + theme_net #add vlabel & direction later
+ggplot(data = blood$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = blood$vertices, layout='circle', vlabel = TRUE) + expand_limits(x = c(-2,2), y = c(-2,2)) + theme_net #add vlabel & direction later
 @
 \sct{
 This network is shown in figure \ref{fig:blood_ex}. 
@@ -118,6 +118,16 @@ The network of football games is given in figure \ref{fig:football_ex}.
   This next network comes from \citet{lesmis}. It is an undirected network of coappearances of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.  There are 77 vertices representing each of the 77 characters in the book, and an edge connects two vertices if those two characters appear in the same chapter of the book.  There are 254 edges in this network. The edges are also weighted by the number of coappearances. The largest weighting is 31, between the characters Jean Valjean and Cosette.}
 <<lesmis_ex, echo=TRUE, fig.cap="Coappearance network of characters in Victor Hugo's \\emph{Les Mis\\'{e}rables}">>=
 ggplot(data = lesmis$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = lesmis$vertices, aes(esize = value), ealpha = 2/10, layout = 'fruchtermanreingold') + expand_limits(x = c(-25,25), y = c(-25,25)) + theme_net
+@
+\sct{
+  \subsection{Protein Interaction Network in Yeast}
+}
+<<read_data>>=
+yeast <- read.table("~/Desktop/NetworksResearch/ggnet/CC/data/protein.txt")
+yeast <- list(edges = yeast, vertices = data.frame(label = min(yeast):max(yeast)))
+@
+<<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.">>=
+ggplot(data = yeast$edges, aes(from_id = V1, to_id = V2)) + geom_net(vertices = yeast$vertices, ealpha = 0.1, valpha = .5) + expand_limits(x = c(-25,25), y = c(-25,25)) + theme_net
 @
 
 
