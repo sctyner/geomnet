@@ -26,16 +26,20 @@ Abstract will be here
 \end{abstract}
 \hh{XXX I've set tidy to FALSE; for some reason it's totally messing up the line width.}
 <<chunk_setup, echo=FALSE>>=
+library(knitr)
 opts_chunk$set(tidy = FALSE, echo=FALSE, eval = FALSE, message = FALSE, warning = FALSE,  fig.height = 8, fig.width = 8, fig.align = 'center')
 @
 <<readingdata>>=
- library(knitr)
  library(ggplot2) # needs to be the version with geom_net!
  theme_net <- theme(aspect.ratio = 1, line = element_blank(), panel.background = element_blank(), plot.background = element_blank(), axis.text=element_blank(),axis.title=element_blank())
  data(blood, football, theme_elements, lesmis)
  load("data/madmen.rda") # relative path should work for both of us
+names(madmen$vertices)[1] <- "label"
+names(blood$vertices)[1] <- "label"
+
  email.net <- read.csv("data/email-data.csv")
- email.names <- data.frame(name = as.factor(unique(c(as.character(email.net$From),as.character(email.net$to)))))
+ email.names <- data.frame(label = as.factor(unique(c(as.character(email.net$From),as.character(email.net$to)))))
+
 @
 
 \section{Introduction}
