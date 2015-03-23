@@ -3,6 +3,7 @@
 \usepackage{xspace}
 \usepackage{natbib}
 \usepackage{url}
+\usepackage{pdflscape}
 \usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 \geometry{letterpaper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
@@ -26,37 +27,39 @@ Abstract will be here
 \end{abstract}
 <<chunk_setup, echo=FALSE>>=
 library(knitr)
-opts_chunk$set(tidy = FALSE, echo=FALSE, eval = FALSE, message = FALSE, warning = FALSE,  fig.height = 8, fig.width = 8, fig.align = 'center')
+opts_chunk$set(tidy = FALSE, echo=FALSE, eval = TRUE, message = FALSE, warning = FALSE,  fig.height = 8, fig.width = 8, fig.align = 'center',fig.show='hide')
 @
-<<readingdata>>=
+<<readingdata, eval=TRUE>>=
  library(ggplot2) # needs to be the version with geom_net!
  theme_net <- theme(aspect.ratio = 1, line = element_blank(), panel.background = element_blank(), plot.background = element_blank(), axis.text=element_blank(),axis.title=element_blank())
  data(blood, football, theme_elements, lesmis)
  load("data/madmen.rda") # relative path should work for both of us
 names(madmen$vertices)[1] <- "label"
 names(blood$vertices)[1] <- "label"
-
+names(theme_elements$vertices)[1] <- "label"
+football$vertices$label <- as.factor(football$vertices$label)
+football$vertices$value <- as.factor(football$vertices$value)
  email.net <- read.csv("data/email-data.csv")
  email.names <- data.frame(label = as.factor(unique(c(as.character(email.net$From),as.character(email.net$to)))))
 
 @
 
 \section{Introduction}
-At its core, a network is simply a set of points connected in pairs by a set of lines \citep{newman}.  Here, we refer to the lines as edges and the points as vertices, although these are also called nodes.  These two seemingly simple sets of graphical objects, points and segments, are used to encode a huge variety and quantity of information across many fields of study. \sct{For instance, networks of scientific collaboration, a food web of marine animals, and American college football games are all covered in a paper on community detection in networks by \citet{football}.  Additionally, \citet{networkfailures} examine node failure in interdependent networks like power grids.  Social networks, such as links between actors found on \url{www.imdb.com}, and neural networks, like the completely mapped neural network of the \textit{C. elegans} worm are also etensively studied \citep{smallworld}.}  Networks vary widely in scope and complexity: the smallest network is simply an edge between two vertices, while one of the most commonly used networks, the world wide web, has billions of vertices (webpages) and billions of edges (hyperlinks) connecting them.  The edges in a network can  be directed or undirected: directed edges represent information travelling from one vertex to another, and switching the direction would change the structure of the network. The world wide web is an example of a directed network because one webpage can link to another, and not necessarily the other way around. Undirected edges, however, are simply connections between vertices.  Coauthorship networks that encode information about academic publications are examples of undirected networks because if two people author a paper together, that creates a connection between them that is bidirectional.
+At its core, a network is simply a set of points connected in pairs by a set of lines \citep{newman}.  Here, we refer to the lines as edges and the points as vertices, although these are also called nodes.  These two seemingly simple sets of graphical objects, points and segments, are used to encode a huge variety and quantity of information across many fields of study. \sct{For instance, networks of scientific collaboration, a food web of marine animals, and American college football games are all covered in a paper on community detection in networks by \citet{football}.  Additionally, \citet{networkfailures} examine node failure in interdependent networks like power grids.  Social networks, such as links between actors found on \url{www.imdb.com}, and neural networks, like the completely mapped neural network of the \textit{C. elegans} worm are also etensively studied \citep{smallworld}.}  Networks vary widely in scope and complexity: the smallest network is simply an edge between two vertices, while one of the most commonly used \sct{and most complex} networks, the world wide web, has billions of vertices (webpages) and billions of edges (hyperlinks) connecting them.  The edges in a network can  be directed or undirected: directed edges represent information travelling from one vertex to another, and switching the direction would change the structure of the network. The world wide web is an example of a directed network because one webpage \sct{may} link to another, and not necessarily the other way around. Undirected edges, however, are simply connections between vertices.  Coauthorship networks that encode information about academic publications are examples of undirected networks because if two people author a paper together, that creates a connection between them that is bidirectional.
 
-\par A social network is a network that everyone is a part of in one way or another.  We do not refer here to social media like Facebook or LinkedIn, but rather to the connections we form with other people. To demonstrate the functionality of our geometry for plotting networks, we have chosen an example of a social network from the popular television show Mad Men.  This network was compiled in \citet{madmen}.  In this example network, there are 52 vertices and 87 edges. Each vertex is a character on the show, and there is an edge between every two characters who have had a romantic relationship.
+\par A social network is a network that everyone is a part of in one way or another.  We do not \sct{necessarily} refer here to social media like Facebook or LinkedIn, but rather to the connections we form with other people. To demonstrate the functionality of our geometry for plotting networks, we have chosen an example of a social network from the popular television show Mad Men.  This network was compiled in \citet{madmen}.  In this example network, there are 52 vertices and 87 edges. Each vertex is a character on the show, and there is an edge between every two characters who have had a romantic relationship.
 
 This network is shown in figure~\ref{fig.cap:madmen_ex}. \emph{Notes: add names, color for gender}
-<<madmen_ex, dependson='madmen-prep', fig.cap = 'Network of Relationships in Mad Men'>>=
+<<madmen_ex, dependson='madmen-prep', fig.cap = 'Network of Relationships in Mad Men',cache=TRUE>>=
 ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2)) +
   geom_net(vertices = madmen$vertices, vsize=3, vlabel= TRUE, ecolour="grey30",
            aes(vcolour=c( "#FF69B4", "#0099ff")[as.numeric(Gender)])) +
-  expand_limits(x = c(0,1), y = c(0,1)) + theme_net
+  expand_limits(x = c(0,1.5), y = c(0,1)) + theme_net
 @
 
 \begin{figure}
 \centering
-\includegraphics{figure/madmen_ex-1.pdf}
+\includegraphics[width=\textwidth]{figure/madmen_ex-1.pdf}
 \caption{\label{fig.cap:madmen_ex} Graph of the characters in the show Mad Men who are linked by a romatic relationship.}
 \end{figure}
 
@@ -98,39 +101,65 @@ In this section, we demonstrate the capabilities of \texttt{geom\_net} in a seri
 }
 <<blood_ex, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.">>=
 ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
-  geom_net(vertices = blood$vertices, layout='circle', vlabel = TRUE) +
-  expand_limits(x = c(0,1), y = c(0,1)) + theme_net #add vlabel & direction later
+  geom_net(vertices = blood$vertices, layout='circle', vlabel = TRUE, vsize = I(2)) +
+  expand_limits(x = c(0,1), y = c(0,1)) + theme_net #add direction later
 @
 \sct{
-This network is shown in figure \ref{fig:blood_ex}.
-  \subsection{Email Network}
+This network is shown in figure \ref{fig.cap:blood_ex}.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/blood_ex-1.pdf}
+\caption{\label{fig.cap:blood_ex} Network of blood donation possibilities in humans by ABO and RhD blood types.}
+\end{figure}
+
+\subsection{Email Network}
   \emph{Note: would be best with coloring and direction}
   This email network comes from the 2014 VAST Challenge \citep{emailnet}. It is a directed network of emails between company employees with 55 vertices and 9,063 edges. Each vertex is an employee of the company, and each edge is an email sent from one employee to one or more other employees. The arrow of the directed edge points to the recipient(s) of the email. The network contains two business weeks of emails across the entire company. }
 <<email_ex, fig.cap = 'All emails within a company over a two week period.'>>=
-ggplot(data = email.net, aes(from_id = From, to_id = to, )) +
+ggplot(data = email.net, aes(from_id = From, to_id = to)) +
   geom_net(vertices = email.names,ealpha = 0.1, vsize = I(2)) +
-  expand_limits(x=c(-1.75,1.75), y = c(-1.75,1.75)) +
+  expand_limits(x=c(0,1), y = c(0,1)) +
   theme_net #add direction later
 @
-\sct{This network is plotted in figure \ref{fig:email_ex}.  This plot is very crowded, and it is difficult to distinguish structure in the network when it there is so much over-plotting.  To remedy this, we facet the network by day to examine how the company's communications change throughout the week. }
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/email_ex-1.pdf}
+\caption{\label{fig.cap:email_ex} Email network within a company over a two week period.}
+\end{figure}
+
+
+\sct{This network is plotted in figure \ref{fig.cap:email_ex}.  This plot is very crowded, and it is difficult to distinguish structure in the network when it there is so much over-plotting.  To remedy this, we facet the network by day to examine how the company's communications change throughout the week. }
 <<email_ex_facet, fig.height=8, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.'>>=
 ggplot(data = email.net, aes(from_id = From, to_id = to, )) +
   geom_net(vertices = email.names,ealpha = 0.1, vsize = I(2)) +
-  expand_limits(x=c(-2,2), y = c(-2,2)) +
+  expand_limits(x=c(0,1), y = c(0,1)) +
   facet_wrap(~day, nrow = 2) +
   theme_net #add direction later
 @
-\sct{This plot is shown in figure \ref{fig: email_ex_facet}.  With the facetting, we can see that there are between four and seven employees sending \sctq{or receiving? will know with direction option added later} several emails each day to a majority of the company. We can also see clusters that have formed on the perimeter of each day's network where the employees are communicating heavily with each other, but not much outside of their cluster. We can also see that there is heavier inter-cluster communication on different days.  For example, day 17 has more concentrated in-group communication than day 15. Additionally, we can better distinguish the communication of the outlying employee, who only corresponds with up to four other complany employees on a given day.} \sctq{talk about clusters being different departments within the company?}
+\begin{landscape}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/email_ex_facet-1.pdf}
+\caption{\label{fig.cap:email_ex_facet} The same email network as in figure \ref{fig.cap:email_ex} facetted by day of the week.}
+\end{figure}
+\end{landscape}
+\sct{This plot is shown in figure \ref{fig.cap: email_ex_facet}.  With the facetting, we can see that there are between four and seven employees sending \sctq{or receiving? will know with direction option added later} several emails each day to a majority of the company. We can also see clusters that have formed on the perimeter of each day's network where the employees are communicating heavily with each other, but not much outside of their cluster. We can also see that there is heavier inter-cluster communication on different days.  For example, day 17 has more concentrated in-group communication than day 15. Additionally, we can better distinguish the communication of the outlying employee, who only corresponds with up to four other complany employees on a given day.} \sctq{talk about clusters being different departments within the company?}
   \subsection{\texttt{ggplot2} Theme Elements}
   \emph{Note: would be best with labels and direction} \\
   \sct{This example comes from the \texttt{theme()} help page in the \texttt{ggplot2} documentation \citep{ggplot}.  It is a directed network which shows the structure of the inheritance of theme options in the construction of a \texttt{ggplot2} plot.  There are 53 vertices and 36 edges in this network.  There is an arrow from one vertex to another if the element represented by the \emph{to} vertex inherits its values from the \emph{from} vertex.  For example, the \texttt{axis.ticks.x} option inherits its value from the \texttt{axis.ticks} value, which inherits its value from the \texttt{line} option.  Thus, setting the \texttt{line} option to a value such as \texttt{element\_blank()} sets the entire inheritance tree to \texttt{element\_blank()}, and thus no lines appear anywhere on the plot background. Finally, we note that the vertices with no edges were incorporated into the plot by adding their labels to the edges data frame in both the  `from\_id' and `to\_id' columns before passing the edges data frame to \texttt{ggplot}.  }
-<<theme_ex, echo=TRUE, fig.cap= 'Inheritance structure for \\texttt{theme} elements in \\texttt{ggplot2}.', eval=FALSE>>=
+<<theme_ex, echo=TRUE, fig.cap= 'Inheritance structure for \\texttt{theme} elements in \\texttt{ggplot2}.'>>=
 ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) +
-  geom_net(vertices = theme_elements$vertices) +
-  expand_limits(x = c(-5,5), y = c(-5,5)) +
+  geom_net(vertices = theme_elements$vertices, vlabel = TRUE) +
+  expand_limits(x = c(0,1), y = c(0,1)) +
   theme_net #add vlabel & direction later
 @
-\sct{The inheritance structure is plotted in figure \ref{fig:theme_ex}.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/theme_ex-1.pdf}
+\caption{\label{fig.cap:theme_ex} Inheritance structure of \texttt{ggplot2} theme elements. This is a recreation of the graph found at \protect\url{http://docs.ggplot2.org/current/theme.html}.}
+\end{figure}
+
+\sct{The inheritance structure is plotted in figure \ref{fig.cap:theme_ex}.
   \subsection{Madmen Network (again?? or no?)}
   \sctq{leaving blank for now.}
   \subsection{College Football}
@@ -138,23 +167,31 @@ ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) +
   This next example comes from M.E.J. Newman's network data web page \citep{football}.  It is an undirected network consisting of all regular season college football games played between Division I schools in Fall of 2000.  There are 115 vertices and 613 edges: each vertex represents a school, and an edge represents a game played between two schools.}
 <<football_ex, echo=TRUE, fig.cap="All regular season Division I college football games in the Fall 2000 season.">>=
 ggplot(data = football$edges, aes(from_id = from, to_id = to)) +
-  geom_net(vertices = football$vertices, ealpha = 0.1) +
-  expand_limits(x = c(-2.5,2.5), y = c(-2.5,2.5)) +
+  geom_net(vertices = football$vertices, ealpha = 0.2, vsize = I(2), vlabel = TRUE,aes(vcolour=c("#A6CEE3","#1F78B4","#B2DF8A","#33A02C","#FB9A99","#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99","#B15928")[as.numeric(value)])) +
+  expand_limits(x = c(0,1), y = c(0,1)) +
   theme_net
 @
 \sct{
-The network of football games is given in figure \ref{fig:football_ex}.
+The network of football games is given in figure \ref{fig.cap:football_ex}.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/football_ex-1.pdf}
+\caption{\label{fig.cap:football_ex} The network of regular season Division I college football games in the season of fall 2000. The vertices and their labels are colored by conference.}
+\end{figure}
   \subsection{Les Mis\'{e}rables}
   \emph{Note: data set has edge weightings for number of co-occurences of characters. esize would be useful here!} \\
   This next network comes from \citet{lesmis}. It is an undirected network of coappearances of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.  There are 77 vertices representing each of the 77 characters in the book, and an edge connects two vertices if those two characters appear in the same chapter of the book.  There are 254 edges in this network. The edges are also weighted by the number of coappearances. The largest weighting is 31, between the characters Jean Valjean and Cosette.}
 <<lesmis_ex, echo=TRUE, fig.cap="Coappearance network of characters in Victor Hugo's \\emph{Les Mis\\'{e}rables}">>=
-ggplot(data = lesmis$edges, aes(from_id = from, to_id = to)) +
-  geom_net(vertices = lesmis$vertices, aes(esize = value), ealpha = 2/10, layout = 'fruchtermanreingold') +
-  expand_limits(x = c(-25,25), y = c(-25,25)) +
-  theme_net
+ggplot(data = lesmis$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = lesmis$vertices, ealpha = 2/10, layout = 'fruchtermanreingold', vlabel=TRUE) + expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
 @
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/lesmis_ex-1.pdf}
+\caption{\label{fig.cap:lesmis_ex} Coappearance network of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.}
+\end{figure}
 \sct{
   \subsection{Protein Interaction Network in Yeast}
+  This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}. 
 }
 <<read_data>>=
 yeast <- read.table("data/protein.txt")
@@ -163,8 +200,14 @@ yeast <- list(edges = yeast, vertices = data.frame(label = min(yeast):max(yeast)
 <<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=TRUE>>=
 ggplot(data = yeast$edges, aes(from_id = V1, to_id = V2)) +
   geom_net(vertices = yeast$vertices, ealpha = 0.1, valpha = .5) +
-  expand_limits(x = c(-25,25), y = c(-25,25)) + theme_net
+  expand_limits(x = c(0,1), y = c(0,1)) + theme_net
 @
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/yeast_ex-1.pdf}
+\caption{\label{fig.cap:yeast_ex} Complete protein-protein interaction network in \emph{S. cerevisiae}.}
+\end{figure}
 
 
 \section{Technical Details}
