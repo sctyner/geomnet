@@ -10,6 +10,7 @@
 % See the ``Article customise'' template for come common customisations
 
 %\definecolor{Blue}{rgb}{0,0,0.5}
+\usepackage{color}
 \definecolor{purple}{rgb}{.4,0,.8}
 \newcommand{\hh}[1]{{\color{magenta} #1}}
 \newcommand{\sct}[1]{{\color{purple} #1}}
@@ -27,9 +28,9 @@ Abstract will be here
 \end{abstract}
 <<chunk_setup, echo=FALSE>>=
 library(knitr)
-opts_chunk$set(tidy = FALSE, echo=FALSE, eval = TRUE, message = FALSE, warning = FALSE,  fig.height = 8, fig.width = 8, fig.align = 'center',fig.show='hide')
+opts_chunk$set(tidy = FALSE, echo=FALSE, cache=TRUE, eval = TRUE, message = FALSE, warning = FALSE,  fig.height = 8, fig.width = 8, fig.align = 'center',fig.show='hide')
 @
-<<readingdata, eval=TRUE>>=
+<<readingdata, eval=TRUE, echo=FALSE>>=
  library(ggplot2) # needs to be the version with geom_net!
  theme_net <- theme(aspect.ratio = 1, line = element_blank(), panel.background = element_blank(), plot.background = element_blank(), axis.text=element_blank(),axis.title=element_blank())
  data(blood, football, theme_elements, lesmis)
@@ -60,11 +61,11 @@ ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2)) +
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{figure/madmen_ex-1.pdf}
-\caption{\label{fig.cap:madmen_ex} Graph of the characters in the show Mad Men who are linked by a romatic relationship.}
+\caption{\label{fig.cap:madmen_ex} Graph of the characters in the show Mad Men who are linked by a romantic relationship.}
 \end{figure}
 
  In the plot, we can see one central character who has many more relationships than any other character. This vertex represents the main character of the show, Don Draper.
-\par There are many kinds of networks, and networks are extensively studied across many disciplines.  Many sociologists study social networks, and many biologists study protein networks. As different as these and the many other disciplines that study networks are, they all need the ability to quickly and effectively visualize networks.  We found the current tools to be lacking in this ability, so we chose to fill this gap by adding network plotting capabilities to the popular and widely used \texttt{R} package \texttt{ggplot2}. \sct{From January 1, 2015 to March 21, 2015, \texttt{ggplot2} was downloaded over 270,000 times: approximately 3454 downloads per day. It has also been downloaded in 189 countries at least once, and in 31 of those countries, including China, Israel, and Colombia, it has been downloaded over 1,000 times.} 
+\par There are many kinds of networks, and networks are extensively studied across many disciplines.  Many sociologists study social networks, and many biologists study protein networks. As different as these and the many other disciplines that study networks are, they all need the ability to quickly and effectively visualize networks.  We found the current tools to be lacking in this ability, so we chose to fill this gap by adding network plotting capabilities to the popular and widely used \texttt{R} package \texttt{ggplot2}. \sct{From January 1, 2015 to March 21, 2015, \texttt{ggplot2} was downloaded over 270,000 times: approximately 3454 downloads per day. It has also been downloaded in 189 countries at least once, and in 31 of those countries, including China, Israel, and Colombia, it has been downloaded over 1,000 times.}
 
 \par The three necessary elements of any network visualization are the vertices, the edges, and the layout.  But once those three items are visualized, we usually find our visualization to be lacking.  We may want to color the vertices (or edges) by some sort of grouping variable, or we may want to make vertices of degree ten twice the size of vertices of degree five.  Many \texttt{R} packages already exist for network analysis and visualization such as \texttt{igraph} by \citet{igraph}, \texttt{sna} by \citet{sna}, and \texttt{network} by \citet{network.jss, network} but we have found these packages to have unintuitive or burdensome methods for customizing the colors, sizes, etc of the vertices and edges of the network. For instance, the \texttt{igraph} package allows for coloring vertices by groups but the user must assign the colors to each vertex individually as opposed to assigning color by a grouping factor variable. \\
 
@@ -167,7 +168,7 @@ ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) +
   This next example comes from M.E.J. Newman's network data web page \citep{football}.  It is an undirected network consisting of all regular season college football games played between Division I schools in Fall of 2000.  There are 115 vertices and 613 edges: each vertex represents a school, and an edge represents a game played between two schools.}
 <<football_ex, echo=TRUE, fig.cap="All regular season Division I college football games in the Fall 2000 season.">>=
 ggplot(data = football$edges, aes(from_id = from, to_id = to)) +
-  geom_net(vertices = football$vertices, ealpha = 0.2, vsize = I(2), vlabel = TRUE,aes(vcolour=c("#A6CEE3","#1F78B4","#B2DF8A","#33A02C","#FB9A99","#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99","#B15928")[as.numeric(value)])) +
+  geom_net(vertices = football$vertices, ealpha = 0.2, vsize = 5, vlabel = TRUE, aes(vcolour=c("#A6CEE3","#1F78B4","#B2DF8A","#33A02C","#FB9A99","#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99","#B15928")[as.numeric(factor(value))])) +
   expand_limits(x = c(0,1), y = c(0,1)) +
   theme_net
 @
@@ -191,7 +192,7 @@ ggplot(data = lesmis$edges, aes(from_id = from, to_id = to)) + geom_net(vertices
 \end{figure}
 \sct{
   \subsection{Protein Interaction Network in Yeast}
-  This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}. 
+  This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}.
 }
 <<read_data>>=
 yeast <- read.table("data/protein.txt")
