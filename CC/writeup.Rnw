@@ -167,8 +167,8 @@ ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) +
   \emph{Note: would be best with coloring vertices by conference}
   This next example comes from M.E.J. Newman's network data web page \citep{football}.  It is an undirected network consisting of all regular season college football games played between Division I schools in Fall of 2000.  There are 115 vertices and 613 edges: each vertex represents a school, and an edge represents a game played between two schools.}
 <<football_ex, echo=TRUE, fig.cap="All regular season Division I college football games in the Fall 2000 season.">>=
-ggplot(data = football$edges, aes(from_id = from, to_id = to)) +
-  geom_net(vertices = football$vertices, ealpha = 0.2, vsize = 5, vlabel = TRUE, aes(vcolour=c("#A6CEE3","#1F78B4","#B2DF8A","#33A02C","#FB9A99","#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99","#B15928")[as.numeric(factor(value))])) +
+ggplot(data = football$edges, aes(from_id = from, to_id = to, elinetype = in.conf + 1)) +
+  geom_net(vertices = football$vertices, ealpha = 0.2, vsize = 2, vlabel = TRUE, aes(vcolour=c("#A6CEE3","#1F78B4","#B2DF8A","#33A02C","#FB9A99","#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99","#B15928")[as.numeric(factor(value))])) +
   expand_limits(x = c(0,1), y = c(0,1)) +
   theme_net
 @
@@ -183,7 +183,7 @@ The network of football games is given in figure \ref{fig.cap:football_ex}.
   \emph{Note: data set has edge weightings for number of co-occurences of characters. esize would be useful here!} \\
   This next network comes from \citet{lesmis}. It is an undirected network of coappearances of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.  There are 77 vertices representing each of the 77 characters in the book, and an edge connects two vertices if those two characters appear in the same chapter of the book.  There are 254 edges in this network. The edges are also weighted by the number of coappearances. The largest weighting is 31, between the characters Jean Valjean and Cosette.}
 <<lesmis_ex, echo=TRUE, fig.cap="Coappearance network of characters in Victor Hugo's \\emph{Les Mis\\'{e}rables}">>=
-ggplot(data = lesmis$edges, aes(from_id = from, to_id = to)) + geom_net(vertices = lesmis$vertices, ealpha = 2/10, layout = 'fruchtermanreingold', vlabel=TRUE) + expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
+ggplot(data = lesmis$edges, aes(from_id = from, to_id = to, esize = value)) + geom_net(vertices = lesmis$vertices, ealpha = 2/10, layout = 'fruchtermanreingold', vlabel=TRUE) + expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
 @
 \begin{figure}
 \centering
