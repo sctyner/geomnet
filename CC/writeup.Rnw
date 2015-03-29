@@ -40,7 +40,15 @@ names(madmen$vertices)[1] <- 'label'
 names(theme_elements$vertices)[1] <- 'label'
 football$vertices$label <- as.factor(football$vertices$label)
 football$vertices$value <- as.factor(football$vertices$value)
- email.net <- read.csv("data/email-data.csv")
+football$edges$in.conf <- 0
+for (i in 1:nrow(football$edges)){
+  idx1 <- which(football$vertices$label == football$edges$from[i])
+  idx2 <- which(football$vertices$label == football$edges$to[i])
+  if (football$vertices$value[idx1] == football$vertices$value[idx2]){
+    football$edges$in.conf[i] <- 1
+  }
+}
+email.net <- read.csv("data/email-data.csv")
  email.names <- data.frame(label = as.factor(unique(c(as.character(email.net$From),as.character(email.net$to)))))
 
 @
