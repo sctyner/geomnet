@@ -60,9 +60,9 @@ cols <- brewer.pal(8, name="Set1")
 @
 
 \section{Introduction}
-At its core, a network is simply a set of points connected in pairs by a set of lines \citep{newman}.  Here, we refer to the lines as edges and the points as vertices, although these are also called nodes.  These two seemingly simple sets of graphical objects, points and segments, are used to encode a huge variety and quantity of information across many fields of study. \sct{For instance, networks of scientific collaboration, a food web of marine animals, and American college football games are all covered in a paper on community detection in networks by \citet{football}.  Additionally, \citet{networkfailures} examine node failure in interdependent networks like power grids.  Social networks, such as links between actors found on \url{www.imdb.com}, and neural networks, like the completely mapped neural network of the \textit{C. elegans} worm are also etensively studied \citep{smallworld}.}  Networks vary widely in scope and complexity: the smallest network is simply an edge between two vertices, while one of the most commonly used \sct{and most complex} networks, the world wide web, has billions of vertices (webpages) and billions of edges (hyperlinks) connecting them.  The edges in a network can  be directed or undirected: directed edges represent information travelling from one vertex to another, and switching the direction would change the structure of the network. The world wide web is an example of a directed network because one webpage \sct{may} link to another, and not necessarily the other way around. Undirected edges, however, are simply connections between vertices.  Coauthorship networks that encode information about academic publications are examples of undirected networks because if two people author a paper together, that creates a connection between them that is bidirectional.
+At its core, a network is simply a set of points connected in pairs by a set of lines \citep{newman}.  Here, we refer to the lines as edges and the points as vertices, although these are also called nodes.  These two seemingly simple sets of graphical objects, points and segments, are used to encode a huge variety and quantity of information across many fields of study. For instance, networks of scientific collaboration, a food web of marine animals, and American college football games are all covered in a paper on community detection in networks by \citet{football}.  Additionally, \citet{networkfailures} examine node failure in interdependent networks like power grids.  Social networks, such as links between actors found on \url{www.imdb.com}, and neural networks, like the completely mapped neural network of the \textit{C. elegans} worm are also etensively studied \citep{smallworld}.  Networks vary widely in scope and complexity: the smallest network is simply an edge between two vertices, while one of the most commonly used and most complex networks, the world wide web, has billions of vertices (webpages) and billions of edges (hyperlinks) connecting them.  The edges in a network can  be directed or undirected: directed edges represent information travelling from one vertex to another, and switching the direction would change the structure of the network. The world wide web is an example of a directed network because one webpage may link to another, and not necessarily the other way around. Undirected edges, however, are simply connections between vertices.  Coauthorship networks that encode information about academic publications are examples of undirected networks because if two people author a paper together, that creates a connection between them that is bidirectional.
 
-\par A social network is a network that everyone is a part of in one way or another.  We do not \sct{necessarily} refer here to social media like Facebook or LinkedIn, but rather to the connections we form with other people. To demonstrate the functionality of our geometry for plotting networks, we have chosen an example of a social network from the popular television show Mad Men.  This network was compiled in \citet{madmen}.  In this example network, there are 52 vertices and 87 edges. Each vertex is a character on the show, and there is an edge between every two characters who have had a romantic relationship.
+\par A social network is a network that everyone is a part of in one way or another.  We do not necessarily refer here to social media like Facebook or LinkedIn, but rather to the connections we form with other people. To demonstrate the functionality of our geometry for plotting networks, we have chosen an example of a social network from the popular television show Mad Men.  This network was compiled in \citet{madmen}.  In this example network, there are 52 vertices and 87 edges. Each vertex is a character on the show, and there is an edge between every two characters who have had a romantic relationship.
 
 This network is shown in figure~\ref{fig.cap:madmen_ex}.
 <<madmen_ex, dependson='madmen-prep', fig.cap = 'Network of Relationships in Mad Men'>>=
@@ -80,7 +80,8 @@ ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2)) +
 \afterpage{\clearpage}
 
  In the plot, we can see one central character who has many more relationships than any other character. This vertex represents the main character of the show, Don Draper.
-\par There are many kinds of networks, and networks are extensively studied across many disciplines.  Many sociologists study social networks, and many biologists study protein networks. As different as these and the many other disciplines that study networks are, they all need the ability to quickly and effectively visualize networks.  We found the current tools to be lacking in this ability, so we chose to fill this gap by adding network plotting capabilities to the popular and widely used \texttt{R} package \texttt{ggplot2}. \sct{From January 1, 2015 to March 21, 2015, \texttt{ggplot2} was downloaded over 270,000 times, or approximately 3,454 downloads per day. It has also been downloaded in 189 countries at least once, and in 31 of those countries, including China, Israel, and Colombia, it has been downloaded over 1,000 times.}
+\par There are many kinds of networks, and networks are extensively studied across many disciplines.  Many sociologists study social networks, and many biologists study protein networks. As different as these and the many other disciplines that study networks are, they all need the ability to quickly and effectively visualize networks.  We found the current tools to be lacking in this ability, so we chose to fill this gap by adding network plotting capabilities to the popular and widely used \texttt{R} package \texttt{ggplot2}. \hh{Just to give an idea of the popularity and the wide=spread use of \texttt{ggplot2}:} From January 1, 2015 to March 21, 2015, \texttt{ggplot2} was downloaded over 270,000 times, or approximately 3,454 downloads per day. It has also been downloaded in 189 countries at least once, and in 31 of those countries, including China, Israel, and Colombia, it has been downloaded over 1,000 times.
+\hh{This is the user base we are aiming at by making network visualizations a part of \texttt{ggplot2}.}
 
 \par The three necessary elements of any network visualization are the vertices, the edges, and the layout.  But once those three items are visualized, we usually find our visualization to be lacking.  We may want to color the vertices (or edges) by some sort of grouping variable, or we may want to make vertices of degree ten twice the size of vertices of degree five.  Many \texttt{R} packages already exist for network analysis and visualization such as \texttt{igraph} by \citet{igraph}, \texttt{sna} by \citet{sna}, and \texttt{network} by \citet{network.jss, network} but we have found these packages to have unintuitive or burdensome methods for customizing the colors, sizes, etc of the vertices and edges of the network. For instance, the \texttt{igraph} package allows for coloring vertices by groups but the user must assign the colors to each vertex individually as opposed to assigning color by a grouping factor variable. \\
 
@@ -89,11 +90,12 @@ ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2)) +
 Coloring the vertices or edges in a graph is a quick and easy way to visualize grouping and can help with pattern or cluster detection. The vertices in a network and the edges between them compose the structure of a network, and being able to discover patterns among them visually is a key part of network analysis. Viewing multiple layouts of the same network can also help reveal patterns or clusters that would not be discovered when only viewing one layout or analyzing only an adjacency matrix. The \texttt{ggnet} function, however, requires the graph input to be a \texttt{network} object according to the \texttt{network} package.  Our work builds off of the \texttt{ggnet} function and presents an intuitive \texttt{geom} for network visualization within the \texttt{ggplot2} framework, without the need for objects other than simple data frames.
 
   \subsection{Data Structure}
-  \hh{XXX we need a link between the two data frames: we have from\_id and to\_id in the edge data frame, but we also need an 'id' variable in the vertex data. We don't officially have that at the moment - in the code there is a soft requirement (new as of Mar 20) that one of the columns in the edge data set has to be called 'label' ... that's a bit stoopid, but I couldn't think of a better name. It would make more sense to call this id or edgeid or something along those lines - let's talk about it, and make it a formal requirement.}
+  \hh{variable label links the two data sets - let's talk about it, and make it a formal requirement.}
   In order for this geometry to work using data frames, there need to be two separate data frames given to the \texttt{geom\_net} function: one for the edge information and one for the vertex information. The vertex data frame should contain all the relevant vertex information. \emph{The only necessary variables are the vertex names/labels and the vertex degree (if undirected) or the vertex in degree and out degree (if directed).  The names and degrees are stored in columns and the rows are the vertices.  Other values of interest, such as grouping variables, for each vertex should be stored as columns in this dataframe, with an observation for each vertex.}
   \par The edge data frame should contain all the relevant edge information. The only necessary variables are the ``from vertex" and ``to vertex" for each edge in the network. The From and To vertices should be listed according to the names of the vertices in the vertex information data frame. Other variables may also be included for each edge, such as the edge weight or grouping variable.  As before, the variables of interest are columns in the data frame and the rows are each edge in the network.%\footnote{I'm not 100\% certain of all of this yet, but so far it seems to me to be the best way to think about networks in terms of data frames.}
 
   \subsection{Vertex Aesthetics}
+
   In our geometry, the possible vertex aesthetics mimic the usual aesthetics in \texttt{ggplot2} for points.  The \texttt{vlabel} aesthetic is a logical value that prints the name or number assigned to each vertex in order to uniquely identify it on the plot. \sct{If this value is set to TRUE, the vertex data frame is required to have a column titled label.} This aesthetic is most useful for smaller network objects where all vertex names can be printed on or near their corresponding vertices and still be read clearly.  The \texttt{vcolor} aesthetic can be an identity color (e.g. \texttt{color = "red"}) to change the color of all vertices, \sct{XXX shouldn't we take this out? or it can take a factor variable which identifies each vertex as belonging to one of several groups, and it colors the vertices of the graph according to this grouping.}  \sct{Right now, the \texttt{vcolor} aesthetic does not work like a typical color aesthetic in \texttt{ggplot2}. It can, however, take HEX color characters and assign them to different levels of a factor variable.}  \sct{XXX We should probably take this out too. It can also color the vertices according to the different values of  some numeric variable, such as degree.  The colors are set to the default color palette in \texttt{ggplot2}, and the palette used can be changed in the usual way within the \texttt{ggplot2} framework, by using \texttt{scale\_color\_brewer}.}
   %The \texttt{vcolor} aesthetic operates in the same way as the \texttt{vfill} aesthetic, but it changes the outline color of the vertex instead of the fill color of the vertex, which is in line with the \texttt{ggplot2} use of the \texttt{color} and \texttt{fill} aesthetics.
   The \texttt{vsize} aesthetic can also be set to an identity value to increase or decrease the size of all vertices in the graph, or it can be set to the degree of the vertices in undirected graphs or the in-degree (or out-degree) of directed graphs. \sct{These must be integer-valued columns in the vertex data frame.} It can also be set to any other numeric variable associated with the vertices in the network.  The \texttt{vshape} aesthetic is for changing the shape of the vertices from the default circle to other shapes, like square or triangle.  It can also change the shape of the vertices according to some grouping variable, \sct{which is currently required to consist of integer values from 0 to 25.}.  Finally, the \texttt{valpha} aesthetic will change the vertex transparency to a set value, like 1/10, or to some numeric variable of interest that takes on the values $[0,1]$.
@@ -185,9 +187,9 @@ ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) +
 
 \sct{The inheritance structure is plotted in figure \ref{fig.cap:theme_ex}.
   \subsection{Madmen Network (again?? or no?)}
-  \sctq{leaving blank for now.}
+  \sctq{leaving blank for now.} \hh{i don't think we need to repeat it, but you could show the code for the example here and give the reference to the example. are there any more details you wanted to talk about?}
   \subsection{College Football}
-  \emph{Note: would be best with coloring vertices by conference}
+
   This next example comes from M.E.J. Newman's network data web page \citep{football}.  It is an undirected network consisting of all regular season college football games played between Division I schools in Fall of 2000.  There are 115 vertices and 613 edges: each vertex represents a school, and an edge represents a game played between two schools.}
 <<football_ex, echo=TRUE, fig.cap="All regular season Division I college football games in the Fall 2000 season.">>=
 ggplot(data = football$edges, aes(from_id = from, to_id = to, elinetype = in.conf + 1)) +
@@ -195,7 +197,6 @@ ggplot(data = football$edges, aes(from_id = from, to_id = to, elinetype = in.con
   expand_limits(x = c(0,1), y = c(0,1)) +
   theme_net
 @
-\sct{
 The network of football games is given in figure \ref{fig.cap:football_ex}.
 \begin{figure}
 \centering
@@ -206,21 +207,23 @@ The network of football games is given in figure \ref{fig.cap:football_ex}.
 
   \subsection{Les Mis\'{e}rables}
   \emph{Note: data set has edge weightings for number of co-occurences of characters. esize would be useful here!} \\
-  This next network comes from \citet{lesmis}. It is an undirected network of coappearances of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.  There are 77 vertices representing each of the 77 characters in the book, and an edge connects two vertices if those two characters appear in the same chapter of the book.  There are 254 edges in this network. The edges are also weighted by the number of coappearances. The largest weighting is 31, between the characters Jean Valjean and Cosette.}
+  This next network comes from \citet{lesmis}. It is an undirected network of coappearances of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.  There are 77 vertices representing each of the 77 characters in the book, and an edge connects two vertices if those two characters appear in the same chapter of the book.  There are 254 edges in this network. The edges are also weighted by the number of coappearances. The largest weighting is 31, between the characters Jean Valjean and Cosette.
 <<lesmis_ex, echo=TRUE, fig.cap="Coappearance network of characters in Victor Hugo's \\emph{Les Mis\\'{e}rables}">>=
-ggplot(data = lesmis$edges, aes(from_id = from, to_id = to, esize = value/mean(value))) + geom_net(vertices = lesmis$vertices, ealpha = 7/10, layout = 'fruchtermanreingold', vlabel=TRUE) + expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
+ggplot(data = lesmis$edges, aes(from_id = from, to_id = to, esize = value/mean(value))) +
+  geom_net(vertices = lesmis$vertices, ealpha = 7/10,
+           layout = 'fruchtermanreingold', vlabel=TRUE) +
+  expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
 @
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{figure/lesmis_ex-1.pdf}
-\caption{\label{fig.cap:lesmis_ex} Coappearance network of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.}
+\caption{\label{fig.cap:lesmis_ex} Co-appearance network of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.}
 \end{figure}
 \afterpage{\clearpage}
 
-\sct{
+
   \subsection{Protein Interaction Network in Yeast}
   This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}.
-}
 <<read_data>>=
 yeast <- read.table("data/protein.txt")
 yeast <- list(edges = yeast, vertices = data.frame(label = min(yeast):max(yeast)))
@@ -242,6 +245,9 @@ ggplot(data = yeast$edges, aes(from_id = V1, to_id = V2)) +
 \section{Technical Details}
 \sctq{I have no idea exactly how detailed I should be. I'm going to attempt to be detailed without parsing each line in the code, but I do want to describe how everything works in detailed enough descriptions. I know you'll tell me if I'm too detailed or not detailed enough!}
 \hh{You're doing just fine, keep going!}
+
+\hh{XXX have a look at the ggplot2 help online and include something along these lines for both stat_net and geom_net}
+
 \sct{
 In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \texttt{R} script files: a `stat' file and a `geom' file. The stat file performs all the necessary calculations on the two input data frames, and the geom file performs the drawing of the network.
   \subsection{Creating \texttt{stat\_net}}
