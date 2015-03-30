@@ -49,12 +49,15 @@ for (i in 1:nrow(football$edges)){
     football$edges$in.conf[i] <- 1
   }
 }
-email.net <- read.csv("data/email-data.csv")
-email.names <- data.frame(label = as.factor(unique(c(as.character(email.net$From),as.character(email.net$to)))))
-library(plyr)
-email.net <- ddply(email.net, .(eID), transform, nrecipients=length(to))
-employee <- read.csv("data/EmployeeRecords.csv")
-employee <- merge(email.names, employee, by.x="label", by.y="EmailAddress", all.x=T)
+load("data/email.rda")
+#email.net <- read.csv("data/email-data.csv")
+#email.names <- data.frame(label = as.factor(unique(c(as.character(email.net$From),as.character(email.net$to)))))
+#library(plyr)
+#email.net <- ddply(email.net, .(eID), transform, nrecipients=length(to))
+#employee <- read.csv("data/EmployeeRecords.csv")
+#employee <- merge(email.names, employee, by.x="label", by.y="EmailAddress", all.x=T)
+email.net <- email$edges
+employee <- email$nodes
 library(RColorBrewer)
 cols <- brewer.pal(8, name="Set1")
 @
