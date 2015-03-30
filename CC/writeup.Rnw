@@ -151,11 +151,12 @@ ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = t
 
 \sct{This network is plotted in figure \ref{fig.cap:email_ex}.  This plot is very crowded, and it is difficult to distinguish structure in the network when it there is so much over-plotting.  To remedy this, we facet the network by day to examine how the company's communications change throughout the week. }
 <<email_ex_facet, fig.height=8, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.'>>=
-ggplot(data = email.net, aes(from_id = From, to_id = to, )) +
-  geom_net(vertices = email.names,ealpha = 0.1, vsize = I(2), directed = TRUE) +
+ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = to, )) +
+  geom_net(vertices = employee,ealpha = 0.1, vsize = I(2), directed = TRUE,
+           aes(vcolour=cols[as.numeric(CurrentEmploymentType)])) +
   expand_limits(x=c(0,1), y = c(0,1)) +
   facet_wrap(~day, nrow = 2) +
-  theme_net #add direction later
+  theme_net
 @
 \begin{landscape}
 \begin{figure}
