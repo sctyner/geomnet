@@ -34,9 +34,10 @@ opts_chunk$set(tidy = FALSE, echo=FALSE, cache=FALSE, eval = TRUE, message = FAL
 <<readingdata, eval=TRUE, echo=FALSE>>=
 library(ggplot2) # needs to be the version with geom_net!
  theme_net <- theme(aspect.ratio = 1, line = element_blank(), panel.background = element_blank(), plot.background = element_blank(), axis.text=element_blank(),axis.title=element_blank())
- data(blood, football, theme_elements, lesmis)
+ data(blood, football, theme_elements, lesmis,madmen, mm_directed,email)
 names(blood$vertices)[1] <- 'label'
-load("data/madmen.rda") # relative path should work for both of us
+#load("data/madmen.rda") # relative path should work for both of us
+#load("data/mm_directed.rda")
 #names(madmen$vertices)[1] <- 'label'
 names(theme_elements$vertices)[1] <- 'label'
 football$vertices$label <- as.factor(football$vertices$label)
@@ -49,7 +50,7 @@ for (i in 1:nrow(football$edges)){
     football$edges$in.conf[i] <- 1
   }
 }
-load("data/email.rda")
+#load("data/email.rda")
 #email.net <- read.csv("data/email-data.csv")
 #email.names <- data.frame(label = as.factor(unique(c(as.character(email.net$From),as.character(email.net$to)))))
 #library(plyr)
@@ -60,6 +61,8 @@ email.net <- email$edges
 employee <- email$nodes
 library(RColorBrewer)
 cols <- brewer.pal(8, name="Set1")
+yeast <- read.table("data/protein.txt")
+yeast <- list(edges = yeast, vertices = data.frame(label = min(yeast):max(yeast)))
 @
 
 \section{Introduction}
@@ -82,9 +85,8 @@ ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2)) +
 \end{figure}
 \afterpage{\clearpage}
 
- In the plot, we can see one central character who has many more relationships than any other character. This vertex represents the main character of the show, Don Draper.
-\par There are many kinds of networks, and networks are extensively studied across many disciplines.  Many sociologists study social networks, and many biologists study protein networks. As different as these and the many other disciplines that study networks are, they all need the ability to quickly and effectively visualize networks.  We found the current tools to be lacking in this ability, so we chose to fill this gap by adding network plotting capabilities to the popular and widely used \texttt{R} package \texttt{ggplot2}. \hh{Just to give an idea of the popularity and the wide-spread use of \texttt{ggplot2}:} From January 1, 2015 to March 21, 2015, \texttt{ggplot2} was downloaded over 270,000 times, or approximately 3,454 downloads per day. It has also been downloaded in 189 countries at least once, and in 31 of those countries, including China, Israel, and Colombia, it has been downloaded over 1,000 times.
-\hh{This is the user base we are aiming at by making network visualizations a part of \texttt{ggplot2}.}
+ In the plot, we can see one central character who has many more relationships than any other character. This vertex represents the main character of the show, Don Draper, who is quite the ``ladies' man."  This fun example shows just how ubiquitous networks are.  
+\par There are many kinds of networks, and networks are extensively studied across many disciplines.  Many sociologists study social networks, and many biologists study protein networks. As different as these and the many other disciplines that study networks are, they all need the ability to quickly and effectively visualize networks.  We found the current tools to be lacking in this ability, so we chose to fill this gap by adding network plotting capabilities to the popular and widely used \texttt{R} package \texttt{ggplot2}. Just to give an idea of the popularity and the wide-spread use of \texttt{ggplot2}, from January 1, 2015 to March 21, 2015, \texttt{ggplot2} was downloaded over 270,000 times, or approximately 3,454 downloads per day. It has also been downloaded in 189 countries at least once, and in 31 of those countries, including China, Israel, and Colombia, it has been downloaded over 1,000 times. This is the user base we are aiming at by making network visualizations a part of \texttt{ggplot2}.  
 
 \par The three necessary elements of any network visualization are the vertices, the edges, and the layout.  But once those three items are visualized, we usually find our visualization to be lacking.  We may want to color the vertices (or edges) by some sort of grouping variable, or we may want to make vertices of degree ten twice the size of vertices of degree five.  Many \texttt{R} packages already exist for network analysis and visualization such as \texttt{igraph} by \citet{igraph}, \texttt{sna} by \citet{sna}, and \texttt{network} by \citet{network.jss, network} but we have found these packages to have unintuitive or burdensome methods for customizing the colors, sizes, etc of the vertices and edges of the network. For instance, the \texttt{igraph} package allows for coloring vertices by groups but the user must assign the colors to each vertex individually as opposed to assigning color by a grouping factor variable. \\
 
@@ -93,42 +95,59 @@ ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2)) +
 Coloring the vertices or edges in a graph is a quick and easy way to visualize grouping and can help with pattern or cluster detection. The vertices in a network and the edges between them compose the structure of a network, and being able to discover patterns among them visually is a key part of network analysis. Viewing multiple layouts of the same network can also help reveal patterns or clusters that would not be discovered when only viewing one layout or analyzing only an adjacency matrix. The \texttt{ggnet} function, however, requires the graph input to be a \texttt{network} object according to the \texttt{network} package.  Our work builds off of the \texttt{ggnet} function and presents an intuitive \texttt{geom} for network visualization within the \texttt{ggplot2} framework, without the need for objects other than simple data frames.
 
   \subsection{Data Structure}
-  \hh{variable label links the two data sets - let's talk about it, and make it a formal requirement.}
-  In order for this geometry to work using data frames, there need to be two separate data frames given to the \texttt{geom\_net} function: one for the edge information and one for the vertex information. The vertex data frame should contain all the relevant vertex information. \emph{The only necessary variables are the vertex names/labels and the vertex degree (if undirected) or the vertex in degree and out degree (if directed).  The names and degrees are stored in columns and the rows are the vertices.  Other values of interest, such as grouping variables, for each vertex should be stored as columns in this dataframe, with an observation for each vertex.}
-  \par The edge data frame should contain all the relevant edge information. The only necessary variables are the ``from vertex" and ``to vertex" for each edge in the network. The From and To vertices should be listed according to the names of the vertices in the vertex information data frame. Other variables may also be included for each edge, such as the edge weight or grouping variable.  As before, the variables of interest are columns in the data frame and the rows are each edge in the network.%\footnote{I'm not 100\% certain of all of this yet, but so far it seems to me to be the best way to think about networks in terms of data frames.}
+In order for this geometry to work using data frames, there need to be two separate data frames given to the \texttt{geom\_net} function: one for the edge information and one for the vertex information. The vertex data frame should contain all the relevant vertex information. The only necessary variable is one called \texttt{label} which contains the vertex labels as they are encoded in the edges data set. This will be a formal requirement in the final version of the \texttt{geom\_net} function.  Each row represents one vertex.  Other values of interest, such as grouping variables or degree of each vertex should be stored as columns in this dataframe, with an observation for each vertex.  
+  \par The edge data frame should contain all the relevant edge information. The only necessary variables are the ``from vertex" and ``to vertex" for each edge in the network. The From and To vertices should match the names of the vertices in the vertex information data frame. The formal names for these columns are \texttt{from\_id} and \texttt{to\_id}, respectively.  Other variables may also be included for each edge, such as the edge weight or grouping variable.  As before, the variables of interest are columns in the data frame and the rows are each edge in the network.
 
   \subsection{Vertex Aesthetics}
 
-  In our geometry, the possible vertex aesthetics mimic the usual aesthetics in \texttt{ggplot2} for points.  The \texttt{vlabel} aesthetic is a logical value that prints the name or number assigned to each vertex in order to uniquely identify it on the plot. \sct{If this value is set to TRUE, the vertex data frame is required to have a column titled label.} This aesthetic is most useful for smaller network objects where all vertex names can be printed on or near their corresponding vertices and still be read clearly.  The \texttt{vcolor} aesthetic can be an identity color (e.g. \texttt{color = "red"}) to change the color of all vertices, \sct{XXX shouldn't we take this out? or it can take a factor variable which identifies each vertex as belonging to one of several groups, and it colors the vertices of the graph according to this grouping.}  \sct{Right now, the \texttt{vcolor} aesthetic does not work like a typical color aesthetic in \texttt{ggplot2}. It can, however, take HEX color characters and assign them to different levels of a factor variable.}  \sct{XXX We should probably take this out too. It can also color the vertices according to the different values of  some numeric variable, such as degree.  The colors are set to the default color palette in \texttt{ggplot2}, and the palette used can be changed in the usual way within the \texttt{ggplot2} framework, by using \texttt{scale\_color\_brewer}.}
+  In our geometry, we want to create all possible vertex aesthetic to mimic the usual aesthetics in \texttt{ggplot2} for points. The \texttt{vcolor} aesthetic can be an identity color (e.g. \texttt{color = "red"}) to change the color of all vertices, or, in the final version, it will take a factor variable which identifies each vertex as belonging to one of several groups, and it colors the vertices of the graph according to this grouping. In the current version, the \texttt{vcolor} aesthetic does not work like a typical color aesthetic in \texttt{ggplot2}. It can, however, take HEX color characters and assign them to different levels of a factor variable. We use the \texttt{RColorBrewer} package to choose the colors for us in this paper \citep{RColorBrewer}. It will also color the vertices along a color gradient according to the different values of some numeric variable such as degree.  The vertex color defaults to black. % are set to the default color palette in \texttt{ggplot2}, and the palette used can be changed in the usual way within the \texttt{ggplot2} framework, by using \texttt{scale\_color\_brewer}.}
   %The \texttt{vcolor} aesthetic operates in the same way as the \texttt{vfill} aesthetic, but it changes the outline color of the vertex instead of the fill color of the vertex, which is in line with the \texttt{ggplot2} use of the \texttt{color} and \texttt{fill} aesthetics.
-  The \texttt{vsize} aesthetic can also be set to an identity value to increase or decrease the size of all vertices in the graph, or it can be set to the degree of the vertices in undirected graphs or the in-degree (or out-degree) of directed graphs. \sct{These must be integer-valued columns in the vertex data frame.} It can also be set to any other numeric variable associated with the vertices in the network.  The \texttt{vshape} aesthetic is for changing the shape of the vertices from the default circle to other shapes, like square or triangle.  It can also change the shape of the vertices according to some grouping variable, \sct{which is currently required to consist of integer values from 0 to 25.}.  Finally, the \texttt{valpha} aesthetic will change the vertex transparency to a set value, like 1/10, or to some numeric variable of interest that takes on the values $[0,1]$.
+  The \texttt{vsize} aesthetic can also be set to an identity value to increase or decrease the size of all vertices in the graph, or it can be set to one of any numerical columns in the vertex data frame. Right now, the numerical values are strict point values: if the size of a vertex is two, then it will be two points in diameter. A point is the size of the default fontsize in the \texttt{grid} package. In our final version, the \texttt{vsize} will scale to minimum and maximum values as all other size aesthestics in \texttt{ggplot2} do.  The \texttt{vshape} aesthetic is for changing the shape of the vertices from the default circle to other shapes, like square or triangle.  It also changes the shape of the vertices according to some grouping variable, which is currently required to consist of integer values from 0 to 25.  In the final version, it will be able to change shape based on different levels of a factor variable.  Finally, the \texttt{valpha} aesthetic will change the vertex transparency to a set value, like 1/10 or 0.5.  It operates in exactly the same way as the \texttt{alpha} aesthetic in \texttt{geom\_point}.  This aesthetic is very useful for networks with hundreds or thousands of vertices, which can easily crowd the static visualization. Making the vertices more transparent will better show the underlying structure in the network. 
 
 \par Evidently, we created all of these aesthetics to fit in exactly to the \texttt{ggplot2} grammar of graphics. We also created the edge aesthetics in a similar fashion.
   \subsection{Edge Aesthetics}
-  Again, our edge aesthetics mimic the familiar \texttt{ggplot2} aesthetics, this time for lines.  \sct{XXX take out this??? The \texttt{elabel} aesthetic is the name or number assigned to each edge.  This aesthetic is most useful for visualizing random graphs or Markov processes, where each edge probability is of interest.}  The \texttt{ecolor} aesthetic changes the color of all of the edges according to the identity function or can change the color according to HEX colors assigned to levels of a grouping variable.  %It can also be used to color the edges in random graphs or Markov processes according to the probability of each edge.
-  The \texttt{elinetype} aesthetic can also be used with a grouping variable to change the line type of each edge in the graph from solid to one of the different types of lines in \texttt{ggplot2}. \sct{The column associated with this aesthetic must be integer valued and take on values from one to six.}  The \texttt{esize} aesthetic can also be set to the weight or probability of each edge, or it can be changed for all edges with the identity function. \sct{The associated column can take on any numerical values.}  The \texttt{ealpha} aesthetic can change the edge transparency to a set value, or to some numeric variable of interest that takes on the values $[0,1]$, such as edge weight or probability. \sct{This property is especially useul for networks with a lot of connections and with vertices of relatively high degree.}  \sct{XXX should we take this out? Finally, the \texttt{directed} aesthetic is a logical value that identifies whether or not the network is directed.  When this value is true, the arrows change size, color, etc. with the previous aesthetics.}
+  Again, our edge aesthetics mimic the familiar \texttt{ggplot2} aesthetics, this time for segments.    The \texttt{ecolor} aesthetic changes the color of all of the edges according to the identity function or can change the color according to HEX colors assigned to levels of a grouping variable.  In the final version, the \texttt{ecolor} aesthetic will automatically color according to levels of a grouping variable or according to a gradient scale associated with a numeric variable. 
+  The \texttt{elinetype} aesthetic can also be used with a grouping variable to change the line type of each edge in the graph from solid to one of the different types of lines in \texttt{ggplot2}. Currently, the column associated with this aesthetic must be integer valued and take on values from zero to six. In the final version, it will change the edge linetypes according to levels of a grouping variable.  The \texttt{esize} aesthetic can also be set to the weight or probability of each edge, or it can be changed for all edges with the identity function. The associated column can take on any numerical values, and currently maps the values directly to points, just like the \texttt{vsize} aesthetic. In the final version, this aesthetic will work exactly like the sizing in \texttt{ggplot2}, by scaling sizes to the minimum and maximum values.  The \texttt{ealpha} aesthetic can change the edge transparency to a set value on the interval $[0,1]$. This property is especially useul for large networks with a lot of connections or with vertices of relatively high degree. Finally, we will add an \texttt{elabel} aesthetic to print the name or number assigned to each edge on or next to it.  This aesthetic will be very useful for visualizing random graphs or Markov processes where each edge probability is of interest.  
 
-  \subsection{Layout Argument}
-  \sct{There are many layouts to choose from, but the default layout is the Kamada-Kawai layout.  This is a force-directed layout for undirected networks \citep{kamadakawai}}.
-  %and the default layout changes according the size of the graph.  For smaller networks, with less than $x$ vertices and $y$ edges, the default layout is INSERT DEFAULT HERE. For larger networks with more than $x$ vertices and $y$ edges, the default layout is INSERT DEFAULT HERE. %**Now justify these two statements with research to be done.** \hh{I don't think that you'd have to defend your choices of defaults. They are defaults, and can be changed. }}
-  The \texttt{layout} \sct{argument in the \texttt{geom\_net} function} can be changed to any of the layouts also found in the \texttt{sna} package, such as circular, eigen, or Fruchterman-Reingold.  \sctq{Should I insert a table of layouts here? And I took out the thing about the background color because I figure it can just be changed with \texttt{theme()}} %Finally, the background color of the graph can be changed with the \texttt{bgfill} aesthetic.  This aesthetic takes only the identity colors, not additional variables.%\footnote{Sam's notes: I'm not sure if what I've laid out here is possible or even reasonable.  I have not yet found any research into what layout is best based on number of edges, number of vertices, density of the network, or anything else. \hh{You're fine - those are things, which people are going to have strong opinions on without actual backup. You provide the environment for people to easily use network data in a familiar setting.}}
+  \subsection{Other Arguments}
+  Similar to the other geometries and functions in \texttt{ggplot2}, our geometry takes several arguments outside of the aesthetic mapping parameters.  One such argument is the \texttt{vlabel} argument. The \texttt{vlabel} aesthetic is a logical value that, if set to \texttt{TRUE} prints the name or number associated with each vertex in the \texttt{label} column in order to identify it on the plot.  In the final version of this geometry, we will add capabilities to adjust the size and positioning of the labels. For the moment, the color is set to the vertex color, the size is set to twice the vertex size, and all other possible parameters are set to their defaults in \texttt{geom\_text()}. The \texttt{vlabel} argument is most useful for smaller network objects where all vertex names can be printed on their corresponding vertices and still be read clearly.  Next, the \texttt{directed} argument is a logical value that identifies whether or not the network is directed.  When this value is true, arrows are created on the end of the line segment that corresponds to the \texttt{to\_id} value for each edge.  The arrows match the edges in coloring, linetype, and size, and the default length of the arrow is set using the \texttt{unit} function in the \texttt{grid} package to 0.015 of the normalised parent coordinates of the plot.  
+  Finally, the \texttt{layout} argument takes a character value corresponding to the possible layouts in the \texttt{sna} package that are created by the \texttt{gplot.layout.*()} family of functions.  The default layout is the Kamada-Kawai layout.  This is a force-directed layout for undirected networks \citep{kamadakawai}. There are, however, many other layouts possible.    
+\begin{table}
+\centering
+\begin{tabular}{l|p{10cm}}
+Layout Name & Description \\
+\hline \hline
+\texttt{"adj"} & a version of \texttt{"mds"} which scales the raw adjacency matrix \\
+\texttt{"circle"}* & places vertices uniformly in a circle \\
+\texttt{"circrand"} & places vertices randomly in a circle \\ 
+\texttt{"eigen"} & places vertices based on the eigenstructure of the adjacency matrix \\
+\texttt{"fruchermanreingold"} & uses a variant of Fruchterman and Reingold's force-directed placement algorithm \\
+\texttt{"geodist"} & a version of \texttt{"mds"} which scales the matrix of geodesic distances \\
+\texttt{"hall"}* &  places vertices based on the last two eigenvectors of the Laplacian of the input matrix \\
+\texttt{"kamadakawai"} & generates a vertex layout using a version of the Kamada-Kawai force-directed placement algorithm \\
+\texttt{"mds"}  & places vertices based on a metric multidimensional scaling of a specified distance matrix \\
+\texttt{"random"} & places vertices randomly \\
+\texttt{"segeo"} & a version of \texttt{"mds"} which scales the squared euclidean distances between row-wise geodesic distances \\
+\texttt{"seham"} & a version of \texttt{"mds"} which scales the Hamming distance between rows/columns of the adjacency matrix \\
+\texttt{"target"} & produces a ``target diagram" or ``bullseye" layout using a force-directed placement algorithm.
+\end{tabular}
+\caption{All possible layouts to pass to \texttt{geom\_net}.  All descriptions are from \citet{sna}.  Note that the layouts marked with an asterisk (*) are the only layouts that do not take layout parameters.  All others use the default layout parameters in \texttt{sna} for now.}
+\label{table:layouts}
+\end{table}
+
+All layouts that \texttt{geom\_net} is currently capable of graphing are listed in table \ref{table:layouts}. There is not currently functionality to add layout parameters to the layout function within \texttt{geom\_net}, though this will be included in the final version.  Therefore, all functions in table \ref{table:layouts} that are not marked with asterisks are using their respective default parameters according to the \texttt{sna} documentation for \texttt{gplot.layout}.  
 
 \section{Many Many Examples}
-\sctq{Format-wise, is it ok if each example is its own subsection? Also, can you check the references I added to the .bib file to make sure I'm creating them correctly? I've just been appending them.}\\
-\sct{
-In this section, we demonstrate the capabilities of \texttt{geom\_net} in a series of examples.
+In this section, we demonstrate the current capabilities of \texttt{geom\_net} in a series of diverse examples.
   \subsection{Blood Donation}
-  \emph{Note: would be best with labels and direction}\\
-  In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive and negative types. \sctq{Can I cite wikipedia here? Should I find a more academic source?}  The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a person whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed.  Loops exist on every vertex in this example, as blood of matching ABO and RhD type can always be received.
-}
+  In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive (+) and negative (-) types. The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a person whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed because loops exist on every vertex in this example, as blood between two people of matching ABO and RhD type can always be exchanged.
 <<blood_ex, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.">>=
 ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
-  geom_net(vertices = blood$vertices, layout='circle', vlabel = TRUE, vsize = I(2), directed = TRUE) +
-  expand_limits(x = c(0,1), y = c(0,1)) + theme_net #add direction later
+  geom_net(vertices = blood$vertices, vcolour = I('red'), layout = 'circle',
+           vlabel = TRUE, vsize = I(3), directed = TRUE) +
+  expand_limits(x = c(0,1), y = c(0,1)) + theme_net
 @
-
-\sct{
-This network is shown in figure \ref{fig.cap:blood_ex}.
+This network is shown in figure \ref{fig.cap:blood_ex}.  Here, we have used the aesthetics \texttt{vcolour} and \texttt{vsize} set to identity values to change the size and color of all vertices. We have also used the \texttt{layout} and \texttt{vlabel} arguments to change the default layout to a circle layout and to print the blood types, respectively. The circle layout places blood types of the same ABO type next to each other and spreads the vertices out far enough to distinguish between the various ``in" and ``out" types.  You can tell clearly from this plot that the O- type is the universal donor: it has out degree of seven and in degree of zero. Additionally, you can see that the AB+ type is the universal recepient, with in degree of seven and out degree of zero. Anyone looking at this plot can quickly determine which type(s) of blood they can receive and which type(s) can receive their blood. 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{figure/blood_ex-1.pdf}
@@ -137,14 +156,12 @@ This network is shown in figure \ref{fig.cap:blood_ex}.
 \afterpage{\clearpage}
 
 \subsection{Email Network}
-  \emph{Note: would be best with coloring and direction}
-  This email network comes from the 2014 VAST Challenge \citep{emailnet}. It is a directed network of emails between company employees with 55 vertices and 9,063 edges. Each vertex is an employee of the company, and each edge is an email sent from one employee to one or more other employees. The arrow of the directed edge points to the recipient(s) of the email. The network contains two business weeks of emails across the entire company. }
-<<email_ex, fig.cap = 'All emails within a company over a two week period.'>>=
+  This email network comes from the 2014 VAST Challenge \citep{emailnet}. It is a directed network of emails between company employees with 55 vertices and 9,063 edges. Each vertex is an employee of the company, and each edge is an email sent from one employee to one or more other employees. The arrow of the directed edge points to the recipient(s) of the email. The network contains two business weeks of emails across the entire company. In order to better visualize the structure of the communication network between employees, all emails that were sent out to all employees are removed in the subsequent examples. 
+<<email_ex, fig.cap = 'All emails within a company over a two week period.',echo=TRUE>>=
 ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = to)) +
   geom_net(vertices = employee,ealpha = 0.1, vsize = I(4), directed = TRUE,
            aes(vcolour=cols[as.numeric(CurrentEmploymentType)])) +
-  expand_limits(x=c(0,1), y = c(0,1)) +
-  theme_net
+  expand_limits(x=c(0,1), y = c(0,1)) + theme_net
 @
 \begin{figure}
 \centering
@@ -153,15 +170,12 @@ ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = t
 \end{figure}
 \afterpage{\clearpage}
 
-
-\sct{This network is plotted in figure \ref{fig.cap:email_ex}.  This plot is very crowded, and it is difficult to distinguish structure in the network when it there is so much over-plotting.  To remedy this, we facet the network by day to examine how the company's communications change throughout the week. }
-<<email_ex_facet, fig.height=8, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.'>>=
-ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = to, )) +
-  geom_net(vertices = employee,ealpha = 0.1, vsize = I(2), directed = TRUE,
+This network is plotted in figure \ref{fig.cap:email_ex}.  There are six distinct clusters in this network which almost perfectly correspond to the six different types of employee in this company: administration, engineering, executive, facilities, information technology, and security. Unfortunately, there is currently no legend to associate color with employment type. This will be remedied in the final version of our geometry. Additionally, the edges between employees in the same cluster are much darker than edges between employees in different clusters. This is due to the value of the \texttt{ealpha} aesthetic: more emails between two employees lead to darker edges.  The value is set to 0.1 in this example, so that 10 or more emails between 2 employees results in a completely opaque edge. This pattern of heavy communication between employees of the same type is fairly unsurprising. To make this visualization more interesting and informative, we facet the network by day: each panel in \ref{fig.cap:email_ex_facet} shows the different email networks associated with each day of the week. 
+<<email_ex_facet, fig.height=8, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.',echo=TRUE>>=
+ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = to)) + 
+  geom_net(vertices = employee, ealpha = 0.2, vsize = I(2), directed = TRUE, 
            aes(vcolour=cols[as.numeric(CurrentEmploymentType)])) +
-  expand_limits(x=c(0,1), y = c(0,1)) +
-  facet_wrap(~day, nrow = 2) +
-  theme_net
+  expand_limits(x=c(0,1), y = c(0,1)) + facet_wrap(~day, nrow = 2) + theme_net
 @
 \begin{landscape}
 \begin{figure}
@@ -170,11 +184,9 @@ ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = t
 \caption{\label{fig.cap:email_ex_facet} The same email network as in figure \ref{fig.cap:email_ex} facetted by day of the week.}
 \end{figure}
 \end{landscape}
-
-\sct{This plot is shown in figure \ref{fig.cap: email_ex_facet}.  \sctq{XXX note for later: remove all the emails that go to everyone in the network.} With the facetting, we can see that there are between four and seven employees sending \sctq{or receiving? will know with direction option added later} several emails each day to a majority of the company. We can also see clusters that have formed on the perimeter of each day's network where the employees are communicating heavily with each other, but not much outside of their cluster. We can also see that there is heavier inter-cluster communication on different days.  For example, day 17 has more concentrated in-group communication than day 15. Additionally, we can better distinguish the communication of the outlying employee, who only corresponds with up to four other complany employees on a given day.} \sctq{talk about clusters being different departments within the company?}
+This plot is shown in figure \ref{fig.cap: email_ex_facet}. With the facetting, we can see that there are several days where one or more departments do not communicate with any of the other departments. There are only two days, 13 and 15, without any isolated department communications. Facetting is one of the major benefits of creating a geometry for networks in \texttt{ggplot2}.  Facetting quickly separates dense networks into separate subnetworks for easy visual comparison and  analyses.  
   \subsection{\texttt{ggplot2} Theme Elements}
-  \emph{Note: would be best with labels and direction} \\
-  \sct{This example comes from the \texttt{theme()} help page in the \texttt{ggplot2} documentation \citep{ggplot}.  It is a directed network which shows the structure of the inheritance of theme options in the construction of a \texttt{ggplot2} plot.  There are 53 vertices and 36 edges in this network.  There is an arrow from one vertex to another if the element represented by the \emph{to} vertex inherits its values from the \emph{from} vertex.  For example, the \texttt{axis.ticks.x} option inherits its value from the \texttt{axis.ticks} value, which inherits its value from the \texttt{line} option.  Thus, setting the \texttt{line} option to a value such as \texttt{element\_blank()} sets the entire inheritance tree to \texttt{element\_blank()}, and thus no lines appear anywhere on the plot background. Finally, we note that the vertices with no edges were incorporated into the plot by adding their labels to the edges data frame in both the  `from\_id' and `to\_id' columns before passing the edges data frame to \texttt{ggplot}.  }
+This example comes from the \texttt{theme()} help page in the \texttt{ggplot2} documentation \citep{ggplot}.  It is a directed network which shows the structure of the inheritance of theme options in the construction of a \texttt{ggplot2} plot.  There are 53 vertices and 36 edges in this network. Each vertex represents one possible theme option. There is an arrow from one theme option to another if the element represented by the \emph{to} vertex inherits its values from the \emph{from} vertex.  For example, the \texttt{axis.ticks.x} option inherits its value from the \texttt{axis.ticks} value, which inherits its value from the \texttt{line} option.  Thus, setting the \texttt{line} option to a value such as \texttt{element\_blank()} sets the entire inheritance tree to \texttt{element\_blank()}, and no lines appear anywhere on the plot background. Finally, we note that the vertices with no edges were incorporated into the plot by adding their labels to the edges data frame in both the  `from\_id' and `to\_id' columns before passing the edges data frame to \texttt{ggplot}.  
 <<theme_ex, echo=TRUE, fig.cap= 'Inheritance structure for \\texttt{theme} elements in \\texttt{ggplot2}.'>>=
 ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) +
   geom_net(vertices = theme_elements$vertices, directed = TRUE, vlabel = TRUE) +
@@ -188,19 +200,37 @@ ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) +
 \end{figure}
 \afterpage{\clearpage}
 
-\sct{The inheritance structure is plotted in figure \ref{fig.cap:theme_ex}.
-  \subsection{Madmen Network (again?? or no?)}
-  \sctq{leaving blank for now.} \hh{i don't think we need to repeat it, but you could show the code for the example here and give the reference to the example. are there any more details you wanted to talk about?}
-  \subsection{College Football}
-
-  This next example comes from M.E.J. Newman's network data web page \citep{football}.  It is an undirected network consisting of all regular season college football games played between Division I schools in Fall of 2000.  There are 115 vertices and 613 edges: each vertex represents a school, and an edge represents a game played between two schools.}
-<<football_ex, echo=TRUE, fig.cap="All regular season Division I college football games in the Fall 2000 season.">>=
-ggplot(data = football$edges, aes(from_id = from, to_id = to, elinetype = in.conf + 1)) +
-  geom_net(vertices = football$vertices, ealpha = 0.2, vsize = 2, vlabel = TRUE, aes(vcolour=c("#A6CEE3","#1F78B4","#B2DF8A","#33A02C","#FB9A99","#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99","#B15928")[as.numeric(factor(value))])) +
-  expand_limits(x = c(0,1), y = c(0,1)) +
-  theme_net
+The inheritance structure is plotted in figure \ref{fig.cap:theme_ex}.  In this plot, it is easy to quickly determine the parent and child vertices. Using this plot made creation of the \texttt{theme\_net} object used throughout these examples very simple. We just made set each of the major parent elements, \texttt{text}, \texttt{rect}, and \texttt{line} to \texttt{element\_blank()} and then set the aspect ratio equal to one.  
+  \subsection{Mad Men Networks}
+  The following code creates the network example given in the introduction. We changed the vertex size and edge color for all vertices and edges, included vertex labels, and colored the vertices according to the character's gender. 
+<<print_ex, ref.label="madmen_ex", eval=FALSE, echo=TRUE,cache=FALSE>>=
 @
-The network of football games is given in figure \ref{fig.cap:football_ex}.
+ There is another Mad Men network included in the \texttt{gcookbook} package \citep{madmen}. It is a directed network, also of romantic relationships between characters, but it also includes advances made by one character that were rejected by the other.  For example, Roger Sterling made advances toward Betty Draper, but Betty refused him, and so there is a directed edge going from Roger to Betty, but not from Betty to Roger.  If the advance is reciprocated, like between Sal Romano and the Bellhop, there are two directed edges between the two vertices.
+<<madmen2_ex,echo=TRUE, fig.cap= 'A directed network of relationships in Mad Men.'>>=
+ggplot(data = mm.directed$edges, aes(from_id = Name1, to_id = Name2)) + 
+  geom_net(vertices = mm.directed$vertices, directed = T, vlabel = T, 
+           vsize = I(2.5), layout = 'fruchtermanreingold',
+           aes(vcolour=c( "#FF69B4", "#0099ff")[as.numeric(Gender)])) + 
+  expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
+@
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/madmen2_ex-1.pdf}
+\caption{\label{fig.cap:madmen2_ex} A directed network of relationships in Mad Men.}
+\end{figure}
+This network is shown in figure \ref{fig.cap:madmen2_ex}.  This network is much more connected than the previous Mad Men example.  It also allows us to see much more of the drama in the show. For instance, you can see that Roger made advances towards Betty, his business partner's wife, which is much more scandalous than what we can see in the first network.  
+
+  \subsection{College Football}
+  This next example comes from M.E.J. Newman's network data web page \citep{football}.  It is an undirected network consisting of all regular season college football games played between Division I schools in Fall of 2000.  There are 115 vertices and 613 edges: each vertex represents a school, and an edge represents a game played between two schools. There is an additional variable in the vertex data frame corresponding to the conference each team belongs to, and there is an additional variable in the edge data frame that is equal to one if the game occured between teams in the same conference or zero if the game occured between teams in different conferences. 
+<<football_ex, echo=TRUE, fig.cap="All regular season Division I college football games in the Fall 2000 season.">>=
+colors <- brewer.pal(12, name = 'Paired')
+ggplot(data = football$edges, aes(from_id = from, to_id = to, 
+                                  elinetype = in.conf + 1)) +
+  geom_net(vertices = football$vertices, ealpha = 0.3, vsize = 2, vlabel = TRUE, 
+           aes(vcolour=colors[as.numeric(factor(value))])) +
+  expand_limits(x = c(0,1), y = c(0,1)) + theme_net
+@
+The network of football games is given in figure \ref{fig.cap:football_ex}. Here, we have changed the \texttt{elinetype} aesthetic to correspond to games that occur between teams in the same conference or different conferences.  These lines are dotted and solid, respectively. We have also assigned a different color to each conference, and the vertices and their labels are colored according to their conference. This coloring and changing of the linetypes make the structure of the game network easier to view.  There is one conference consisting of Navy, Notre Dame, Utah State, Central Florida, and Connecticut, which is spread out all over the network, whereas most other conferences' teams are all very close to each other because they play within conference much more than they play out of conference.  At the time, these five schools were all independents and did not have a home conference.  Without the coloring capability, we would not have been able to pick out that difference as easily.  
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{figure/football_ex-1.pdf}
@@ -212,7 +242,8 @@ The network of football games is given in figure \ref{fig.cap:football_ex}.
   \emph{Note: data set has edge weightings for number of co-occurences of characters. esize would be useful here!} \\
   This next network comes from \citet{lesmis}. It is an undirected network of coappearances of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.  There are 77 vertices representing each of the 77 characters in the book, and an edge connects two vertices if those two characters appear in the same chapter of the book.  There are 254 edges in this network. The edges are also weighted by the number of coappearances. The largest weighting is 31, between the characters Jean Valjean and Cosette.
 <<lesmis_ex, echo=TRUE, fig.cap="Coappearance network of characters in Victor Hugo's \\emph{Les Mis\\'{e}rables}">>=
-ggplot(data = lesmis$edges, aes(from_id = from, to_id = to, esize = value/mean(value))) +
+ggplot(data = lesmis$edges, aes(from_id = from, to_id = to, 
+                                esize = value/mean(value))) +
   geom_net(vertices = lesmis$vertices, ealpha = 7/10,
            layout = 'fruchtermanreingold', vlabel=TRUE) +
   expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
@@ -227,10 +258,7 @@ ggplot(data = lesmis$edges, aes(from_id = from, to_id = to, esize = value/mean(v
 
   \subsection{Protein Interaction Network in Yeast}
   This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}.
-<<read_data>>=
-yeast <- read.table("data/protein.txt")
-yeast <- list(edges = yeast, vertices = data.frame(label = min(yeast):max(yeast)))
-@
+
 <<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=TRUE>>=
 ggplot(data = yeast$edges, aes(from_id = V1, to_id = V2)) +
   geom_net(vertices = yeast$vertices, ealpha = 0.1, valpha = .5) +
@@ -249,7 +277,7 @@ ggplot(data = yeast$edges, aes(from_id = V1, to_id = V2)) +
 \sctq{I have no idea exactly how detailed I should be. I'm going to attempt to be detailed without parsing each line in the code, but I do want to describe how everything works in detailed enough descriptions. I know you'll tell me if I'm too detailed or not detailed enough!}
 \hh{You're doing just fine, keep going!}
 
-\hh{XXX have a look at the ggplot2 help online and include something along these lines for both stat_net and geom_net}
+\hh{XXX have a look at the ggplot2 help online and include something along these lines for both stat\_net and geom\_net}
 
 \sct{
 In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \texttt{R} script files: a `stat' file and a `geom' file. The stat file performs all the necessary calculations on the two input data frames, and the geom file performs the drawing of the network.
