@@ -171,7 +171,7 @@ ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = t
 \afterpage{\clearpage}
 
 This network is plotted in figure \ref{fig.cap:email_ex}.  There are six distinct clusters in this network which almost perfectly correspond to the six different types of employee in this company: administration, engineering, executive, facilities, information technology, and security. Unfortunately, there is currently no legend to associate color with employment type. This will be remedied in the final version of our geometry. Additionally, the edges between employees in the same cluster are much darker than edges between employees in different clusters. This is due to the value of the \texttt{ealpha} aesthetic: more emails between two employees lead to darker edges.  The value is set to 0.1 in this example, so that 10 or more emails between 2 employees results in a completely opaque edge. This pattern of heavy communication between employees of the same type is fairly unsurprising. To make this visualization more interesting and informative, we facet the network by day: each panel in \ref{fig.cap:email_ex_facet} shows the different email networks associated with each day of the week.
-<<email_ex_facet, fig.height=8, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.',echo=TRUE>>=
+<<email_ex_facet, fig.height=8, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.',echo=TRUE,eval=FALSE>>=
 ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = to)) +
   geom_net(vertices = employee, ealpha = 0.2, vsize = I(2), directed = TRUE,
            aes(vcolour=cols[as.numeric(CurrentEmploymentType)])) +
@@ -180,7 +180,7 @@ ggplot(data = subset(email.net, nrecipients < 54), aes(from_id = From, to_id = t
 \begin{landscape}
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{figure/email_ex_facet-1.pdf}
+\includegraphics[width=8in]{figure/email_ex_facet-1.pdf}
 \caption{\label{fig.cap:email_ex_facet} The same email network as in figure \ref{fig.cap:email_ex} facetted by day of the week.}
 \end{figure}
 \end{landscape}
@@ -264,8 +264,9 @@ yeast.samp <- list(edges = sample.edges, vertices = data.frame(label = unique(c(
 @
 <<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=FALSE>>=
 ggplot(data = yeast.samp$edges, aes(from_id = V1, to_id = V2)) +
-  geom_net(vertices = yeast.samp$vertices, ealpha = .25, valpha = .5, vcolour = 'magenta',
-           layout = 'random', layout.par = list(dist = 'uniang')) +
+  geom_net(vertices = yeast.samp$vertices, ealpha = .25, valpha = .5, 
+           vcolour = 'magenta', layout = 'random', 
+           layout.par = list(dist = 'uniang')) +
   expand_limits(x = c(0,1), y = c(0,1)) + theme_net
 @
 
