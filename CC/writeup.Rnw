@@ -137,7 +137,7 @@ Layout Name & Description \\
 
 All layouts that \texttt{geom\_net} is currently capable of graphing are listed in table \ref{table:layouts}. The layouts not marked with an asterisk can also take their associated layout parameters.  The \texttt{layout.par} argument takes a list of named parameters.  For instance, if \texttt{layout = "random"}, we can also set \texttt{layout.par = list(dist = "normal")} to change the distribution of vertex placement from the default uniform to Gaussian.
 
-\section{Many Many Examples}
+\section{Usage Examples}
 In this section, we demonstrate the current capabilities of \texttt{geom\_net} in a series of diverse examples.
   \subsection{Blood Donation}
   In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive (+) and negative (-) types. The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a person whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed because loops exist on every vertex in this example, as blood between two people of matching ABO and RhD type can always be exchanged.
@@ -258,9 +258,11 @@ ggplot(data = lesmis$edges, aes(from_id = from, to_id = to,
   \subsection{Protein Interaction Network in Yeast}
   This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}. Because the network is very large, we randomly sampled 500 interactions and their associated proteins to plot it in figure \ref{fig.cap:yeast_ex}.  We also demonstrate the layout capabilities by changing the layout to random and setting the distribution to \texttt{"uniang"}, which is a  ``gaussian donut" layout.  Indeed, we see a nearly round area in the middle of the graph where the layout parameter has forced there to be no vertices.
 
-<<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=FALSE>>=
+<<yeast_code>>=
 sample.edges <- yeast$edges[sample(nrow(yeast$edges), 500),]
 yeast.samp <- list(edges = sample.edges, vertices = data.frame(label = unique(c(sample.edges$V1,sample.edges$V2))))
+@
+<<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=FALSE>>=
 ggplot(data = yeast.samp$edges, aes(from_id = V1, to_id = V2)) +
   geom_net(vertices = yeast.samp$vertices, ealpha = .25, valpha = .5, vcolour = 'magenta',
            layout = 'random', layout.par = list(dist = 'uniang')) +
@@ -282,23 +284,22 @@ In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \text
   In order to plot the network with only the edge connections and vertex names, we relied on the \texttt{sna} and \texttt{network} packages \citep{sna, network.jss}. First, we used the edges data frame to construct a network object with the \texttt{as.network()} function, then constructed an adjacency matrix from that network using the \texttt{as.matrix.network.adjacency()} function.  This adjacency matrix is then passed to the chosen \texttt{gplot.layout.*()} function from the \texttt{sna} package.  \emph{When the layout argument is changed in the \texttt{geom\_net()} function, the corresponding \texttt{gplot.layout.*()} function in \texttt{sna} is called with a \texttt{do.call()} statement.} This layout function produces a matrix of coordinates of the vertices, which we then transform into a data frame containing the coordinates of the edges using the \texttt{as.matrix.network.edgelist()} function in \texttt{network}.  We are grateful to Moritz Marbach for his \texttt{gplot()} function which we used when creating this process \citep{marbach}.  At the end of the previous routine, we have a data frame with \texttt{x, y, xend,} and \texttt{yend} columns describing the edges and another data frame with \texttt{x,y} columns describing the vertices.  These two data frames, along with the many \texttt{aes()} and other argument options get passed on to the actual network geometry for drawing.
    \subsection{\texttt{stat\_net} Usage}
 <<usage_stat_net, eval=FALSE>>=
-stat_net(mapping = NULL, data = NULL, vertices = NULL, geom = "net", position = "identity", na.rm = FALSE, ...)
+stat_net(mapping = NULL, data = NULL, vertices = NULL, geom = "net", position = "identity", ...)
 #aes(colour = "black", size =3, layout="kamadakawai",layout.par = NA)
 @
   The usage of the \texttt{stat\_net} arguments is as follows:
-  \sct{XXX adding detail tomorrow}
   \begin{itemize}
-  \item mapping
-  \item data
-  \item vertices
-  \item geom
-  \item position
+  \item The \texttt{mapping} argument is the aesthetic mapping. Currently, there is no reason to ever change it from \texttt{NULL}.
+  \item The \texttt{data} argument is the edges data frame.  This is sent to \texttt{stat\_net} through the \texttt{ggplot()} function.
+  \item The \texttt{vertices} argument is the vertex data frame. This is sent to \texttt{stat\_net} through the \texttt{geom\_net} function.
+  \item The \texttt{geom} argument is the geometric object used to plot the data. It is by default set to \texttt{net}. 
+  \item The \texttt{position} argument is set to \texttt{identity} because we wish to plot the network as-is, with no adjustments.
   \item na.rm
   \end{itemize}
   \texttt{stat\_net} also accepts the following aesthetic values, none of which are required:
   \begin{itemize}
-  \item layout
-  \item layout.par
+  \item The \texttt{layout} aesthetic is the layout algorithm to use to place the vertices of the network.  The default is the Kamada-Kawai algorithm, and there are other options listed in \ref{table:layouts}.  
+  \item The \texttt{layout.par} aesthetic is the layout arguments to pass to the layout function.  It is set to \texttt{NA} by default, in which case the algorithm uses its set defaults in the \texttt{sna} package. This aesthetic takes a list of parameters according to the documentation by \citet{sna}. 
   \end{itemize}
 
   \subsection{Creating \texttt{geom\_net}}
@@ -310,34 +311,30 @@ geom_net(mapping = NULL, data = NULL, vertices = NULL, vlabel = FALSE, directed 
 #aes(ecolour = "grey20", vcolour = "black", vfill="black", fill = NA, esize = 1, vsize = 2, elinetype = 1, weight = NA, valpha = 1, vshape = 16, ealpha=1)
 @
   The usage of the \texttt{geom\_net} arguments is as follows:
-  \sct{XXX adding detail tomorrow}
   \begin{itemize}
-  \item mapping
-  \item data
-  \item vertices
-  \item vlabel
-  \item directed
-  \item stat
+  \item The \texttt{mapping} argument is the aesthetic mapping. It is constructed with \texttt{aes()} according to the aesthetic values that can be passed to \texttt{geom\_net}. 
+  \item The \texttt{data} argument is the edges data frame.  There is usually no need to use it in \texttt{geom\_net()} because it will have already been provided in the \texttt{ggplot()} function.
+  \item The \texttt{vertices} argument is the vertex data frame. The vertex data frame should be provided to this argument in \texttt{geom\_net}. This data frame is required to have a column named \texttt{label} providing the labels of all vertices in the network.
+  \item The \texttt{vlabel} argument is a logical value which plots the label layer on top of the edge and vertex layers when it is set to \texttt{TRUE}. 
+  \item The \texttt{directed} argument is a logical value which adds arrows to the edge layer pointing to the \texttt{to\_id} vertex when it is set to \texttt{TRUE}.  
+  \item The \texttt{stat} argument is the statistical transformation used on the data for the network layer. It is always set to \texttt{net}. 
   \end{itemize}
-  \texttt{stat\_net} also accepts the following aesthetic values, and the ones marked with an asterisk are required:
+  \texttt{geom\_net} also accepts the following aesthetic values, and the ones marked with an asterisk are required:
   \begin{itemize}
-  \item from\_id*
-  \item to\_id*
-  \item ecolour
-  \item esize
-  \item elinetype
-  \item ealpha
-  \item vcolour
-  \item vfill
-  \item vsize
-  \item vshape
-  \item valpha
+  \item The \texttt{from\_id}* and \texttt{to\_id}* aesthetics each take one column which, when combined, provide the edges in a network.  If the network is undirected, then their order does not matter. If the network is directed, then the \emph{from} vertex names should all be in the \texttt{from\_id} column, and their corresponding \emph{to} vertex names should all be in the \texttt{to\_id} column. 
+  \item The \texttt{ecolour} aesthetic changes the color of the edges. Its default is \texttt{grey20}
+  \item The \texttt{esize} aesthetic changes the size (thickness) of the edges. Its default is 1. 
+  \item The \texttt{elinetype} aesthetic changes the linetype of the edges. Its default is 1. 
+  \item The \texttt{ealpha} aesthetic changes the transparency of the edges. Its default is 1. 
+  \item The \texttt{vcolour} aesthetic changes the color of the vertices. Its default is \texttt{black}. 
+  \item The \texttt{vfill} aesthetic changes the ouline color of the vertices. Its default is \texttt{black}. 
+  \item The \texttt{vsize} aesthetic changes the size (diameter) of the vertices. Its default is 2.
+  \item The \texttt{vshape} aesthetic changes the shape of the vertices. Its default is 16 (solid circular points). 
+  \item The \texttt{valpha} aesthetic changes the transparency of the vertices. Its default is 1. 
   \end{itemize}
 
 \section{Future Work}
-\hh{XXX  just be a bit more specific here: we (a) want to make the code a part of the ggplot2 world - either as a part of ggplot2 itself or within GGally. (b) we want to publish this paper in the R Journal.
-Things that we still need to do are discussed in the paper, they are: .... }
-As we discussed throughout the paper, there is still some work to be done  before we submit it for publication in \emph{The R Journal}.  We also hope to make it an official part of \texttt{ggplot2}.  We believe that this is an important contribution to \texttt{ggplot2} and to the R user community because it fills in gaps in the network plotting capabilities of R. \sct{XXX That's all I got. Help?}
+As we discussed throughout the paper, there is still some work to be done.  The primary change that we need to make is to add the capability of mapping aesthetic values to the plot based on variables directly. Right now, we have the ability to do this indirectly, but we want to add this functionality so that it is easier to change the \texttt{ecolor}, \texttt{esize}, \texttt{elinetype}, \texttt{vcolor}, \texttt{vfill}, \texttt{vsize}, and \texttt{vshape} by mapping variables to these aesthetics.  We also want to include the legends for each of these aesthetics like we would normally see in \texttt{ggplot2}.   We also hope to make it an official part of the \texttt{ggplot2} world, by either adding it to \texttt{ggplot2} itself or by adding it to the \texttt{GGally} package.  We believe that this is an important contribution to \texttt{ggplot2} and to the R user community because it fills in gaps in the network plotting capabilities of R. Ultimately, our goal is to publish this paper in \textit{The R Journal}.
 
 \bibliographystyle{asa}
 \bibliography{references}
