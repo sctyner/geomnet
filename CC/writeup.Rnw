@@ -286,7 +286,6 @@ In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \text
    \subsection{\texttt{stat\_net} Usage}
 <<usage_stat_net, eval=FALSE>>=
 stat_net(mapping = NULL, data = NULL, vertices = NULL, geom = "net", position = "identity", ...)
-#aes(colour = "black", size =3, layout="kamadakawai",layout.par = NA)
 @
   The usage of the \texttt{stat\_net} arguments is as follows:
   \begin{itemize}
@@ -309,7 +308,6 @@ stat_net(mapping = NULL, data = NULL, vertices = NULL, geom = "net", position = 
    \subsection{\texttt{geom\_net} Usage}
 <<usage_geom_net, eval=FALSE>>=
 geom_net(mapping = NULL, data = NULL, vertices = NULL, vlabel = FALSE, directed = FALSE, stat = "net", ...)
-#aes(ecolour = "grey20", vcolour = "black", vfill="black", fill = NA, esize = 1, vsize = 2, elinetype = 1, weight = NA, valpha = 1, vshape = 16, ealpha=1)
 @
   The usage of the \texttt{geom\_net} arguments is as follows:
   \begin{itemize}
