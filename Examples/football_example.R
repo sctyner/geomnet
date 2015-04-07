@@ -4,12 +4,12 @@
 load('data/football.rda')
 football$vertices$label <- as.factor(football$vertices$label)
 football$vertices$value <- as.factor(football$vertices$value)
-football$edges$in.conf <- 0
+football$edges$in.conf <- 1
 for (i in 1:nrow(football$edges)){
   idx1 <- which(football$vertices$label == football$edges$from[i])
   idx2 <- which(football$vertices$label == football$edges$to[i])
   if (football$vertices$value[idx1] == football$vertices$value[idx2]){
-    football$edges$in.conf[i] <- 1
+    football$edges$in.conf[i] <- 0
   }
 }
 
