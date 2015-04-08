@@ -5,7 +5,7 @@ load('data/blood.rda')
 library(network)
 library(sna)
 library(ggplot2)
-
+names(blood$vertices)[1] <- "label"
 ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
   geom_net(vertices = blood$vertices, vcolour = I('red'), layout = 'circle',
            vlabel = TRUE, vsize = I(3), directed = TRUE) +

@@ -15,7 +15,11 @@ tennis$Result <- as.numeric(as.character(tennis$Result))
 players <- data.frame(tennis %>% group_by(Player, Year, Tournament) %>% summarise(n.wins = sum(Result), total = n(), perc.win = n.wins/total))
 names(players)[1] = 'label'
 
-ggplot(data = na.omit(filter(matches, Year == 2014, Tournament == 'Wimbledon')), aes(from_id = Player, to_id = Opponent, ealpha = .2)) +
+library(RColorBrewer)
+tennis.colors <- brewer.pal(7, "PuBu")
+tennis.colors <- tennis.colors[c(7,6,5,4,3,2,1)]
+
+ggplot(data = na.omit(filter(matches, Year == 2014, Tournament == 'Wimbledon')), aes(from_id = Player, to_id = Opponent, esize = 2, ecolour = tennis.colors[as.numeric(factor(Round))])) +
   geom_net(vertices = filter(players, Year == 2014, Tournament == 'Wimbledon'), layout= 'fruchtermanreingold', vlabel = T) + 
   expand_limits(x = 0:1, y = 0:1) + theme_net
 
@@ -27,6 +31,4 @@ ggplot(data = na.omit(filter(matches, Year == 2014, Tournament == 'Australian Op
   geom_net(vertices = filter(players, Year == 2014, Tournament == 'Australian Open'), layout= 'fruchtermanreingold', vlabel = T) + 
   expand_limits(x = 0:1, y = 0:1) + theme_net
 
-library(RColorBrewer)
-tennis.colors <- brewer.pal(7, "PuBu")
-tennis.colors <- tennis.colors[c(7,6,5,4,3,2,1)]
+
