@@ -65,7 +65,14 @@ p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(vertices = blood$vertices)
 p + geom_net(vertices = blood$vertices, vlabel=blood$vertices$rho=="neg")
-p + geom_net(vertices = blood$vertices, vcolour = "grey50", layout = 'circle',
+p + geom_net(vertices = blood$vertices, vcolour = "orange", layout = 'circle',
 vlabel = TRUE, vsize = 6, directed = TRUE) +  theme_net
+
+#Madmen Relationships
+data(madmen)
+p <- ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2))
+p + geom_net(vlabel= TRUE)
+p + geom_net(vertices = madmen$vertices, vsize=5, vlabel= TRUE, colour="grey30",
+             aes(vcolour=c("#FF69B4", "#0099ff")[as.numeric(madmen$vertices$Gender)]))
 }
 

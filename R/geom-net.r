@@ -18,9 +18,9 @@
 #' #Madmen Relationships
 #' data(madmen)
 #' p <- ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2))
-#' p + geom_net()
-#' p + geom_net(vertices = madmen$vertices, vsize=3, vlabel= TRUE, colour="grey30",
-#'              vcolour=c("#FF69B4", "#0099ff")[as.numeric(madmen$vertices$Gender)])
+#' p + geom_net(vlabel= TRUE)
+#' p + geom_net(vertices = madmen$vertices, vsize=5, vlabel= TRUE, colour="grey30",
+#'              aes(vcolour=c("#FF69B4", "#0099ff")[as.numeric(madmen$vertices$Gender)]))
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), vertices=NULL, vlabel=FALSE, vcolour = NULL, vsize=NULL, vshape=NULL,
@@ -45,6 +45,12 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                              alpha = NA, stroke = 0.5, linewidth=1, angle=0),
   draw_key = ggplot2::draw_key_point,
 
+  setup_data = function(data, params, mapping) {
+    browser()
+
+    data
+  },
+
   draw_panel = function(data, panel_scales, coord, vlabel=FALSE, vcolour=NULL, vsize=NULL, vshape=NULL, directed=FALSE) {
 browser()
     vertices <- data.frame(
@@ -62,7 +68,8 @@ browser()
     if (any(vlabel)) {
       if (length(vlabel) == 1) vlabel <- rep(vlabel, nrow(vertices))
       labels <- subset(vertices, vlabel == TRUE)
-      labels$x <- labels$x + 0.05
+      labels$y <- labels$y + 0.02
+      labels$vjust <- 1
       labels$angle <- data$outlier.angle[1] %||% data$angle[1]
       labels$colour="grey30"
 

@@ -57,7 +57,9 @@ browser()
 
     # vertices data set gets stuffed into the first element of each panel
     if (!is.null(vertices)) {
-      vert.coord <- merge(vert.coord, vertices, by="label")
+      vertices$.order <- 1:nrow(vertices)
+      vert.coord <- merge(vertices, vert.coord, by="label")
+      vert.coord <- vert.coord[order(vert.coord$.order),]
     }
 
 #     vert.coord$edges <- NA
