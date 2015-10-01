@@ -39,6 +39,7 @@ browser()
     m <- network::as.matrix.network.adjacency(net)
 
     #print("it would be nice at this point to check, whether layout is one of the supported functions, and if not,
+    require(sna)
 
     layoutFun <- paste('gplot.layout.',layout,sep='')
     vert.coord <- data.frame(do.call(layoutFun, list(m, layout.par = layout.par)))

@@ -11,6 +11,7 @@
 #' p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
 #' p + geom_net()
 #' p + geom_net(vertices = blood$vertices)
+#' p + geom_net(vertices = blood$vertices, vlabel=blood$vertices$rho=="neg")
 #' p + geom_net(vertices = blood$vertices, vcolour = I('red'), layout = 'circle',
 #' vlabel = TRUE, vsize = I(3), directed = TRUE) +
 #' expand_limits(x = c(0,1), y = c(0,1)) + theme_net
