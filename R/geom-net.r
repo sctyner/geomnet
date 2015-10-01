@@ -15,7 +15,13 @@
 #' p + geom_net(vertices = blood$vertices, vcolour = "orange", layout = 'circle',
 #' vlabel = TRUE, vsize = 6, directed = TRUE) +  theme_net
 #'
-#'
+#' #Madmen Relationships
+#' data(madmen)
+#' p <- ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2))
+#' p + geom_net()
+#' p + geom_net(vertices = madmen$vertices, vsize=3, vlabel= TRUE, colour="grey30",
+#'              vcolour=c("#FF69B4", "#0099ff")[as.numeric(madmen$vertices$Gender)])
+
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), vertices=NULL, vlabel=FALSE, vcolour = NULL, vsize=NULL, vshape=NULL,
                       directed = FALSE, ...) {
