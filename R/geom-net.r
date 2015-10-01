@@ -12,17 +12,20 @@
 #' p + geom_net()
 #' p + geom_net(vertices = blood$vertices)
 #' p + geom_net(vertices = blood$vertices, vlabel=blood$vertices$rho=="neg")
-#' p + geom_net(vertices = blood$vertices, vcolour = I('red'), layout = 'circle',
-#' vlabel = TRUE, vsize = I(3), directed = TRUE) +
-#' expand_limits(x = c(0,1), y = c(0,1)) + theme_net
+#' p + geom_net(vertices = blood$vertices, vcolour = "orange", layout = 'circle',
+#' vlabel = TRUE, vsize = 6, directed = TRUE) +  theme_net
+#'
 #'
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                        layout="kamadakawai", layout.par=list(), vertices=NULL, vlabel=FALSE, ...) {
+                      layout="kamadakawai", layout.par=list(), vertices=NULL, vlabel=FALSE, vcolour = NULL, vsize=NULL, vshape=NULL,
+                      directed = FALSE, ...) {
 browser()
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(layout=layout, layout.par=layout.par, vertices=vertices, vlabel=vlabel, ...)
+    params = list(layout=layout, layout.par=layout.par, vertices=vertices,
+                  vlabel=vlabel, vcolour=vcolour, vsize=vsize, vshape=vshape,
+                  directed=directed, ...)
   )
 }
 
@@ -32,31 +35,41 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   required_aes = c("x", "y"),
 
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
-                             shape = 19, colour = "black", size = 0.75, fill = NA,
+                             shape = 19, colour = "grey60", size = 0.75, fill = NA,
                              alpha = NA, stroke = 0.5, linewidth=1, angle=0),
   draw_key = ggplot2::draw_key_point,
 
-  draw_panel = function(data, panel_scales, coord, vlabel=FALSE) {
+  draw_panel = function(data, panel_scales, coord, vlabel=FALSE, vcolour=NULL, vsize=NULL, vshape=NULL, directed=FALSE) {
 browser()
     vertices <- data.frame(
       data$vertices[[1]],
-      colour = data$colour[1],
-      shape = data$shape[1],
-      size = 5*data$size[1],
+      colour = vcolour %||% data$colour[1],
+      shape = vshape %||% data$shape[1],
+      size = vsize %||% 5*data$size[1],
       stroke = data$outlier.stroke[1] %||% data$stroke[1],
       fill = NA,
       alpha = NA,
       stringsAsFactors = FALSE,
       row.names=NULL)
 
+    label_grob <- NULL
     if (any(vlabel)) {
       if (length(vlabel) == 1) vlabel <- rep(vlabel, nrow(vertices))
       labels <- subset(vertices, vlabel == TRUE)
+      labels$x <- labels$x + 0.05
       labels$angle <- data$outlier.angle[1] %||% data$angle[1]
-      labels$colour="red"
+      labels$colour="grey30"
 
       label_grob <- GeomText$draw_panel(labels, panel_scales, coord)
-    } else label_grob <- NULL
+    }
+
+    if (directed == TRUE){
+      if (is.null(data$arrow)){
+        #default arrow parameters.
+        data$arrow <- arrow(angle = 15, length = unit(10,"npc"), type = 'closed')
+      }
+      data$arrow$length[which(data$from == data$to)] <- unit(0,"npc")
+    }
 
     ggplot2:::ggname("geom_net", grobTree(
       GeomSegment$draw_panel(data, panel_scales, coord),

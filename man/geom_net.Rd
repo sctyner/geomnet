@@ -8,7 +8,8 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   alpha = 0.25, layout = "kamadakawai", layout.par = list(),
-  vertices = NULL, vlabel = FALSE, ...)
+  vertices = NULL, vlabel = FALSE, vcolour = NULL, vsize = NULL,
+  vshape = NULL, directed = FALSE, ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -63,8 +64,8 @@ data(blood)
 p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(vertices = blood$vertices)
-p + geom_net(vertices = blood$vertices, vcolour = I('red'), layout = 'circle',
-vlabel = TRUE, vsize = I(3), directed = TRUE) +
-expand_limits(x = c(0,1), y = c(0,1)) + theme_net
+p + geom_net(vertices = blood$vertices, vlabel=blood$vertices$rho=="neg")
+p + geom_net(vertices = blood$vertices, vcolour = "grey50", layout = 'circle',
+vlabel = TRUE, vsize = 6, directed = TRUE) +  theme_net
 }
 
