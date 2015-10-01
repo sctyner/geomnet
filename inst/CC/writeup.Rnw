@@ -61,8 +61,10 @@ email.net <- email$edges
 employee <- email$nodes
 library(RColorBrewer)
 cols <- brewer.pal(8, name="Set1")
-yeast <- read.table("data/protein.txt")
-yeast <- list(edges = yeast, vertices = data.frame(label = min(yeast):max(yeast)))
+load("data/protein.rda")
+
+#yeast <- list(edges = protein, vertices = data.frame(label = min(yeast):max(yeast)))
+yeast <- protein
 @
 
 \section{Introduction}
@@ -264,8 +266,8 @@ yeast.samp <- list(edges = sample.edges, vertices = data.frame(label = unique(c(
 @
 <<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=FALSE>>=
 ggplot(data = yeast.samp$edges, aes(from_id = V1, to_id = V2)) +
-  geom_net(vertices = yeast.samp$vertices, ealpha = .25, valpha = .5, 
-           vcolour = 'magenta', layout = 'random', 
+  geom_net(vertices = yeast.samp$vertices, ealpha = .25, valpha = .5,
+           vcolour = 'magenta', layout = 'random',
            layout.par = list(dist = 'uniang')) +
   expand_limits(x = c(0,1), y = c(0,1)) + theme_net
 @
@@ -292,14 +294,14 @@ stat_net(mapping = NULL, data = NULL, vertices = NULL, geom = "net", position = 
   \item The \texttt{mapping} argument is the aesthetic mapping. Currently, there is no reason to ever change it from \texttt{NULL}.
   \item The \texttt{data} argument is the edges data frame.  This is sent to \texttt{stat\_net} through the \texttt{ggplot()} function.
   \item The \texttt{vertices} argument is the vertex data frame. This is sent to \texttt{stat\_net} through the \texttt{geom\_net} function.
-  \item The \texttt{geom} argument is the geometric object used to plot the data. It is by default set to \texttt{net}. 
+  \item The \texttt{geom} argument is the geometric object used to plot the data. It is by default set to \texttt{net}.
   \item The \texttt{position} argument is set to \texttt{identity} because we wish to plot the network as-is, with no adjustments.
   \item na.rm
   \end{itemize}
   \texttt{stat\_net} also accepts the following aesthetic values, none of which are required:
   \begin{itemize}
-  \item The \texttt{layout} aesthetic is the layout algorithm to use to place the vertices of the network.  The default is the Kamada-Kawai algorithm, and there are other options listed in \ref{table:layouts}.  
-  \item The \texttt{layout.par} aesthetic is the layout arguments to pass to the layout function.  It is set to \texttt{NA} by default, in which case the algorithm uses its set defaults in the \texttt{sna} package. This aesthetic takes a list of parameters according to the documentation by \citet{sna}. 
+  \item The \texttt{layout} aesthetic is the layout algorithm to use to place the vertices of the network.  The default is the Kamada-Kawai algorithm, and there are other options listed in \ref{table:layouts}.
+  \item The \texttt{layout.par} aesthetic is the layout arguments to pass to the layout function.  It is set to \texttt{NA} by default, in which case the algorithm uses its set defaults in the \texttt{sna} package. This aesthetic takes a list of parameters according to the documentation by \citet{sna}.
   \end{itemize}
 
   \subsection{Creating \texttt{geom\_net}}
@@ -311,25 +313,25 @@ geom_net(mapping = NULL, data = NULL, vertices = NULL, vlabel = FALSE, directed 
 @
   The usage of the \texttt{geom\_net} arguments is as follows:
   \begin{itemize}
-  \item The \texttt{mapping} argument is the aesthetic mapping. It is constructed with \texttt{aes()} according to the aesthetic values that can be passed to \texttt{geom\_net}. 
+  \item The \texttt{mapping} argument is the aesthetic mapping. It is constructed with \texttt{aes()} according to the aesthetic values that can be passed to \texttt{geom\_net}.
   \item The \texttt{data} argument is the edges data frame.  There is usually no need to use it in \texttt{geom\_net()} because it will have already been provided in the \texttt{ggplot()} function.
   \item The \texttt{vertices} argument is the vertex data frame. The vertex data frame should be provided to this argument in \texttt{geom\_net}. This data frame is required to have a column named \texttt{label} providing the labels of all vertices in the network.
-  \item The \texttt{vlabel} argument is a logical value which plots the label layer on top of the edge and vertex layers when it is set to \texttt{TRUE}. 
-  \item The \texttt{directed} argument is a logical value which adds arrows to the edge layer pointing to the \texttt{to\_id} vertex when it is set to \texttt{TRUE}.  
-  \item The \texttt{stat} argument is the statistical transformation used on the data for the network layer. It is always set to \texttt{net}. 
+  \item The \texttt{vlabel} argument is a logical value which plots the label layer on top of the edge and vertex layers when it is set to \texttt{TRUE}.
+  \item The \texttt{directed} argument is a logical value which adds arrows to the edge layer pointing to the \texttt{to\_id} vertex when it is set to \texttt{TRUE}.
+  \item The \texttt{stat} argument is the statistical transformation used on the data for the network layer. It is always set to \texttt{net}.
   \end{itemize}
   \texttt{geom\_net} also accepts the following aesthetic values, and the ones marked with an asterisk are required:
   \begin{itemize}
-  \item The \texttt{from\_id}* and \texttt{to\_id}* aesthetics each take one column which, when combined, provide the edges in a network.  If the network is undirected, then their order does not matter. If the network is directed, then the \emph{from} vertex names should all be in the \texttt{from\_id} column, and their corresponding \emph{to} vertex names should all be in the \texttt{to\_id} column. 
+  \item The \texttt{from\_id}* and \texttt{to\_id}* aesthetics each take one column which, when combined, provide the edges in a network.  If the network is undirected, then their order does not matter. If the network is directed, then the \emph{from} vertex names should all be in the \texttt{from\_id} column, and their corresponding \emph{to} vertex names should all be in the \texttt{to\_id} column.
   \item The \texttt{ecolour} aesthetic changes the color of the edges. Its default is \texttt{grey20}
-  \item The \texttt{esize} aesthetic changes the size (thickness) of the edges. Its default is 1. 
-  \item The \texttt{elinetype} aesthetic changes the linetype of the edges. Its default is 1. 
-  \item The \texttt{ealpha} aesthetic changes the transparency of the edges. Its default is 1. 
-  \item The \texttt{vcolour} aesthetic changes the color of the vertices. Its default is \texttt{black}. 
-  \item The \texttt{vfill} aesthetic changes the ouline color of the vertices. Its default is \texttt{black}. 
+  \item The \texttt{esize} aesthetic changes the size (thickness) of the edges. Its default is 1.
+  \item The \texttt{elinetype} aesthetic changes the linetype of the edges. Its default is 1.
+  \item The \texttt{ealpha} aesthetic changes the transparency of the edges. Its default is 1.
+  \item The \texttt{vcolour} aesthetic changes the color of the vertices. Its default is \texttt{black}.
+  \item The \texttt{vfill} aesthetic changes the ouline color of the vertices. Its default is \texttt{black}.
   \item The \texttt{vsize} aesthetic changes the size (diameter) of the vertices. Its default is 2.
-  \item The \texttt{vshape} aesthetic changes the shape of the vertices. Its default is 16 (solid circular points). 
-  \item The \texttt{valpha} aesthetic changes the transparency of the vertices. Its default is 1. 
+  \item The \texttt{vshape} aesthetic changes the shape of the vertices. Its default is 16 (solid circular points).
+  \item The \texttt{valpha} aesthetic changes the transparency of the vertices. Its default is 1.
   \end{itemize}
 
 \section{Future Work}

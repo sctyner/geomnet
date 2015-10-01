@@ -1,0 +1,19 @@
+Package: ggnet
+Type: Package
+Title: Network visualization in the ggplot2 framework
+Version: 0.0.1
+Date: 2015-10-01
+Author: Samantha Tyner, Heike Hofmann
+Maintainer: Samantha Tyner <hofmann@iastate.edu>
+Description: Network visualization in the ggplot2 framework. This needs to be a proper sentence.
+License: GPL (>= 2)
+LazyData: TRUE
+Depends:
+    R (>= 2.14)
+Imports:
+  ggplot2 (>= 1.0.1.9003),
+  grid,
+  proto,
+  plyr,
+  reshape2,
+  sna

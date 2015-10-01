@@ -1,0 +1,30 @@
+\documentclass[11pt]{article}
+\usepackage{asa}
+\usepackage{xspace}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{afterpage}
+\usepackage{pdflscape}
+\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+\geometry{letterpaper} % or letter or a5paper or ... etc
+% \geometry{landscape} % rotated page geometry
+% See the ``Article customise'' template for come common customisations
+
+%\definecolor{Blue}{rgb}{0,0,0.5}
+\usepackage{color}
+\definecolor{purple}{rgb}{.4,0,.8}
+\newcommand{\hh}[1]{{\color{magenta} #1}}
+\newcommand{\sct}[1]{{\color{purple} #1}}
+\newcommand{\sctq}[1]{{\color{red} #1}} %things in red are questions for you or concerns that i have.
+
+\title{A Geometry for Network Visualization in \MakeLowercase{\texttt{ggplot2}}}
+\author{Sam Tyner and Heike Hofmann}
+\date{} % delete this line to display the current date
+%%% BEGIN DOCUMENT
+\usepackage{Sweave}
+\begin{document}
+
+\maketitle
+\begin{abstract}
+There are many implementations of static network visualization in R, but none are equipped with the flexibility and functionality of \texttt{ggplot2}.  \texttt{geom\_net} was created to fill this gap. Using two data frames to describe vertex and edge information, \texttt{geom\_net} makes use of the underlying structure of \texttt{ggplot2} to visualize networks. This makes it possible to easily facet networks according to covariates  or change aesthetics such as shape, size, or color according to additional edge or vertex information.
+\end{abstract}

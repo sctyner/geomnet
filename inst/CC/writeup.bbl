@@ -1,0 +1,74 @@
+\begin{thebibliography}{16}
+\newcommand{\enquote}[1]{``#1''}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{Buldyrev et~al.(2010)Buldyrev, Parshani, Paul, Stanley, and
+  Havlin}]{networkfailures}
+Buldyrev, S.~V., Parshani, R., Paul, G., Stanley, H.~E., and Havlin, S. (2010),
+  \enquote{Catastrophic cascade of failures in interdependent networks,}
+  \textit{Nature}, 464, 1025--1028.
+
+\bibitem[{Butts(2008)}]{network.jss}
+Butts, C.~T. (2008), \enquote{{network: a Package for Managing Relational Data
+  in R.}} \textit{Journal of Statistical Software}, 24.
+
+\bibitem[{Butts(2014)}]{sna}
+--- (2014), \textit{sna: Tools for Social Network Analysis}, r package version
+  2.3-2.
+
+\bibitem[{Butts et~al.(2014)Butts, Handcock, and Hunter}]{network}
+Butts, C.~T., Handcock, M.~S., and Hunter, D.~R. (2014), \textit{network:
+  Classes for Relational Data}, Irvine, CA, r package version 1.10.2.
+
+\bibitem[{Chang(2013)}]{madmen}
+Chang, W. (2013), \textit{R graphics cookbook}, Sebastopol, CA: O'Reilly.
+
+\bibitem[{Cook et~al.(2014)Cook, Grinstein, and Whiting}]{emailnet}
+Cook, K., Grinstein, G., and Whiting, M. (2014), \enquote{Vast Challenge 2014,}
+  \url{http://vacommunity.org/VAST+Challenge+2014%3A+Mini-Challenge+1#Download_the_Datasets_Entry_Forms_and_Documentation}.
+
+\bibitem[{Csardi and Nepusz(2006)}]{igraph}
+Csardi, G. and Nepusz, T. (2006), \enquote{The igraph software package for
+  complex network research,} \textit{InterJournal}, Complex Systems, 1695.
+
+\bibitem[{Girvan and Newman(2002)}]{football}
+Girvan, M. and Newman, M. E.~J. (2002), \enquote{Community structure in social
+  and biological networks,} \textit{Proc. Natl. Acad. Sci. USA}, 99,
+  7821--7826.
+
+\bibitem[{Jeong et~al.(2001)Jeong, Barabási, and Oltvai}]{protein}
+Jeong, H., Barabási, S. P. M. A.-L., and Oltvai, Z.~N. (2001),
+  \enquote{Lethality and centrality in protein networks,} \textit{Nature}, 411,
+  41--42.
+
+\bibitem[{Kamada and Kawai(1989)}]{kamadakawai}
+Kamada, T. and Kawai, S. (1989), \enquote{An Algorithm for Drawing General
+  Undirected Graphs,} \textit{Information Processing Letters}, 31, 7--15.
+
+\bibitem[{Knuth(1993)}]{lesmis}
+Knuth, D. (1993), \textit{The Stanford GraphBase : a platform for combinatorial
+  computing}, New York, N.Y. Reading, Mass: ACM Press Addison-Wesley.
+
+\bibitem[{Marbach(2011)}]{marbach}
+Marbach, M. (2011), \enquote{Visualizing networks with ggplot2 in R,}
+  \url{https://sumtxt.wordpress.com/2011/07/02/visualizing-networks-with-ggplot2-in-r/}.
+
+\bibitem[{Newman(2010)}]{newman}
+Newman, M. E.~J. (2010), \textit{Networks : an introduction}, Oxford New York:
+  Oxford University Press.
+
+\bibitem[{Schloerke et~al.(2014)Schloerke, Crowley, Cook, Hofmann, Wickham,
+  Briatte, Marbach, and Thoen}]{ggally}
+Schloerke, B., Crowley, J., Cook, D., Hofmann, H., Wickham, H., Briatte, F.,
+  Marbach, M., and Thoen, E. (2014), \textit{{GG}ally: Extension to ggplot2.},
+  r package version 0.4.7.
+
+\bibitem[{Watts and Strogatz(1998)}]{smallworld}
+Watts, D. and Strogatz, S. (1998), \enquote{Collective dynamics of
+  'small-world' networks,} \textit{Nature}, 393, 440--442.
+
+\bibitem[{Wickham(2009)}]{ggplot}
+Wickham, H. (2009), \textit{ggplot2: elegant graphics for data analysis},
+  Springer New York.
+
+\end{thebibliography}
