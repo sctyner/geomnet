@@ -24,6 +24,11 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 #                 xmin = x - width / 2,
 #                 xmax = x + width / 2
 #     )
+    # we want to keep all of the values that are NA in the second edge - give them a special value, so we can pull them out later
+    levels <- levels(data$to_id)
+    data$to_id <- as.character(data$to_id)
+    data$to_id[is.na(data$to_id)] <- "..NA.."
+    data$to_id <- factor(data$to_id, levels = c(levels, "..NA.."))
     data
   },
 #  compute_group = function(data, scales, params, na.rm = FALSE,
@@ -33,7 +38,8 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
                            layout="kamadakawai", layout.par=list()) {
 browser()
-    edges <- data[,c('from_id', 'to_id')]
+    edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
+
     #3/17 - the next two lines are the source of the deletion of lone vertices.
     net <- network::as.network(edges, matrix.type = "edgelist") #from network package
     m <- network::as.matrix.network.adjacency(net)
@@ -52,9 +58,15 @@ browser()
     edgelist <- network::as.matrix.network.edgelist(net) #network pkg
     edge.coord <- data.frame(vert.coord[edgelist[,1],], vert.coord[edgelist[,2],], row.names=NULL)
     names(edge.coord) <- c('x','y', "from", 'xend','yend', "to")
-    edges <- data.frame(data, edge.coord[, c("x", "y", "xend", "yend")])
+    edges <- data.frame(subset(data, to_id != "..NA.."),
+                        edge.coord[, c("x", "y", "xend", "yend")])
 
+    fromonly <- subset(data, to_id == "..NA..")
+    fromonly <- merge(fromonly, edge.coord[,c("xend", "yend", "to")], by.x = "from_id", by.y="to", all.x=T)
+    fromonly <- transform(fromonly,
+                          x=xend, y=yend, xend=NA, yend=NA)
 
+    edges <- rbind(edges, fromonly)
     edges
   }
 

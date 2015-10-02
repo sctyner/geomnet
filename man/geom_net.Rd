@@ -76,7 +76,8 @@ data(madmen)
 MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=T)
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 p + geom_net()
-p + geom_net(vertices = madmen$vertices, vsize=5, vlabel= TRUE, colour="grey30",
-             aes(vcolour=c("#FF69B4", "#0099ff")[as.numeric(madmen$vertices$Gender)]))
+p + geom_net(aes(colour=Gender), size=6, esize=1)
+p + geom_net(aes(colour=Gender), size=6, esize=1) +
+    scale_colour_manual(values=c("#FF69B4", "#0099ff"))
 }
 

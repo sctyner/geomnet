@@ -23,8 +23,10 @@
 #' MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=T)
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 #' p + geom_net()
-#' p + geom_net(vertices = madmen$vertices, vsize=5, vlabel= TRUE, colour="grey30",
-#'              aes(vcolour=c("#FF69B4", "#0099ff")[as.numeric(madmen$vertices$Gender)]))
+#' p + geom_net(aes(colour=Gender), size=6, esize=1)
+#' p + geom_net(aes(colour=Gender), size=6, esize=1) +
+#'     scale_colour_manual(values=c("#FF69B4", "#0099ff"))
+#'
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,...) {
@@ -62,6 +64,8 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       size = esize %||% (data$size / 4),
       alpha = data$alpha
     )
+    edges <- subset(edges, !is.na(xend))
+
     arrow = NULL
     if (directed) arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
 
