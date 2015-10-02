@@ -14,7 +14,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   },
 
   setup_data = function(data, params) {
-    browser()
+#    browser()
   #  data <- remove_missing(data, na.rm, "y", name = "stat_net", finite = TRUE)
 
     # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
@@ -31,13 +31,10 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     data$to_id <- factor(data$to_id, levels = c(levels, "..NA.."))
     data
   },
-#  compute_group = function(data, scales, params, na.rm = FALSE,
-#                           layout="kamadakawai", layout.par=list(), vertices=NULL,  ...) {
-#    data
-#  },
+
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
                            layout="kamadakawai", layout.par=list()) {
-browser()
+# browser()
     edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
 
     #3/17 - the next two lines are the source of the deletion of lone vertices.

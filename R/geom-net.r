@@ -62,7 +62,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
   draw_panel = function(data, panel_scales, coord,  ecolour="grey60", esize=NULL,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
-    browser()
+#    browser()
     edges <- data.frame(
       x = data$x,
       xend = data$xend,
