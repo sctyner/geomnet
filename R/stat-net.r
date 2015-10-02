@@ -10,13 +10,14 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   non_missing_aes = "weight",
 
   setup_params = function(data, params) {
-    print(str(params))
+#    print(str(params))
 
     params
   },
 
-  setup_data = function(self, data, params, layout="kamadakawai", layout.par=list()) {
+  setup_data = function(self, data, params) {
 #    browser()
+    fiteach=params$fiteach
 
     # we want to keep all of the values that are NA in the second edge - give them a special value, so we can pull them out later
     levels <- levels(data$to_id)
@@ -24,7 +25,9 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     data$to_id[is.na(data$to_id)] <- "..NA.."
     data$to_id <- factor(data$to_id, levels = c(levels, "..NA.."))
 
-    self$compute_network(data, layout=layout, layout.par=layout.par)
+    if (fiteach) return(data)
+
+    self$compute_network(data, layout=params$layout, layout.par=params$layout.par)
   },
 
 compute_network = function(data, layout="kamadakawai", layout.par=list()) {
@@ -51,7 +54,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   names(edge.coord) <- c('x','y', "from", 'xend','yend', "to")
 
   fromto <- subset(data, to_id != "..NA..")
-  edges <- merge(edge.coord, fromto, by.x=c("from", "to"), by.y=c("from_id", "to_id"))
+  edges <- merge(edge.coord, fromto, by.x=c("from", "to"), by.y=c("from_id", "to_id"), all=TRUE)
 
   fromonly <- subset(data, to_id == "..NA..")
   if (nrow(fromonly) > 0) {
@@ -65,9 +68,10 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   edges
 },
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
-                           layout="kamadakawai", layout.par=list()) {
+                           layout="kamadakawai", layout.par=list(), fiteach=FALSE) {
 #  browser()
-#    self$compute_network(data, layout=layout, layout.par=layout.par)
+    if (fiteach) return(self$compute_network(data, layout=layout, layout.par=layout.par))
+
     data
   }
 
@@ -87,12 +91,12 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 #' @export
 stat_net <- function(mapping = NULL, data = NULL, geom = "point",
                      position = "identity", show.legend = NA,
-                     inherit.aes = TRUE, layout="kamadakawai", layout.par=list(),
-                     vertices=NULL, na.rm=FALSE, ...) {
+                     inherit.aes = TRUE, layout="kamadakawai", layout.par=list(), fiteach=FALSE,
+                     na.rm=FALSE, ...) {
   layer(
     stat = StatNet, data = data, mapping = mapping, geom = geom, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(vertices=vertices, layout=layout, layout.par=layout.par,
+    params = list(layout=layout, layout.par=layout.par, fiteach=fiteach,
                   na.rm=na.rm, ...
     )
   )

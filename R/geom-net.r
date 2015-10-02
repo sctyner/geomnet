@@ -32,15 +32,33 @@
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 #' # alternative labelling: specify label variable.
 #' p + geom_net(aes(colour=Gender, label=Gender), size=6, esize=1, fontsize=3, labelcolour="black")
-
+#'
+#' ## visualizing ggplot2 theme elements
+#' data(theme_elements)
+#' TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent", by.y="name", all=T)
+#' ggplot(data = TEnet, aes(from_id = parent, to_id = child)) + geom_net(label=TRUE, vjust=-0.5)
+#'
+#'
+#' ## emails example from VastChallenge 2014
+#' data(email)
+#' emailnet <- merge(email$edges, email$nodes, by.x="From", by.y="label", all=T)
+#'
+#' #no facets
+#' ggplot(data = subset(emailnet, nrecipients < 54), aes(from_id = From, to_id = to)) +
+#'   geom_net(aes(colour= CurrentEmploymentType), esize=0.5) + scale_colour_brewer(palette="Set2")
+#'
+#' #facet by day
+#' ggplot(data = subset(emailnet, nrecipients < 54), aes(from_id = From, to_id = to)) +
+#'   geom_net(aes(colour= CurrentEmploymentType), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+#'   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), label=FALSE, ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(layout=layout, layout.par=layout.par, label=label,
+    params = list(layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
                   ecolour = ecolour, esize = esize, directed=directed,
                   arrowsize=arrowsize, labelcolour=labelcolour, ...)
   )
