@@ -8,29 +8,30 @@
 #' @examples
 #' library(ggplot2)
 #' data(blood)
-#' p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
+#' bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label")
+#' p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 #' p + geom_net()
-#' p + geom_net(vertices = blood$vertices)
-#' p + geom_net(vertices = blood$vertices, vlabel=blood$vertices$rho=="neg")
-#' p + geom_net(vertices = blood$vertices, vcolour = "orange", layout = 'circle',
-#' vlabel = TRUE, vsize = 6, directed = TRUE) +  theme_net
+#' p + geom_net(aes(colour=rho))
+#' p + geom_net(aes(colour=rho)) + geom_text(aes(x=..x.., y=..y.., label=from)) # not working yet
+#' p + geom_net(colour = "orange", layout = 'circle', size = 6)
+#' p + geom_net(colour = "orange", layout = 'circle', size = 6, esize=.75)
+#' p + geom_net(colour = "orange", layout = 'circle', size = 0, esize=.75, directed = TRUE)
+#'
 #'
 #' #Madmen Relationships
 #' data(madmen)
-#' p <- ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2))
-#' p + geom_net(vlabel= TRUE)
+#' MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=T)
+#' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
+#' p + geom_net()
 #' p + geom_net(vertices = madmen$vertices, vsize=5, vlabel= TRUE, colour="grey30",
 #'              aes(vcolour=c("#FF69B4", "#0099ff")[as.numeric(madmen$vertices$Gender)]))
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), vertices=NULL, vlabel=FALSE, vcolour = NULL, vsize=NULL, vshape=NULL,
-                      directed = FALSE, ...) {
+                      layout="kamadakawai", layout.par=list(), ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(layout=layout, layout.par=layout.par, vertices=vertices,
-                  vlabel=vlabel, vcolour=vcolour, vsize=vsize, vshape=vshape,
-                  directed=directed, ...)
+    params = list(layout=layout, layout.par=layout.par, ecolour = ecolour, esize = esize, directed=directed, arrowsize=arrowsize, ...)
   )
 }
 
@@ -40,7 +41,8 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   required_aes = c("x", "y"),
 
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
-                             shape = 19, colour = "grey60", size = 0.75, fill = NA,
+                             shape = 19, colour = "grey30",
+                             size = 4, fill = NA,
                              alpha = NA, stroke = 0.5, linewidth=1, angle=0),
   draw_key = ggplot2::draw_key_point,
 
@@ -49,42 +51,37 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     data
   },
 
-  draw_panel = function(data, panel_scales, coord, vlabel=FALSE, vcolour=NULL, vsize=NULL, vshape=NULL, directed=FALSE) {
+  draw_panel = function(data, panel_scales, coord, ecolour="grey60", esize=NULL, directed=FALSE, arrowsize=1) {
+    browser()
+    edges <- data.frame(
+      x = data$x,
+      xend = data$xend,
+      y = data$y,
+      yend = data$yend,
+      colour = ecolour,
+      size = esize %||% (data$size / 4),
+      alpha = data$alpha
+    )
+    arrow = NULL
+    if (directed) arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
+
     vertices <- data.frame(
-      data$vertices[[1]],
-      colour = vcolour %||% data$colour[1],
-      shape = vshape %||% data$shape[1],
-      size = vsize %||% 5*data$size[1],
-      stroke = data$outlier.stroke[1] %||% data$stroke[1],
+      x = data$x,
+      y = data$y,
+      colour = data$colour,
+      shape = data$shape,
+      size = data$size,
+      stroke = data$stroke,
       fill = NA,
-      alpha = NA,
-      stringsAsFactors = FALSE,
-      row.names=NULL)
-
-    label_grob <- NULL
-    if (any(vlabel)) {
-      if (length(vlabel) == 1) vlabel <- rep(vlabel, nrow(vertices))
-      labels <- subset(vertices, vlabel == TRUE)
-      labels$y <- labels$y + 0.02
-      labels$vjust <- 1
-      labels$angle <- data$outlier.angle[1] %||% data$angle[1]
-      labels$colour="grey30"
-
-      label_grob <- GeomText$draw_panel(labels, panel_scales, coord)
-    }
-
-    if (directed == TRUE){
-      if (is.null(data$arrow)){
-        #default arrow parameters.
-        data$arrow <- arrow(angle = 15, length = unit(10,"npc"), type = 'closed')
-      }
-      data$arrow$length[which(data$from == data$to)] <- unit(0,"npc")
-    }
+      alpha = data$alpha,
+      stringsAsFactors = FALSE
+    )
+    vertices <- unique(vertices)
 
     ggplot2:::ggname("geom_net", grobTree(
-      GeomSegment$draw_panel(data, panel_scales, coord),
-      GeomPoint$draw_panel(vertices, panel_scales, coord),
-      label_grob
+      GeomSegment$draw_panel(edges, panel_scales, coord, arrow),
+      GeomPoint$draw_panel(vertices, panel_scales, coord)
+#      label_grob
     ))
   },
 

@@ -8,8 +8,8 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   alpha = 0.25, layout = "kamadakawai", layout.par = list(),
-  vertices = NULL, vlabel = FALSE, vcolour = NULL, vsize = NULL,
-  vshape = NULL, directed = FALSE, ...)
+  ecolour = "grey60", esize = NULL, directed = FALSE, arrowsize = 1,
+  ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -61,17 +61,21 @@ Geom for network visualization
 \examples{
 library(ggplot2)
 data(blood)
-p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
+bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label")
+p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
-p + geom_net(vertices = blood$vertices)
-p + geom_net(vertices = blood$vertices, vlabel=blood$vertices$rho=="neg")
-p + geom_net(vertices = blood$vertices, vcolour = "orange", layout = 'circle',
-vlabel = TRUE, vsize = 6, directed = TRUE) +  theme_net
+p + geom_net(aes(colour=rho))
+p + geom_net(aes(colour=rho)) + geom_text(aes(x=..x.., y=..y.., label=from)) # not working yet
+p + geom_net(colour = "orange", layout = 'circle', size = 6)
+p + geom_net(colour = "orange", layout = 'circle', size = 6, esize=.75)
+p + geom_net(colour = "orange", layout = 'circle', size = 0, esize=.75, directed = TRUE)
+
 
 #Madmen Relationships
 data(madmen)
-p <- ggplot(data = madmen$edges, aes(from_id = Name1, to_id = Name2))
-p + geom_net(vlabel= TRUE)
+MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=T)
+p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
+p + geom_net()
 p + geom_net(vertices = madmen$vertices, vsize=5, vlabel= TRUE, colour="grey30",
              aes(vcolour=c("#FF69B4", "#0099ff")[as.numeric(madmen$vertices$Gender)]))
 }

@@ -31,7 +31,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 #    data
 #  },
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
-                           layout="kamadakawai", layout.par=list(), vertices=NULL) {
+                           layout="kamadakawai", layout.par=list()) {
 browser()
     edges <- data[,c('from_id', 'to_id')]
     #3/17 - the next two lines are the source of the deletion of lone vertices.
@@ -45,8 +45,8 @@ browser()
     vert.coord <- data.frame(do.call(layoutFun, list(m, layout.par = layout.par)))
 
     vert.coord$label <- row.names(m)
-    vert.coord$X1 <- scale(vert.coord$X1, center=min(vert.coord$X1), scale=diff(range(vert.coord$X1))) # center nodes
-    vert.coord$X2 <- scale(vert.coord$X2, center=min(vert.coord$X2), scale=diff(range(vert.coord$X2)))
+#    vert.coord$X1 <- scale(vert.coord$X1, center=min(vert.coord$X1), scale=diff(range(vert.coord$X1))) # center nodes
+#    vert.coord$X2 <- scale(vert.coord$X2, center=min(vert.coord$X2), scale=diff(range(vert.coord$X2)))
     names(vert.coord) <- c("x", "y", "label")
 
     edgelist <- network::as.matrix.network.edgelist(net) #network pkg
@@ -55,18 +55,6 @@ browser()
     edges <- data.frame(data, edge.coord[, c("x", "y", "xend", "yend")])
 
 
-    # vertices data set gets stuffed into the first element of each panel
-    if (!is.null(vertices)) {
-      vertices$.order <- 1:nrow(vertices)
-      vert.coord <- merge(vertices, vert.coord, by="label")
-      vert.coord <- vert.coord[order(vert.coord$.order),]
-    }
-
-#     vert.coord$edges <- NA
-#     vert.coord$edges[1] <- I(list(edges))
-#     vert.coord
-    edges$vertices <- NA
-    edges$vertices[1] <- I(list(vert.coord))
     edges
   }
 
