@@ -8,7 +8,7 @@
 #' @examples
 #' library(ggplot2)
 #' data(blood)
-#' bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label")
+#' bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=T)
 #' p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho))
@@ -16,7 +16,9 @@
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6, esize=.75)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 0, esize=.75, directed = TRUE)
-#'
+#' p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), esize=0.75, label =TRUE,
+#'     labelcolour="black") + facet_wrap(~Ethnicity) +
+#'     scale_colour_brewer(palette="Set2")
 #'
 #' #Madmen Relationships
 #' data(madmen)
@@ -53,7 +55,18 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                              shape = 19, colour = "grey30",
                              size = 4, fill = NA,
                              alpha = NA, stroke = 0.5, linewidth=1, angle=0, vjust=0),
-  draw_key = ggplot2::draw_key_point,
+
+  draw_key = function(data, params)  {
+    with(data, grobTree(
+      grid::pointsGrob(0.5, 0.5, pch = data$shape,
+                       gp = grid::gpar(col = alpha(data$colour, data$alpha),
+                                       fill = alpha(data$fill, data$alpha),
+                                       fontsize = data$size * .pt + data$stroke * .stroke/2,
+                                       lwd = data$stroke * .stroke/2)),
+      grid::rectGrob(gp = grid::gpar(col = colour, fill = alpha(fill, alpha), lty = linetype))
+      #      grid::linesGrob(gp = grid::gpar(col = colour, lwd = size * .pt, lineend="butt", lty = linetype))
+    ))
+  },
 
   setup_data = function(data, params, mapping) {
 
@@ -70,9 +83,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       yend = data$yend,
       colour = ecolour,
       size = esize %||% (data$size / 4),
-      alpha = data$alpha
+      alpha = data$alpha,
+      linetype=data$linetype,
+      stringsAsFactors = FALSE
     )
-    edges <- subset(edges, !is.na(xend))
+    edges <- unique(subset(edges, !is.na(xend)))
 
     arrow = NULL
     if (directed) arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
@@ -95,7 +110,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       labels <- data.frame(
         x = data$x,
         y = data$y,
-        label = data$label %||% data$from_id,
+        label = data$label %||% data$from,
         colour = labelcolour %||% data$colour,
         shape = data$shape,
         size = data$fontsize,
