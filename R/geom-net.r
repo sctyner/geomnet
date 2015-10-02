@@ -25,7 +25,6 @@
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), vertices=NULL, vlabel=FALSE, vcolour = NULL, vsize=NULL, vshape=NULL,
                       directed = FALSE, ...) {
-browser()
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -46,13 +45,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   draw_key = ggplot2::draw_key_point,
 
   setup_data = function(data, params, mapping) {
-    browser()
 
     data
   },
 
   draw_panel = function(data, panel_scales, coord, vlabel=FALSE, vcolour=NULL, vsize=NULL, vshape=NULL, directed=FALSE) {
-browser()
     vertices <- data.frame(
       data$vertices[[1]],
       colour = vcolour %||% data$colour[1],
