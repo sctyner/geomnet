@@ -12,7 +12,7 @@
 #' p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho))
-#' p + geom_net(aes(colour=rho)) + geom_text(aes(x=..x.., y=..y.., label=from)) # not working yet
+#' p + geom_net(aes(colour=rho), label=TRUE)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6, esize=.75)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 0, esize=.75, directed = TRUE)
@@ -22,18 +22,25 @@
 #' data(madmen)
 #' MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=T)
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
-#' p + geom_net()
-#' p + geom_net(aes(colour=Gender), size=6, esize=1)
+#' p + geom_net(label=TRUE)
+#' p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, fontsize=3, labelcolour="black")
 #' p + geom_net(aes(colour=Gender), size=6, esize=1) +
 #'     scale_colour_manual(values=c("#FF69B4", "#0099ff"))
 #'
+#' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
+#' # alternative labelling: specify label variable.
+#' p + geom_net(aes(colour=Gender, label=Gender), size=6, esize=1, fontsize=3, labelcolour="black")
+
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,...) {
+                      layout="kamadakawai", layout.par=list(), label=FALSE, ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,
+                      labelcolour=NULL, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(layout=layout, layout.par=layout.par, ecolour = ecolour, esize = esize, directed=directed, arrowsize=arrowsize, ...)
+    params = list(layout=layout, layout.par=layout.par, label=label,
+                  ecolour = ecolour, esize = esize, directed=directed,
+                  arrowsize=arrowsize, labelcolour=labelcolour, ...)
   )
 }
 
@@ -45,7 +52,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
                              shape = 19, colour = "grey30",
                              size = 4, fill = NA,
-                             alpha = NA, stroke = 0.5, linewidth=1, angle=0),
+                             alpha = NA, stroke = 0.5, linewidth=1, angle=0, vjust=0),
   draw_key = ggplot2::draw_key_point,
 
   setup_data = function(data, params, mapping) {
@@ -53,7 +60,8 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     data
   },
 
-  draw_panel = function(data, panel_scales, coord, ecolour="grey60", esize=NULL, directed=FALSE, arrowsize=1) {
+  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", esize=NULL,
+                        directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
     browser()
     edges <- data.frame(
       x = data$x,
@@ -82,10 +90,28 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     )
     vertices <- unique(vertices)
 
+    label_grob <- NULL
+    if (label | !is.null(data$label)) {
+      labels <- data.frame(
+        x = data$x,
+        y = data$y,
+        label = data$label %||% data$from_id,
+        colour = labelcolour %||% data$colour,
+        shape = data$shape,
+        size = data$fontsize,
+        angle = data$angle,
+        alpha = NA,
+        vjust= data$vjust,
+        stringsAsFactors = FALSE
+      )
+      labels <- unique(labels)
+      label_grob <- GeomText$draw_panel(labels, panel_scales, coord)
+    }
+
     ggplot2:::ggname("geom_net", grobTree(
       GeomSegment$draw_panel(edges, panel_scales, coord, arrow),
-      GeomPoint$draw_panel(vertices, panel_scales, coord)
-#      label_grob
+      GeomPoint$draw_panel(vertices, panel_scales, coord),
+      label_grob
     ))
   },
 

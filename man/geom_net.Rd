@@ -8,8 +8,8 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   alpha = 0.25, layout = "kamadakawai", layout.par = list(),
-  ecolour = "grey60", esize = NULL, directed = FALSE, arrowsize = 1,
-  ...)
+  label = FALSE, ecolour = "grey60", esize = NULL, directed = FALSE,
+  arrowsize = 1, labelcolour = NULL, ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -65,7 +65,7 @@ bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label")
 p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(aes(colour=rho))
-p + geom_net(aes(colour=rho)) + geom_text(aes(x=..x.., y=..y.., label=from)) # not working yet
+p + geom_net(aes(colour=rho), label=TRUE)
 p + geom_net(colour = "orange", layout = 'circle', size = 6)
 p + geom_net(colour = "orange", layout = 'circle', size = 6, esize=.75)
 p + geom_net(colour = "orange", layout = 'circle', size = 0, esize=.75, directed = TRUE)
@@ -75,9 +75,13 @@ p + geom_net(colour = "orange", layout = 'circle', size = 0, esize=.75, directed
 data(madmen)
 MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=T)
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
-p + geom_net()
-p + geom_net(aes(colour=Gender), size=6, esize=1)
+p + geom_net(label=TRUE)
+p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, fontsize=3, labelcolour="black")
 p + geom_net(aes(colour=Gender), size=6, esize=1) +
     scale_colour_manual(values=c("#FF69B4", "#0099ff"))
+
+p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
+# alternative labelling: specify label variable.
+p + geom_net(aes(colour=Gender, label=Gender), size=6, esize=1, fontsize=3, labelcolour="black")
 }
 
