@@ -36,9 +36,9 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
-\item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{gplot.layout} in the package sna for other choices.}
+\item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
 
-\item{layout.par}{list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{gplot.layout} in the package sna for other choices.}
+\item{layout.par}{list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{?gplot.layout} in the package sna for other choices.}
 
 \item{fiteach}{logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?}
 
@@ -66,7 +66,7 @@ a warning. If \code{TRUE} silently removes missing values.}
 \value{
 A data frame with additional columns:
   \item{x, y}{coordinates of the nodes, beginning of edges,}
-  \item{xend, yend}{coordinate edn points of edges.}
+  \item{xend, yend}{coordinates end points of edges.}
 }
 \description{
 Geom for network visualization
@@ -74,7 +74,7 @@ Geom for network visualization
 \examples{
 library(ggplot2)
 data(blood)
-bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=T)
+bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(aes(colour=rho))

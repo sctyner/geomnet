@@ -80,7 +80,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 #'
 #' @return A data frame with additional columns:
 #'   \item{x, y}{coordinates of the nodes, beginning of edges,}
-#'   \item{xend, yend}{coordinate edn points of edges.}
+#'   \item{xend, yend}{coordinates end points of edges.}
 #' @export
 stat_net <- function(mapping = NULL, data = NULL, geom = "point",
                      position = "identity", show.legend = NA,
