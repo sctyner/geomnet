@@ -36,6 +36,22 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
+\item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{gplot.layout} in the package sna for other choices.}
+
+\item{layout.par}{list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{gplot.layout} in the package sna for other choices.}
+
+\item{fiteach}{logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?}
+
+\item{label}{logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.}
+
+\item{ecolour}{colour for edges.}
+
+\item{esize}{width of edges. Defaults to 1/4 of the node size.}
+
+\item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
+
+\item{labelcolour}{character of colour for the labels.}
+
 \item{...}{other arguments passed on to \code{\link{layer}}. This can
 include aesthetics whose values you want to set, not map. See
 \code{\link{layer}} for more details.}
@@ -43,17 +59,14 @@ include aesthetics whose values you want to set, not map. See
 \item{geom}{The geometric object to use display the data}
 
 \item{na.rm}{If \code{FALSE} (the default), removes missing values with
-   a warning. If \code{TRUE} silently removes missing values.}
+a warning. If \code{TRUE} silently removes missing values.}
+
+\item{arrow}{numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.}
 }
 \value{
 A data frame with additional columns:
-  \item{density}{density estimate}
-  \item{scaled}{density estimate, scaled to maximum of 1}
-  \item{count}{density * number of points - not sure about usefulness for vase plots}
-  \item{vasewidth}{density scaled for the vase plot, according to area, counts
-                     or to a constant maximum width}
-  \item{n}{number of points}
-  \item{width}{width of vase bounding box}
+  \item{x, y}{coordinates of the nodes, beginning of edges,}
+  \item{xend, yend}{coordinate edn points of edges.}
 }
 \description{
 Geom for network visualization
@@ -113,5 +126,12 @@ ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CitizenshipCountry), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
+
+## Les Miserables example
+
+data(lesmis)
+lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label")
+ggplot(data=lesmisnet, aes(from_id=from, to_id=to)) +
+  geom_net(layout="fruchtermanreingold")
 }
 

@@ -3,6 +3,15 @@
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm If \code{FALSE} (the default), removes missing values with
 #'    a warning. If \code{TRUE} silently removes missing values.
+#' @param layout character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{gplot.layout} in the package sna for other choices.
+#' @param layout.par list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{gplot.layout} in the package sna for other choices.
+#' @param fiteach logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
+#' @param label logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
+#' @param labelcolour character of colour for the labels.
+#' @param ecolour colour for edges.
+#' @param esize width of edges. Defaults to 1/4 of the node size.
+#' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
+#' @param arrow numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
 #'
 #' @export
 #' @examples

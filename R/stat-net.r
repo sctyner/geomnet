@@ -74,20 +74,13 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 
     data
   }
-
-
 )
 
 #' @rdname geom_net
 #'
 #' @return A data frame with additional columns:
-#'   \item{density}{density estimate}
-#'   \item{scaled}{density estimate, scaled to maximum of 1}
-#'   \item{count}{density * number of points - not sure about usefulness for vase plots}
-#'   \item{vasewidth}{density scaled for the vase plot, according to area, counts
-#'                      or to a constant maximum width}
-#'   \item{n}{number of points}
-#'   \item{width}{width of vase bounding box}
+#'   \item{x, y}{coordinates of the nodes, beginning of edges,}
+#'   \item{xend, yend}{coordinate edn points of edges.}
 #' @export
 stat_net <- function(mapping = NULL, data = NULL, geom = "point",
                      position = "identity", show.legend = NA,
