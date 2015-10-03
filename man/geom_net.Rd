@@ -24,6 +24,8 @@ at the layer level if you are overriding the plot defaults.}
 \item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
 
+\item{stat}{character string of the network stat corresponding to geom_net.}
+
 \item{position}{The position adjustment to use for overlapping points
 on this layer}
 
@@ -35,6 +37,8 @@ on this layer}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
+
+\item{alpha}{numeric value of alpha blending of edges.}
 
 \item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
 
@@ -50,6 +54,8 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
 
+\item{arrowsize}{numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.}
+
 \item{labelcolour}{character of colour for the labels.}
 
 \item{...}{other arguments passed on to \code{\link{layer}}. This can
@@ -61,7 +67,7 @@ include aesthetics whose values you want to set, not map. See
 \item{na.rm}{If \code{FALSE} (the default), removes missing values with
 a warning. If \code{TRUE} silently removes missing values.}
 
-\item{arrow}{numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.}
+\item{arrow}{what kind of arrow should be drawn? See specification of function \code{arrow} in grid package}
 }
 \value{
 A data frame with additional columns:
@@ -88,12 +94,12 @@ p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), e
 
 #Madmen Relationships
 data(madmen)
-MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=T)
+MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 p + geom_net(label=TRUE)
 p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, fontsize=3, labelcolour="black")
-p + geom_net(aes(colour=Gender), size=6, esize=1) +
-    scale_colour_manual(values=c("#FF69B4", "#0099ff"))
+p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, labelcolour="black") +
+    scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 # alternative labelling: specify label variable.
@@ -101,7 +107,7 @@ p + geom_net(aes(colour=Gender, label=Gender), size=6, esize=1, fontsize=3, labe
 
 ## visualizing ggplot2 theme elements
 data(theme_elements)
-TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent", by.y="name", all=T)
+TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent", by.y="name", all=TRUE)
 ggplot(data = TEnet, aes(from_id = parent, to_id = child)) + geom_net(label=TRUE, vjust=-0.5)
 
 
@@ -113,7 +119,7 @@ data(email)
 employee <- data.frame(expand.grid(
               label=unique(email$nodes$label), day=unique(email$edges$day)))
 employee <- merge(employee, email$nodes, by="label")
-emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=T)
+emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
 
 #no facets
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +

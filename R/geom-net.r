@@ -1,6 +1,8 @@
 #' Geom for network visualization
 #'
 #' @inheritParams ggplot2::stat_identity
+#' @param stat character string of the network stat corresponding to geom_net.
+#' @param alpha numeric value of alpha blending of edges.
 #' @param na.rm If \code{FALSE} (the default), removes missing values with
 #'    a warning. If \code{TRUE} silently removes missing values.
 #' @param layout character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.
@@ -11,7 +13,8 @@
 #' @param ecolour colour for edges.
 #' @param esize width of edges. Defaults to 1/4 of the node size.
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
-#' @param arrow numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
+#' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
+#' @param arrowsize numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
 #'
 #' @export
 #' @examples
@@ -31,12 +34,12 @@
 #'
 #' #Madmen Relationships
 #' data(madmen)
-#' MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=T)
+#' MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 #' p + geom_net(label=TRUE)
 #' p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, fontsize=3, labelcolour="black")
-#' p + geom_net(aes(colour=Gender), size=6, esize=1) +
-#'     scale_colour_manual(values=c("#FF69B4", "#0099ff"))
+#' p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, labelcolour="black") +
+#'     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 #'
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 #' # alternative labelling: specify label variable.
@@ -44,7 +47,7 @@
 #'
 #' ## visualizing ggplot2 theme elements
 #' data(theme_elements)
-#' TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent", by.y="name", all=T)
+#' TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent", by.y="name", all=TRUE)
 #' ggplot(data = TEnet, aes(from_id = parent, to_id = child)) + geom_net(label=TRUE, vjust=-0.5)
 #'
 #'
@@ -56,7 +59,7 @@
 #' employee <- data.frame(expand.grid(
 #'               label=unique(email$nodes$label), day=unique(email$edges$day)))
 #' employee <- merge(employee, email$nodes, by="label")
-#' emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=T)
+#' emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
 #'
 #' #no facets
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +

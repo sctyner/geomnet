@@ -34,13 +34,11 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 #  browser()
   edges <- unique(subset(data, to_id != "..NA..")[,c('from_id', 'to_id')])
 
-  #3/17 - the next two lines are the source of the deletion of lone vertices.
   net <- network::as.network(edges, matrix.type = "edgelist") #from network package
   m <- network::as.matrix.network.adjacency(net)
 
   #print("it would be nice at this point to check, whether layout is one of the supported functions, and if not,
   require(sna)
-
   layoutFun <- paste('gplot.layout.',layout,sep='')
   vert.coord <- data.frame(do.call(layoutFun, list(m, layout.par = layout.par)))
 
