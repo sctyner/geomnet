@@ -61,6 +61,13 @@
 #'   geom_net(aes(colour= CitizenshipCountry), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
 #'   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 #'
+#' ## Les Miserables example
+#'
+#' data(lesmis)
+#' lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label")
+#' ggplot(data=lesmisnet, aes(from_id=from, to_id=to)) +
+#'   geom_net(layout="fruchtermanreingold")
+#'
 
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
