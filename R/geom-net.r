@@ -40,17 +40,28 @@
 #'
 #'
 #' ## emails example from VastChallenge 2014
+#' # care has to be taken to make sure that for each panel all nodes are included with the necessary information.
+#' # Otherwise line segments show on the plot without nodes.
+#'
 #' data(email)
-#' emailnet <- merge(email$edges, email$nodes, by.x="From", by.y="label", all=T)
+#' employee <- data.frame(expand.grid(
+#'               label=unique(email$nodes$label), day=unique(email$edges$day)))
+#' employee <- merge(employee, email$nodes, by="label")
+#' emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=T)
 #'
 #' #no facets
-#' ggplot(data = subset(emailnet, nrecipients < 54), aes(from_id = From, to_id = to)) +
+#' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), esize=0.5) + scale_colour_brewer(palette="Set2")
 #'
 #' #facet by day
-#' ggplot(data = subset(emailnet, nrecipients < 54), aes(from_id = From, to_id = to)) +
+#' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
 #'   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
+#' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
+#'   geom_net(aes(colour= CitizenshipCountry), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+#'   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
+#'
+
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,
