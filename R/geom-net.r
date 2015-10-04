@@ -77,6 +77,8 @@
 #'
 #' data(lesmis)
 #' lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label")
+#' lesmisnet$from <- as.factor(lesmisnet$from)
+#' lesmisnet$to <- as.factor(lesmisnet$to)
 #' ggplot(data=lesmisnet, aes(from_id=from, to_id=to)) +
 #'   geom_net(layout="fruchtermanreingold")
 #'
