@@ -16,7 +16,6 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   },
 
   setup_data = function(self, data, params) {
-    browser()
     fiteach=params$fiteach
 
     # we want to keep all of the values that are NA in the second edge - give them a special value, so we can pull them out later
@@ -31,7 +30,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   },
 
 compute_network = function(data, layout="kamadakawai", layout.par=list()) {
-  browser()
+#  browser()
   edges <- unique(subset(data, to_id != "..NA..")[,c('from_id', 'to_id')])
 
   net <- network::as.network(edges, matrix.type = "edgelist") #from network package
@@ -67,7 +66,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 },
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
                            layout="kamadakawai", layout.par=list(), fiteach=FALSE) {
- browser()
+
     if (fiteach) return(self$compute_network(data, layout=layout, layout.par=layout.par))
 
     data
@@ -84,7 +83,6 @@ stat_net <- function(mapping = NULL, data = NULL, geom = "point",
                      position = "identity", show.legend = NA,
                      inherit.aes = TRUE, layout="kamadakawai", layout.par=list(), fiteach=FALSE,
                      na.rm=FALSE, ...) {
-  browser() 
   layer(
     stat = StatNet, data = data, mapping = mapping, geom = geom, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
