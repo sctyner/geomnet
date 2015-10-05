@@ -1,4 +1,4 @@
-#' Geom for network visualization
+#' Geom for network visualization within the ggplot2 framework
 #'
 #' @inheritParams ggplot2::stat_identity
 #' @param stat character string of the network stat corresponding to geom_net.

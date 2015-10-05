@@ -3,7 +3,7 @@
 \name{geom_net}
 \alias{geom_net}
 \alias{stat_net}
-\title{Geom for network visualization}
+\title{Geom for network visualization within the ggplot2 framework}
 \usage{
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -75,7 +75,7 @@ A data frame with additional columns:
   \item{xend, yend}{coordinates end points of edges.}
 }
 \description{
-Geom for network visualization
+Geom for network visualization within the ggplot2 framework
 }
 \examples{
 library(ggplot2)
