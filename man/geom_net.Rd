@@ -8,8 +8,8 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   alpha = 0.25, layout = "kamadakawai", layout.par = list(),
-  fiteach = FALSE, label = FALSE, ecolour = "grey60", esize = NULL,
-  directed = FALSE, arrowsize = 1, labelcolour = NULL, ...)
+  fiteach = FALSE, label = FALSE, ecolour = "grey60", directed = FALSE,
+  arrowsize = 1, labelcolour = NULL, ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -50,8 +50,6 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{ecolour}{colour for edges.}
 
-\item{esize}{width of edges. Defaults to 1/4 of the node size.}
-
 \item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
 
 \item{arrowsize}{numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.}
@@ -66,6 +64,8 @@ include aesthetics whose values you want to set, not map. See
 
 \item{na.rm}{If \code{FALSE} (the default), removes missing values with
 a warning. If \code{TRUE} silently removes missing values.}
+
+\item{linwidth}{width of edges. Defaults to 1/4 of the node size.}
 
 \item{arrow}{what kind of arrow should be drawn? See specification of function \code{arrow} in grid package}
 }
@@ -86,9 +86,9 @@ p + geom_net()
 p + geom_net(aes(colour=rho))
 p + geom_net(aes(colour=rho), label=TRUE)
 p + geom_net(colour = "orange", layout = 'circle', size = 6)
-p + geom_net(colour = "orange", layout = 'circle', size = 6, esize=.75)
-p + geom_net(colour = "orange", layout = 'circle', size = 0, esize=.75, directed = TRUE)
-p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), esize=0.75, label =TRUE,
+p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
+p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
+p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), linewidth=0.75, label =TRUE,
     labelcolour="black") + facet_wrap(~Ethnicity) +
     scale_colour_brewer(palette="Set2")
 
@@ -97,13 +97,13 @@ data(madmen)
 MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 p + geom_net(label=TRUE)
-p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, fontsize=3, labelcolour="black")
-p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, labelcolour="black") +
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 # alternative labelling: specify label variable.
-p + geom_net(aes(colour=Gender, label=Gender), size=6, esize=1, fontsize=3, labelcolour="black")
+p + geom_net(aes(colour=Gender, label=Gender), size=6, linewidth=1, fontsize=3, labelcolour="black")
 
 ## visualizing ggplot2 theme elements
 data(theme_elements)
@@ -123,21 +123,23 @@ emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From"
 
 #no facets
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-  geom_net(aes(colour= CurrentEmploymentType), esize=0.5) + scale_colour_brewer(palette="Set2")
+  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) + scale_colour_brewer(palette="Set2")
 
 #facet by day
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-  geom_net(aes(colour= CurrentEmploymentType), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-  geom_net(aes(colour= CitizenshipCountry), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+  geom_net(aes(colour= CitizenshipCountry), linewidth=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 
 ## Les Miserables example
 
 data(lesmis)
-lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label")
-ggplot(data=lesmisnet, aes(from_id=from, to_id=to)) +
-  geom_net(layout="fruchtermanreingold")
+lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all=TRUE)
+p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
+p + geom_net(layout="fruchtermanreingold")
+p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
+p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=value/5))
 }
 

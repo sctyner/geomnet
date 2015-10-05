@@ -11,7 +11,7 @@
 #' @param label logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
 #' @param labelcolour character of colour for the labels.
 #' @param ecolour colour for edges.
-#' @param esize width of edges. Defaults to 1/4 of the node size.
+#' @param linwidth width of edges. Defaults to 1/4 of the node size.
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
 #' @param arrowsize numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
@@ -26,9 +26,9 @@
 #' p + geom_net(aes(colour=rho))
 #' p + geom_net(aes(colour=rho), label=TRUE)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)
-#' p + geom_net(colour = "orange", layout = 'circle', size = 6, esize=.75)
-#' p + geom_net(colour = "orange", layout = 'circle', size = 0, esize=.75, directed = TRUE)
-#' p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), esize=0.75, label =TRUE,
+#' p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
+#' p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
+#' p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), linewidth=0.75, label =TRUE,
 #'     labelcolour="black") + facet_wrap(~Ethnicity) +
 #'     scale_colour_brewer(palette="Set2")
 #'
@@ -37,13 +37,13 @@
 #' MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 #' p + geom_net(label=TRUE)
-#' p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, fontsize=3, labelcolour="black")
-#' p + geom_net(aes(colour=Gender), size=6, esize=1, label=TRUE, labelcolour="black") +
+#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
+#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
 #'     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 #'
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 #' # alternative labelling: specify label variable.
-#' p + geom_net(aes(colour=Gender, label=Gender), size=6, esize=1, fontsize=3, labelcolour="black")
+#' p + geom_net(aes(colour=Gender, label=Gender), size=6, linewidth=1, fontsize=3, labelcolour="black")
 #'
 #' ## visualizing ggplot2 theme elements
 #' data(theme_elements)
@@ -63,14 +63,14 @@
 #'
 #' #no facets
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-#'   geom_net(aes(colour= CurrentEmploymentType), esize=0.5) + scale_colour_brewer(palette="Set2")
+#'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) + scale_colour_brewer(palette="Set2")
 #'
 #' #facet by day
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-#'   geom_net(aes(colour= CurrentEmploymentType), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+#'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
 #'   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-#'   geom_net(aes(colour= CitizenshipCountry), esize=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+#'   geom_net(aes(colour= CitizenshipCountry), linewidth=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
 #'   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 #'
 #' ## Les Miserables example
@@ -80,15 +80,15 @@
 #' p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
 #' p + geom_net(layout="fruchtermanreingold")
 #' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
-#'
+#' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=value/5))
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", directed = FALSE, arrowsize=1,
                       labelcolour=NULL, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
-                  ecolour = ecolour, esize = esize, directed=directed,
+                  ecolour = ecolour,  directed=directed,
                   arrowsize=arrowsize, labelcolour=labelcolour, ...)
   )
 }
@@ -120,18 +120,18 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     data
   },
 
-  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", esize=NULL,
+  draw_panel = function(data, panel_scales, coord,  ecolour="grey60",
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
-#    browser()
     edges <- data.frame(
       x = data$x,
       xend = data$xend,
       y = data$y,
       yend = data$yend,
       colour = ecolour,
-      size = esize %||% (data$size / 4),
+      size = data$linewidth %||% (data$size / 4),
       alpha = data$alpha,
       linetype=data$linetype,
+      stroke = data$stroke,
       stringsAsFactors = FALSE
     )
     edges <- unique(subset(edges, !is.na(xend)))
@@ -161,9 +161,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       colour = data$colour,
       shape = data$shape,
       size = data$size,
-      stroke = data$stroke,
       fill = NA,
       alpha = data$alpha,
+      stroke = 0.5,
       stringsAsFactors = FALSE
     )
     vertices <- unique(vertices)
