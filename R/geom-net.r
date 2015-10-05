@@ -81,6 +81,16 @@
 #' p + geom_net(layout="fruchtermanreingold")
 #' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
 #' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=value/5))
+#'
+#' ## College Football Games in the Fall 2000 regular season
+#' # Source: http://www-personal.umich.edu/~mejn/netdata/
+#' data(football)
+#' ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)
+#' p <- ggplot(data=ftnet, aes(from_id=from, to_id=to))
+#' p + geom_net(aes(colour=value), linewidth=0.75, size=4.5, ecolour="grey80") +
+#'   scale_colour_brewer("Conference", palette="Paired") + theme_net() +
+#'   theme(legend.position="bottom")
+
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", directed = FALSE, arrowsize=1,
                       labelcolour=NULL, ...) {
@@ -135,24 +145,24 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       stringsAsFactors = FALSE
     )
     edges <- unique(subset(edges, !is.na(xend)))
-  
+
     arrow = NULL
     if (directed) arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
 
 #     vertices <- data.frame(
 #       x = unique(c(data$x, data$xend)),
 #       y = unique(c(data$y, data$yend)))
-#     vertices$colour = data$colour[unique(c(match(data$x, vertices$x), 
+#     vertices$colour = data$colour[unique(c(match(data$x, vertices$x),
 #                                            match(data$xend, vertices$x)))]
-#     vertices$shape = data$shape[unique(c(match(data$x, vertices$x), 
+#     vertices$shape = data$shape[unique(c(match(data$x, vertices$x),
 #                                           match(data$xend, vertices$x)))]
-#     vertices$size = data$size[unique(c(match(data$x, vertices$x), 
+#     vertices$size = data$size[unique(c(match(data$x, vertices$x),
 #                                          match(data$xend, vertices$x)))]
-#     vertices$stroke = data$stroke[unique(c(match(data$x, vertices$x), 
+#     vertices$stroke = data$stroke[unique(c(match(data$x, vertices$x),
 #                                            match(data$xend, vertices$x)))]
-#     vertices$fill = data$fill[unique(c(match(data$x, vertices$x), 
+#     vertices$fill = data$fill[unique(c(match(data$x, vertices$x),
 #                                          match(data$xend, vertices$x)))]
-#     vertices$alpha = data$alpha[unique(c(match(data$x, vertices$x), 
+#     vertices$alpha = data$alpha[unique(c(match(data$x, vertices$x),
 #                                           match(data$xend, vertices$x)))]
 #     vertices <- unique(vertices)
     vertices <- data.frame(

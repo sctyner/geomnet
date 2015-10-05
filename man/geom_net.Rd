@@ -141,5 +141,14 @@ p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
 p + geom_net(layout="fruchtermanreingold")
 p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
 p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=value/5))
+
+## College Football Games in the Fall 2000 regular season
+# Source: http://www-personal.umich.edu/~mejn/netdata/
+data(football)
+ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)
+p <- ggplot(data=ftnet, aes(from_id=from, to_id=to))
+p + geom_net(aes(colour=value), linewidth=0.75, size=4.5, ecolour="grey80") +
+  scale_colour_brewer("Conference", palette="Paired") + theme_net() +
+  theme(legend.position="bottom")
 }
 
