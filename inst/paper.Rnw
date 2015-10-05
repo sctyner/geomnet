@@ -36,13 +36,14 @@ library(ggplot2) # needs to be version ≥ 1.0.1.9003
 library(ggnet) # install from github
 data(blood, football, theme_elements, lesmis,madmen, mm_directed, email)
 
-# data(protein) # uncomment it once protein.rda is in data folder
+data(protein)
 library(RColorBrewer)
 cols <- brewer.pal(8, name="Set1")
 yeast <- protein
 
 # set up networks for all of the data sets
 MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
+MM2net <- merge(mm.directed$edges, mm.directed$vertices, by.x="Name1", by.y="label", all=TRUE)
 bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 
 employee <- data.frame(expand.grid(
@@ -50,6 +51,17 @@ employee <- data.frame(expand.grid(
 employee <- merge(employee, email$nodes, by="label")
 emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
 
+TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent", by.y="name", all=TRUE)
+
+football$edges$in.conf <- 1
+for (i in 1:nrow(football$edges)){
+  idx1 <- which(football$vertices$label == football$edges$from[i])
+  idx2 <- which(football$vertices$label == football$edges$to[i])
+  if (football$vertices$value[idx1] == football$vertices$value[idx2]){
+    football$edges$in.conf[i] <- 0
+  }
+}
+ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)
 
 @
 
@@ -169,10 +181,9 @@ ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 \afterpage{\clearpage}
 
 This network is plotted in figure \ref{fig.cap:email_ex}.  There are six distinct clusters in this network which almost perfectly correspond to the six different types of employee in this company: administration, engineering, executive, facilities, information technology, and security. Unfortunately, there is currently no legend to associate color with employment type. This will be remedied in the final version of our geometry. Additionally, the edges between employees in the same cluster are much darker than edges between employees in different clusters. This is due to the value of the \texttt{ealpha} aesthetic: more emails between two employees lead to darker edges.  The value is set to 0.1 in this example, so that 10 or more emails between 2 employees results in a completely opaque edge. This pattern of heavy communication between employees of the same type is fairly unsurprising. To make this visualization more interesting and informative, we facet the network by day: each panel in \ref{fig.cap:email_ex_facet} shows the different email networks associated with each day of the week.
-\begin{landscape}
+%\begin{landscape}
 \begin{figure}
 \centering
-%\includegraphics[width=8in]{figure/email_ex_facet-1.pdf}
 <<email_ex_facet, fig.height=5, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.',echo=TRUE, out.width='\\textwidth'>>=
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType), fiteach=TRUE,
@@ -183,78 +194,81 @@ ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 \includegraphics[width=\textwidth]{figure/email_ex_facet-1.pdf}
 \caption{\label{fig.cap:email_ex_facet} The same email network as in figure \ref{fig.cap:email_ex} facetted by day of the week.}
 \end{figure}
-\end{landscape}
-%' This plot is shown in figure \ref{fig.cap: email_ex_facet}. With the facetting, we can see that there are several days where one or more departments do not communicate with any of the other departments. There are only two days, 13 and 15, without any isolated department communications. Facetting is one of the major benefits of creating a geometry for networks in \texttt{ggplot2}.  Facetting quickly separates dense networks into separate subnetworks for easy visual comparison and  analyses.
-%'   \subsection{\texttt{ggplot2} Theme Elements}
-%' This example comes from the \texttt{theme()} help page in the \texttt{ggplot2} documentation \citep{ggplot}.  It is a directed network which shows the structure of the inheritance of theme options in the construction of a \texttt{ggplot2} plot.  There are 53 vertices and 36 edges in this network. Each vertex represents one possible theme option. There is an arrow from one theme option to another if the element represented by the \emph{to} vertex inherits its values from the \emph{from} vertex.  For example, the \texttt{axis.ticks.x} option inherits its value from the \texttt{axis.ticks} value, which inherits its value from the \texttt{line} option.  Thus, setting the \texttt{line} option to a value such as \texttt{element\_blank()} sets the entire inheritance tree to \texttt{element\_blank()}, and no lines appear anywhere on the plot background. Finally, we note that the vertices with no edges were incorporated into the plot by adding their labels to the edges data frame in both the  `from\_id' and `to\_id' columns before passing the edges data frame to \texttt{ggplot}.
-%' <<theme_ex, echo=TRUE, fig.cap= 'Inheritance structure for \\texttt{theme} elements in \\texttt{ggplot2}.'>>=
-%' ggplot(data = theme_elements$edges, aes(from_id = parent, to_id = child)) +
-%'   geom_net(vertices = theme_elements$vertices, directed = TRUE, vlabel = TRUE) +
-%'   expand_limits(x = c(0,1.2), y = c(0,1)) +
-%'   theme_net
-%' @
-%' \begin{figure}
-%' \centering
-%' \includegraphics[width=\textwidth]{figure/theme_ex-1.pdf}
-%' \caption{\label{fig.cap:theme_ex} Inheritance structure of \texttt{ggplot2} theme elements. This is a recreation of the graph found at \protect\url{http://docs.ggplot2.org/current/theme.html}.}
-%' \end{figure}
-%' \afterpage{\clearpage}
-%'
-%' The inheritance structure is plotted in figure \ref{fig.cap:theme_ex}.  In this plot, it is easy to quickly determine the parent and child vertices. Using this plot made creation of the \texttt{theme\_net} object used throughout these examples very simple. We just made set each of the major parent elements, \texttt{text}, \texttt{rect}, and \texttt{line} to \texttt{element\_blank()} and then set the aspect ratio equal to one.
-%'   \subsection{Mad Men Networks}
-%'   The following code creates the network example given in the introduction. We changed the vertex size and edge color for all vertices and edges, included vertex labels, and colored the vertices according to the character's gender.
-%' <<print_ex, ref.label="madmen_ex", eval=FALSE, echo=TRUE,cache=FALSE>>=
-%' @
-%'  There is another Mad Men network included in the \texttt{gcookbook} package \citep{madmen}. It is a directed network, also of romantic relationships between characters, but it also includes advances made by one character that were rejected by the other.  For example, Roger Sterling made advances toward Betty Draper, but Betty refused him, and so there is a directed edge going from Roger to Betty, but not from Betty to Roger.  If the advance is reciprocated, like between Sal Romano and the Bellhop, there are two directed edges between the two vertices.
-%' <<madmen2_ex,echo=TRUE, fig.cap= 'A directed network of relationships in Mad Men.'>>=
-%' ggplot(data = mm.directed$edges, aes(from_id = Name1, to_id = Name2)) +
-%'   geom_net(vertices = mm.directed$vertices, directed = T, vlabel = T,
-%'            vsize = I(2.5), layout = 'fruchtermanreingold',
-%'            aes(vcolour=c( "#FF69B4", "#0099ff")[as.numeric(Gender)])) +
-%'   expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
-%' @
-%' \begin{figure}
-%' \centering
-%' \includegraphics[width=\textwidth]{figure/madmen2_ex-1.pdf}
-%' \caption{\label{fig.cap:madmen2_ex} A directed network of relationships in Mad Men.}
-%' \end{figure}
-%' This network is shown in figure \ref{fig.cap:madmen2_ex}.  This network is much more connected than the previous Mad Men example.  It also allows us to see much more of the drama in the show. For instance, you can see that Roger made advances towards Betty, his business partner's wife, which is much more scandalous than what we can see in the first network.
-%'
-%'   \subsection{College Football}
-%'   This next example comes from M.E.J. Newman's network data web page \citep{football}.  It is an undirected network consisting of all regular season college football games played between Division I schools in Fall of 2000.  There are 115 vertices and 613 edges: each vertex represents a school, and an edge represents a game played between two schools. There is an additional variable in the vertex data frame corresponding to the conference each team belongs to, and there is an additional variable in the edge data frame that is equal to one if the game occured between teams in the same conference or zero if the game occured between teams in different conferences.
-%' <<football_ex, echo=TRUE, fig.cap="All regular season Division I college football games in the Fall 2000 season.">>=
-%' colors <- brewer.pal(12, name = 'Paired')
-%' ggplot(data = football$edges, aes(from_id = from, to_id = to,
-%'                                   elinetype = in.conf + 1)) +
-%'   geom_net(vertices = football$vertices, ealpha = 0.3, vsize = 2, vlabel = TRUE,
-%'            aes(vcolour=colors[as.numeric(factor(value))])) +
-%'   expand_limits(x = c(0,1), y = c(0,1)) + theme_net
-%' @
-%' The network of football games is given in figure \ref{fig.cap:football_ex}. Here, we have changed the \texttt{elinetype} aesthetic to correspond to games that occur between teams in the same conference or different conferences.  These lines are dotted and solid, respectively. We have also assigned a different color to each conference, and the vertices and their labels are colored according to their conference. This coloring and changing of the linetypes make the structure of the game network easier to view.  There is one conference consisting of Navy, Notre Dame, Utah State, Central Florida, and Connecticut, which is spread out all over the network, whereas most other conferences' teams are all very close to each other because they play within conference much more than they play out of conference.  At the time, these five schools were all independents and did not have a home conference.  Without the coloring capability, we would not have been able to pick out that difference as easily.
-%' \begin{figure}
-%' \centering
-%' \includegraphics[width=\textwidth]{figure/football_ex-1.pdf}
-%' \caption{\label{fig.cap:football_ex} The network of regular season Division I college football games in the season of fall 2000. The vertices and their labels are colored by conference.}
-%' \end{figure}
-%' \afterpage{\clearpage}
-%'
-%'   \subsection{Les Mis\'{e}rables}
-%'   This next network comes from \citet{lesmis}. It is an undirected network of coappearances of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.  There are 77 vertices representing each of the 77 characters in the book, and an edge connects two vertices if those two characters appear in the same chapter of the book.  There are 254 edges in this network. The edges are also weighted by the number of coappearances. The largest weighting is 31, between the characters Jean Valjean and Cosette.  This network is shown in figure \ref{fig.cap:lesmis_ex}. This network reveals many important character groups, as well as the main characters in the story.  The main characters are the ones with high degree, like Valjean, Cosette, and Javert.  There is an extremely wide edge connecting Valjean and Cosette, which implies that they are strongly connected; in fact, Cosette is Valjean's adopted daughter.
-%' <<lesmis_ex, echo=TRUE, fig.cap="Coappearance network of characters in Victor Hugo's \\emph{Les Mis\\'{e}rables}">>=
-%' ggplot(data = lesmis$edges, aes(from_id = from, to_id = to,
-%'                                 esize = value/mean(value))) +
-%'   geom_net(vertices = lesmis$vertices, ealpha = 7/10,
-%'            vcolour = I("red"), vsize = I(2.5),
-%'            layout = 'fruchtermanreingold', vlabel=TRUE) +
-%'   expand_limits(x = c(0,1.1), y = c(0,1)) + theme_net
-%' @
-%' \begin{figure}
-%' \centering
-%' \includegraphics[width=\textwidth]{figure/lesmis_ex-1.pdf}
-%' \caption{\label{fig.cap:lesmis_ex} Co-appearance network of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.}
-%' \end{figure}
-%' \afterpage{\clearpage}
-%'
+%\end{landscape}
+This plot is shown in figure \ref{fig.cap: email_ex_facet}. With the facetting, we can see that there are several days where one or more departments do not communicate with any of the other departments. There are only two days, 13 and 15, without any isolated department communications. Facetting is one of the major benefits of creating a geometry for networks in \texttt{ggplot2}.  Facetting quickly separates dense networks into separate subnetworks for easy visual comparison and  analyses.
+  \subsection{\texttt{ggplot2} Theme Elements}
+This example comes from the \texttt{theme()} help page in the \texttt{ggplot2} documentation \citep{ggplot}.  It is a directed network which shows the structure of the inheritance of theme options in the construction of a \texttt{ggplot2} plot.  There are 53 vertices and 36 edges in this network. Each vertex represents one possible theme option. There is an arrow from one theme option to another if the element represented by the \emph{to} vertex inherits its values from the \emph{from} vertex.  For example, the \texttt{axis.ticks.x} option inherits its value from the \texttt{axis.ticks} value, which inherits its value from the \texttt{line} option.  Thus, setting the \texttt{line} option to a value such as \texttt{element\_blank()} sets the entire inheritance tree to \texttt{element\_blank()}, and no lines appear anywhere on the plot background. Finally, we note that the vertices with no edges were incorporated into the plot by adding their labels to the edges data frame in both the  `from\_id' and `to\_id' columns before passing the edges data frame to \texttt{ggplot}.
+<<theme_ex, echo=TRUE, fig.cap= 'Inheritance structure for \\texttt{theme} elements in \\texttt{ggplot2}.'>>=
+ggplot(data = TEnet, aes(from_id = parent, to_id = child)) +
+  geom_net(directed = TRUE, label = TRUE, vjust=-.5) +
+  theme_net() + xlim(c(-0.05, 1.05))
+@
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/theme_ex-1.pdf}
+\caption{\label{fig.cap:theme_ex} Inheritance structure of \texttt{ggplot2} theme elements. This is a recreation of the graph found at \protect\url{http://docs.ggplot2.org/current/theme.html}.}
+\end{figure}
+\afterpage{\clearpage}
+
+The inheritance structure is plotted in figure \ref{fig.cap:theme_ex}.  In this plot, it is easy to quickly determine the parent and child vertices. Using this plot made creation of the \texttt{theme\_net} object used throughout these examples very simple. We just made set each of the major parent elements, \texttt{text}, \texttt{rect}, and \texttt{line} to \texttt{element\_blank()} and then set the aspect ratio equal to one.
+  \subsection{Mad Men Networks}
+  The following code creates the network example given in the introduction. We changed the vertex size and edge color for all vertices and edges, included vertex labels, and colored the vertices according to the character's gender.
+<<print_ex, ref.label="madmen_ex", eval=FALSE, echo=TRUE,cache=FALSE>>=
+@
+ There is another Mad Men network included in the \texttt{gcookbook} package \citep{madmen}. It is a directed network, also of romantic relationships between characters, but it also includes advances made by one character that were rejected by the other.  For example, Roger Sterling made advances toward Betty Draper, but Betty refused him, and so there is a directed edge going from Roger to Betty, but not from Betty to Roger.  If the advance is reciprocated, like between Sal Romano and the Bellhop, there are two directed edges between the two vertices.
+<<madmen2_ex,echo=TRUE, fig.cap= 'A directed network of relationships in Mad Men.'>>=
+ggplot(data = MM2net, aes(from_id = Name1, to_id = Name2)) +
+  geom_net(aes(colour=Gender), directed=TRUE, label=TRUE,
+           size=2.5, layout='fruchtermanreingold') +
+  scale_colour_manual(values=c( "#FF69B4", "#0099ff")) +
+  theme_net() + xlim(c(-.1, 1.1)) + theme(legend.position="bottom")
+@
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/madmen2_ex-1.pdf}
+\caption{\label{fig.cap:madmen2_ex} A directed network of relationships in Mad Men.}
+\end{figure}
+This network is shown in figure \ref{fig.cap:madmen2_ex}.  This network is much more connected than the previous Mad Men example.  It also allows us to see much more of the drama in the show. For instance, you can see that Roger made advances towards Betty, his business partner's wife, which is much more scandalous than what we can see in the first network.
+
+  \subsection{College Football}
+  This next example comes from M.E.J. Newman's network data web page \citep{football}.  It is an undirected network consisting of all regular season college football games played between Division I schools in Fall of 2000.  There are 115 vertices and 613 edges: each vertex represents a school, and an edge represents a game played between two schools. There is an additional variable in the vertex data frame corresponding to the conference each team belongs to, and there is an additional variable in the edge data frame that is equal to one if the game occured between teams in the same conference or zero if the game occured between teams in different conferences.
+<<football_ex, echo=TRUE, fig.cap="All regular season Division I college football games in the Fall 2000 season.">>=
+sid <- which(ftnet$from %in% c("Navy", "NotreDame", "UtahState", "CentralFlorida", "Connecticut"))
+ftnet$schools <- ""
+ftnet$schools[sid] <- ftnet$from[sid]
+
+ggplot(data=ftnet, aes(from_id=from, to_id=to)) +
+  geom_net(aes(colour=value, linewidth=(2-in.conf)/3,  label=schools),
+           size=4, ecolour="grey30", vjust=-0.5,
+           alpha=0.3, layout='fruchtermanreingold') +
+  scale_colour_brewer("Conference", palette="Paired") + theme_net() +
+  theme(legend.position="bottom") + xlim(c(-0.05, 1.05))
+@
+The network of football games is given in figure \ref{fig.cap:football_ex}. Here, we have changed the \texttt{elinetype} aesthetic to correspond to games that occur between teams in the same conference or different conferences.  These lines are dotted and solid, respectively. We have also assigned a different color to each conference, and the vertices and their labels are colored according to their conference. This coloring and changing of the linetypes make the structure of the game network easier to view.  There is one conference consisting of Navy, Notre Dame, Utah State, Central Florida, and Connecticut, which is spread out all over the network, whereas most other conferences' teams are all very close to each other because they play within conference much more than they play out of conference.  At the time, these five schools were all independents and did not have a home conference.  Without the coloring capability, we would not have been able to pick out that difference as easily.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/football_ex-1.pdf}
+\caption{\label{fig.cap:football_ex} The network of regular season Division I college football games in the season of fall 2000. The vertices and their labels are colored by conference.}
+\end{figure}
+\afterpage{\clearpage}
+
+  \subsection{Les Mis\'{e}rables}
+  This next network comes from \citet{lesmis}. It is an undirected network of coappearances of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.  There are 77 vertices representing each of the 77 characters in the book, and an edge connects two vertices if those two characters appear in the same chapter of the book.  There are 254 edges in this network. The edges are also weighted by the number of coappearances. The largest weighting is 31, between the characters Jean Valjean and Cosette.  This network is shown in figure \ref{fig.cap:lesmis_ex}. This network reveals many important character groups, as well as the main characters in the story.  The main characters are the ones with high degree, like Valjean, Cosette, and Javert.  There is an extremely wide edge connecting Valjean and Cosette, which implies that they are strongly connected; in fact, Cosette is Valjean's adopted daughter.
+<<lesmis_ex, echo=TRUE, fig.cap="Coappearance network of characters in Victor Hugo's \\emph{Les Mis\\'{e}rables}">>=
+lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all=TRUE)
+
+ggplot(data = lesmisnet, aes(from_id = from, to_id = to, linewidth = value/5)) +
+  geom_net(alpha = 7/10, colour = "red", size = 2.5,
+           layout = 'fruchtermanreingold', label=TRUE) +
+  theme_net()
+@
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/lesmis_ex-1.pdf}
+\caption{\label{fig.cap:lesmis_ex} Co-appearance network of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.}
+\end{figure}
+\afterpage{\clearpage}
+
 %'   \subsection{Protein Interaction Network in Yeast}
 %'   This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}. Because the network is very large, we randomly sampled 500 interactions and their associated proteins to plot it in figure \ref{fig.cap:yeast_ex}.  We also demonstrate the layout capabilities by changing the layout to random and setting the distribution to \texttt{"uniang"}, which is a  ``gaussian donut" layout.  Indeed, we see a nearly round area in the middle of the graph where the layout parameter has forced there to be no vertices.
 %'
@@ -278,62 +292,62 @@ ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 %' \afterpage{\clearpage}
 %'
 %'
-%' \section{Technical Details}
-%'
-%' In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \texttt{R} script files: a `stat' file and a `geom' file. The stat file performs all the necessary calculations on the two input data frames, and the geom file performs the drawing of the network.
-%'   \subsection{Creating \texttt{stat\_net}}
-%'   In order to plot the network with only the edge connections and vertex names, we relied on the \texttt{sna} and \texttt{network} packages \citep{sna, network.jss}. First, we used the edges data frame to construct a network object with the \texttt{as.network()} function, then constructed an adjacency matrix from that network using the \texttt{as.matrix.network.adjacency()} function.  This adjacency matrix is then passed to the chosen \texttt{gplot.layout.*()} function from the \texttt{sna} package.  \emph{When the layout argument is changed in the \texttt{geom\_net()} function, the corresponding \texttt{gplot.layout.*()} function in \texttt{sna} is called with a \texttt{do.call()} statement.} This layout function produces a matrix of coordinates of the vertices, which we then transform into a data frame containing the coordinates of the edges using the \texttt{as.matrix.network.edgelist()} function in \texttt{network}.  We are grateful to Moritz Marbach for his \texttt{gplot()} function which we used when creating this process \citep{marbach}.  At the end of the previous routine, we have a data frame with \texttt{x, y, xend,} and \texttt{yend} columns describing the edges and another data frame with \texttt{x,y} columns describing the vertices.  These two data frames, along with the many \texttt{aes()} and other argument options get passed on to the actual network geometry for drawing.
-%'    \subsection{\texttt{stat\_net} Usage}
-%' <<usage_stat_net, eval=FALSE>>=
-%' stat_net(mapping = NULL, data = NULL, vertices = NULL, geom = "net", position = "identity", ...)
-%' @
-%'   The usage of the \texttt{stat\_net} arguments is as follows:
-%'   \begin{itemize}
-%'   \item The \texttt{mapping} argument is the aesthetic mapping. Currently, there is no reason to ever change it from \texttt{NULL}.
-%'   \item The \texttt{data} argument is the edges data frame.  This is sent to \texttt{stat\_net} through the \texttt{ggplot()} function.
-%'   \item The \texttt{vertices} argument is the vertex data frame. This is sent to \texttt{stat\_net} through the \texttt{geom\_net} function.
-%'   \item The \texttt{geom} argument is the geometric object used to plot the data. It is by default set to \texttt{net}.
-%'   \item The \texttt{position} argument is set to \texttt{identity} because we wish to plot the network as-is, with no adjustments.
-%'   \item na.rm
-%'   \end{itemize}
-%'   \texttt{stat\_net} also accepts the following aesthetic values, none of which are required:
-%'   \begin{itemize}
-%'   \item The \texttt{layout} aesthetic is the layout algorithm to use to place the vertices of the network.  The default is the Kamada-Kawai algorithm, and there are other options listed in \ref{table:layouts}.
-%'   \item The \texttt{layout.par} aesthetic is the layout arguments to pass to the layout function.  It is set to \texttt{NA} by default, in which case the algorithm uses its set defaults in the \texttt{sna} package. This aesthetic takes a list of parameters according to the documentation by \citet{sna}.
-%'   \end{itemize}
-%'
-%'   \subsection{Creating \texttt{geom\_net}}
-%'   We constructed \texttt{geom\_net} using the drawing capabilities of the \texttt{geom\_point}, \texttt{geom\_line}, \emph{and \texttt{geom\_text}} functions that were already in \texttt{ggplot2}.  Using these capabilities, we were able to seamlessly incorporate our network geometry into the \texttt{ggplot2} structure. We took our edges data frame and used that as our input to the \texttt{GeomSegment} draw function to add a layer of segments to the plot.  Then, on top of that, we plot the vertices by passing our vertex data frame to the \texttt{GeomPoint} draw function to construct a point layer for the vertices. Finally, we use the \texttt{GeomText} draw function to add the vertex labels when the \texttt{vlabel} argument is TRUE. This adds a layer of text on top of the other two layers. We added an if/else statement in the \texttt{draw} function which created a labeling layer which is \texttt{NULL} if \texttt{vlabel = FALSE}, which is the default. We then created a new data frame for the label layer. This allows the vertex properties to be propogated through to the labels, including size and color. Finally, we added another if/else statement for the \texttt{directed} argument.  This adds arrow arguments to the edges data frame which will put arrows pointing toward the ``to" vertex in a directed network corresponding to the \texttt{to\_id} value in the edges data frame.
-%'
-%'    \subsection{\texttt{geom\_net} Usage}
-%' <<usage_geom_net, eval=FALSE>>=
-%' geom_net(mapping = NULL, data = NULL, vertices = NULL, vlabel = FALSE, directed = FALSE, stat = "net", ...)
-%' @
-%'   The usage of the \texttt{geom\_net} arguments is as follows:
-%'   \begin{itemize}
-%'   \item The \texttt{mapping} argument is the aesthetic mapping. It is constructed with \texttt{aes()} according to the aesthetic values that can be passed to \texttt{geom\_net}.
-%'   \item The \texttt{data} argument is the edges data frame.  There is usually no need to use it in \texttt{geom\_net()} because it will have already been provided in the \texttt{ggplot()} function.
-%'   \item The \texttt{vertices} argument is the vertex data frame. The vertex data frame should be provided to this argument in \texttt{geom\_net}. This data frame is required to have a column named \texttt{label} providing the labels of all vertices in the network.
-%'   \item The \texttt{vlabel} argument is a logical value which plots the label layer on top of the edge and vertex layers when it is set to \texttt{TRUE}.
-%'   \item The \texttt{directed} argument is a logical value which adds arrows to the edge layer pointing to the \texttt{to\_id} vertex when it is set to \texttt{TRUE}.
-%'   \item The \texttt{stat} argument is the statistical transformation used on the data for the network layer. It is always set to \texttt{net}.
-%'   \end{itemize}
-%'   \texttt{geom\_net} also accepts the following aesthetic values, and the ones marked with an asterisk are required:
-%'   \begin{itemize}
-%'   \item The \texttt{from\_id}* and \texttt{to\_id}* aesthetics each take one column which, when combined, provide the edges in a network.  If the network is undirected, then their order does not matter. If the network is directed, then the \emph{from} vertex names should all be in the \texttt{from\_id} column, and their corresponding \emph{to} vertex names should all be in the \texttt{to\_id} column.
-%'   \item The \texttt{ecolour} aesthetic changes the color of the edges. Its default is \texttt{grey20}
-%'   \item The \texttt{esize} aesthetic changes the size (thickness) of the edges. Its default is 1.
-%'   \item The \texttt{elinetype} aesthetic changes the linetype of the edges. Its default is 1.
-%'   \item The \texttt{ealpha} aesthetic changes the transparency of the edges. Its default is 1.
-%'   \item The \texttt{vcolour} aesthetic changes the color of the vertices. Its default is \texttt{black}.
-%'   \item The \texttt{vfill} aesthetic changes the ouline color of the vertices. Its default is \texttt{black}.
-%'   \item The \texttt{vsize} aesthetic changes the size (diameter) of the vertices. Its default is 2.
-%'   \item The \texttt{vshape} aesthetic changes the shape of the vertices. Its default is 16 (solid circular points).
-%'   \item The \texttt{valpha} aesthetic changes the transparency of the vertices. Its default is 1.
-%'   \end{itemize}
-%'
-%' \section{Future Work}
-%' As we discussed throughout the paper, there is still some work to be done.  The primary change that we need to make is to add the capability of mapping aesthetic values to the plot based on variables directly. Right now, we have the ability to do this indirectly, but we want to add this functionality so that it is easier to change the \texttt{ecolor}, \texttt{esize}, \texttt{elinetype}, \texttt{vcolor}, \texttt{vfill}, \texttt{vsize}, and \texttt{vshape} by mapping variables to these aesthetics.  We also want to include the legends for each of these aesthetics like we would normally see in \texttt{ggplot2}.   We also hope to make it an official part of the \texttt{ggplot2} world, by either adding it to \texttt{ggplot2} itself or by adding it to the \texttt{GGally} package.  We believe that this is an important contribution to \texttt{ggplot2} and to the R user community because it fills in gaps in the network plotting capabilities of R. Ultimately, our goal is to publish this paper in \textit{The R Journal}.
+\section{Technical Details}
+
+In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \texttt{R} script files: a `stat' file and a `geom' file. The stat file performs all the necessary calculations on the two input data frames, and the geom file performs the drawing of the network.
+  \subsection{Creating \texttt{stat\_net}}
+  In order to plot the network with only the edge connections and vertex names, we relied on the \texttt{sna} and \texttt{network} packages \citep{sna, network.jss}. First, we used the edges data frame to construct a network object with the \texttt{as.network()} function, then constructed an adjacency matrix from that network using the \texttt{as.matrix.network.adjacency()} function.  This adjacency matrix is then passed to the chosen \texttt{gplot.layout.*()} function from the \texttt{sna} package.  \emph{When the layout argument is changed in the \texttt{geom\_net()} function, the corresponding \texttt{gplot.layout.*()} function in \texttt{sna} is called with a \texttt{do.call()} statement.} This layout function produces a matrix of coordinates of the vertices, which we then transform into a data frame containing the coordinates of the edges using the \texttt{as.matrix.network.edgelist()} function in \texttt{network}.  We are grateful to Moritz Marbach for his \texttt{gplot()} function which we used when creating this process \citep{marbach}.  At the end of the previous routine, we have a data frame with \texttt{x, y, xend,} and \texttt{yend} columns describing the edges and another data frame with \texttt{x,y} columns describing the vertices.  These two data frames, along with the many \texttt{aes()} and other argument options get passed on to the actual network geometry for drawing.
+   \subsection{\texttt{stat\_net} Usage}
+<<usage_stat_net, eval=FALSE>>=
+stat_net(mapping = NULL, data = NULL, vertices = NULL, geom = "net", position = "identity", ...)
+@
+  The usage of the \texttt{stat\_net} arguments is as follows:
+  \begin{itemize}
+  \item The \texttt{mapping} argument is the aesthetic mapping. Currently, there is no reason to ever change it from \texttt{NULL}.
+  \item The \texttt{data} argument is the edges data frame.  This is sent to \texttt{stat\_net} through the \texttt{ggplot()} function.
+  \item The \texttt{vertices} argument is the vertex data frame. This is sent to \texttt{stat\_net} through the \texttt{geom\_net} function.
+  \item The \texttt{geom} argument is the geometric object used to plot the data. It is by default set to \texttt{net}.
+  \item The \texttt{position} argument is set to \texttt{identity} because we wish to plot the network as-is, with no adjustments.
+  \item na.rm
+  \end{itemize}
+  \texttt{stat\_net} also accepts the following aesthetic values, none of which are required:
+  \begin{itemize}
+  \item The \texttt{layout} aesthetic is the layout algorithm to use to place the vertices of the network.  The default is the Kamada-Kawai algorithm, and there are other options listed in \ref{table:layouts}.
+  \item The \texttt{layout.par} aesthetic is the layout arguments to pass to the layout function.  It is set to \texttt{NA} by default, in which case the algorithm uses its set defaults in the \texttt{sna} package. This aesthetic takes a list of parameters according to the documentation by \citet{sna}.
+  \end{itemize}
+
+  \subsection{Creating \texttt{geom\_net}}
+  We constructed \texttt{geom\_net} using the drawing capabilities of the \texttt{geom\_point}, \texttt{geom\_line}, \emph{and \texttt{geom\_text}} functions that were already in \texttt{ggplot2}.  Using these capabilities, we were able to seamlessly incorporate our network geometry into the \texttt{ggplot2} structure. We took our edges data frame and used that as our input to the \texttt{GeomSegment} draw function to add a layer of segments to the plot.  Then, on top of that, we plot the vertices by passing our vertex data frame to the \texttt{GeomPoint} draw function to construct a point layer for the vertices. Finally, we use the \texttt{GeomText} draw function to add the vertex labels when the \texttt{vlabel} argument is TRUE. This adds a layer of text on top of the other two layers. We added an if/else statement in the \texttt{draw} function which created a labeling layer which is \texttt{NULL} if \texttt{vlabel = FALSE}, which is the default. We then created a new data frame for the label layer. This allows the vertex properties to be propogated through to the labels, including size and color. Finally, we added another if/else statement for the \texttt{directed} argument.  This adds arrow arguments to the edges data frame which will put arrows pointing toward the ``to" vertex in a directed network corresponding to the \texttt{to\_id} value in the edges data frame.
+
+   \subsection{\texttt{geom\_net} Usage}
+<<usage_geom_net, eval=FALSE>>=
+geom_net(mapping = NULL, data = NULL, vertices = NULL, vlabel = FALSE, directed = FALSE, stat = "net", ...)
+@
+  The usage of the \texttt{geom\_net} arguments is as follows:
+  \begin{itemize}
+  \item The \texttt{mapping} argument is the aesthetic mapping. It is constructed with \texttt{aes()} according to the aesthetic values that can be passed to \texttt{geom\_net}.
+  \item The \texttt{data} argument is the edges data frame.  There is usually no need to use it in \texttt{geom\_net()} because it will have already been provided in the \texttt{ggplot()} function.
+  \item The \texttt{vertices} argument is the vertex data frame. The vertex data frame should be provided to this argument in \texttt{geom\_net}. This data frame is required to have a column named \texttt{label} providing the labels of all vertices in the network.
+  \item The \texttt{vlabel} argument is a logical value which plots the label layer on top of the edge and vertex layers when it is set to \texttt{TRUE}.
+  \item The \texttt{directed} argument is a logical value which adds arrows to the edge layer pointing to the \texttt{to\_id} vertex when it is set to \texttt{TRUE}.
+  \item The \texttt{stat} argument is the statistical transformation used on the data for the network layer. It is always set to \texttt{net}.
+  \end{itemize}
+  \texttt{geom\_net} also accepts the following aesthetic values, and the ones marked with an asterisk are required:
+  \begin{itemize}
+  \item The \texttt{from\_id}* and \texttt{to\_id}* aesthetics each take one column which, when combined, provide the edges in a network.  If the network is undirected, then their order does not matter. If the network is directed, then the \emph{from} vertex names should all be in the \texttt{from\_id} column, and their corresponding \emph{to} vertex names should all be in the \texttt{to\_id} column.
+  \item The \texttt{ecolour} aesthetic changes the color of the edges. Its default is \texttt{grey20}
+  \item The \texttt{esize} aesthetic changes the size (thickness) of the edges. Its default is 1.
+  \item The \texttt{elinetype} aesthetic changes the linetype of the edges. Its default is 1.
+  \item The \texttt{ealpha} aesthetic changes the transparency of the edges. Its default is 1.
+  \item The \texttt{vcolour} aesthetic changes the color of the vertices. Its default is \texttt{black}.
+  \item The \texttt{vfill} aesthetic changes the ouline color of the vertices. Its default is \texttt{black}.
+  \item The \texttt{vsize} aesthetic changes the size (diameter) of the vertices. Its default is 2.
+  \item The \texttt{vshape} aesthetic changes the shape of the vertices. Its default is 16 (solid circular points).
+  \item The \texttt{valpha} aesthetic changes the transparency of the vertices. Its default is 1.
+  \end{itemize}
+
+\section{Future Work}
+As we discussed throughout the paper, there is still some work to be done.  The primary change that we need to make is to add the capability of mapping aesthetic values to the plot based on variables directly. Right now, we have the ability to do this indirectly, but we want to add this functionality so that it is easier to change the \texttt{ecolor}, \texttt{esize}, \texttt{elinetype}, \texttt{vcolor}, \texttt{vfill}, \texttt{vsize}, and \texttt{vshape} by mapping variables to these aesthetics.  We also want to include the legends for each of these aesthetics like we would normally see in \texttt{ggplot2}.   We also hope to make it an official part of the \texttt{ggplot2} world, by either adding it to \texttt{ggplot2} itself or by adding it to the \texttt{GGally} package.  We believe that this is an important contribution to \texttt{ggplot2} and to the R user community because it fills in gaps in the network plotting capabilities of R. Ultimately, our goal is to publish this paper in \textit{The R Journal}.
 
 \bibliographystyle{asa}
 \bibliography{references}
