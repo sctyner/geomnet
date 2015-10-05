@@ -138,10 +138,26 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       stringsAsFactors = FALSE
     )
     edges <- unique(subset(edges, !is.na(xend)))
-
+  
     arrow = NULL
     if (directed) arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
 
+#     vertices <- data.frame(
+#       x = unique(c(data$x, data$xend)),
+#       y = unique(c(data$y, data$yend)))
+#     vertices$colour = data$colour[unique(c(match(data$x, vertices$x), 
+#                                            match(data$xend, vertices$x)))]
+#     vertices$shape = data$shape[unique(c(match(data$x, vertices$x), 
+#                                           match(data$xend, vertices$x)))]
+#     vertices$size = data$size[unique(c(match(data$x, vertices$x), 
+#                                          match(data$xend, vertices$x)))]
+#     vertices$stroke = data$stroke[unique(c(match(data$x, vertices$x), 
+#                                            match(data$xend, vertices$x)))]
+#     vertices$fill = data$fill[unique(c(match(data$x, vertices$x), 
+#                                          match(data$xend, vertices$x)))]
+#     vertices$alpha = data$alpha[unique(c(match(data$x, vertices$x), 
+#                                           match(data$xend, vertices$x)))]
+#     vertices <- unique(vertices)
     vertices <- data.frame(
       x = data$x,
       y = data$y,
