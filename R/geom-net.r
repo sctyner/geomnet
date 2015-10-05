@@ -76,14 +76,11 @@
 #' ## Les Miserables example
 #'
 #' data(lesmis)
-#' lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label")
-#' lesmisnet$from <- as.factor(lesmisnet$from)
-#' lesmisnet$to <- as.factor(lesmisnet$to)
-#' ggplot(data=lesmisnet, aes(from_id=from, to_id=to)) +
-#'   geom_net(layout="fruchtermanreingold")
+#' lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all=TRUE)
+#' p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
+#' p + geom_net(layout="fruchtermanreingold")
+#' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
 #'
-
-
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", esize = NULL, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, ...) {
