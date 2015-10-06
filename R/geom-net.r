@@ -27,7 +27,7 @@
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho))
 #' p + geom_net(aes(colour=rho), label=TRUE)
-#' p + geom_net(aes(colour=rho), label=TRUE, directed=TRUE, epullback=0.02)
+#' p + geom_net(aes(colour=rho), label=TRUE, labelcolour="black", directed=TRUE, epullback=0.03)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
@@ -117,7 +117,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
                              shape = 19, colour = "grey30",
                              size = 4, fill = NA, alpha = NA, stroke = 0.5,
-                             linewidth=1, angle=0, vjust=0),
+                             linewidth=1, angle=0, vjust=-0.5),
 
   draw_key = function(data, params)  {
     with(data, grobTree(
