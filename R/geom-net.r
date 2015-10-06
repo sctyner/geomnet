@@ -2,7 +2,8 @@
 #'
 #' @inheritParams ggplot2::stat_identity
 #' @param stat character string of the network stat corresponding to geom_net.
-#' @param alpha numeric value of alpha blending of edges.
+#' @param alpha numeric value of alpha blending of vertices.
+#' @param ealpha numeric value of alpha blending of edges.
 #' @param na.rm If \code{FALSE} (the default), removes missing values with
 #'    a warning. If \code{TRUE} silently removes missing values.
 #' @param layout character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.
@@ -95,13 +96,13 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", ealpha=NULL, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
-                  ecolour = ecolour,  directed=directed,
+                  ecolour = ecolour, ealpha=ealpha, directed=directed,
                   arrowsize=arrowsize, labelcolour=labelcolour, ...)
   )
 }
@@ -113,8 +114,8 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
                              shape = 19, colour = "grey30",
-                             size = 4, fill = NA,
-                             alpha = NA, stroke = 0.5, linewidth=1, angle=0, vjust=0),
+                             size = 4, fill = NA, alpha = NA, stroke = 0.5,
+                             linewidth=1, angle=0, vjust=0),
 
   draw_key = function(data, params)  {
     with(data, grobTree(
@@ -133,7 +134,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     data
   },
 
-  draw_panel = function(data, panel_scales, coord,  ecolour="grey60",
+  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
 
     data$self <- data$to == data$from
@@ -144,7 +145,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       yend = data$yend,
       colour = ecolour,
       size = data$linewidth %||% (data$size / 4),
-      alpha = data$alpha,
+      alpha = ealpha %||% data$alpha,
       linetype=data$linetype,
       stroke = data$stroke,
       self = data$self,

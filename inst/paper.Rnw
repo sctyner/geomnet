@@ -286,7 +286,7 @@ proteinnet <- merge(yeast.samp$vertices, yeast.samp$edges, by.x="label", by.y="f
 @
 <<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=FALSE>>=
 ggplot(data = proteinnet, aes(from_id = label, to_id = to)) +
-  geom_net(alpha = .25, colour = 'magenta', layout = 'random',
+  geom_net(alpha=0.25, ealpha = .1, colour = 'magenta', layout = 'random',
            layout.par = list(dist = 'uniang')) +
   theme_net()
 @
