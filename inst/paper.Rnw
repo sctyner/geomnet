@@ -67,10 +67,15 @@ ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all
 
 \hh{todo list:
 \begin{enumerate}
-\item there is no protein.rda in the data folder - could you please put it there?
 \item include installation instruction for package ggnet
+\item the biggest change to the previous implementation is that there is no longer a vertices data set. Instead, all of the vertex information has to be included in the edge dataset. The assumption is that any vertex information included relates to the `from\_id' column. If the user does not include ALL vertex information in the dataset (i.e. if some vertices only show up under the `to\_id' column), there will be segment ends without a dot in the graphic. As a measure against that, we suggest to merge edges and vertex information along the `from\_id' column using the parameter setting `all = TRUE'. This ensures all vertices to be included; if a vertex is a sink, the corresponding `to\_id' value is set to NA. This is accommodated for both in the layout and the drawing of the graph.
+\item the parameters have changed names: all of the vertex parameters have the regular names, edge parameters start with `e'. `esize' is re-named to `linewidth'.
+Some parameters might not be implemented yet, we need to get a good overview of what is missing and what works.
+\item we could draw selfies, but at the moment we don't. We need to discuss this.
 \end{enumerate}
 }
+\tableofcontents
+\newpage
 \section{Introduction}
 At its core, a network is simply a set of points connected in pairs by a set of lines \citep{newman}.  Here, we refer to the lines as edges and the points as vertices, although these are also called nodes.  These two seemingly simple sets of graphical objects, points and segments, are used to encode a huge variety and quantity of information across many fields of study. For instance, networks of scientific collaboration, a food web of marine animals, and American college football games are all covered in a paper on community detection in networks by \citet{football}.  Additionally, \citet{networkfailures} examine node failure in interdependent networks like power grids.  Social networks, such as links between actors found on \url{www.imdb.com}, and neural networks, like the completely mapped neural network of the \textit{C. elegans} worm are also etensively studied \citep{smallworld}.  Networks vary widely in scope and complexity: the smallest network is simply an edge between two vertices, while one of the most commonly used and most complex networks, the world wide web, has billions of vertices (webpages) and billions of edges (hyperlinks) connecting them.  The edges in a network can  be directed or undirected: directed edges represent information travelling from one vertex to another, and switching the direction would change the structure of the network. The world wide web is an example of a directed network because one webpage may link to another, and not necessarily the other way around. Undirected edges, however, are simply connections between vertices.  Coauthorship networks that encode information about academic publications are examples of undirected networks because if two people author a paper together, that creates a connection between them that is bidirectional.
 
@@ -269,29 +274,31 @@ ggplot(data = lesmisnet, aes(from_id = from, to_id = to, linewidth = value/5)) +
 \end{figure}
 \afterpage{\clearpage}
 
-%'   \subsection{Protein Interaction Network in Yeast}
-%'   This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}. Because the network is very large, we randomly sampled 500 interactions and their associated proteins to plot it in figure \ref{fig.cap:yeast_ex}.  We also demonstrate the layout capabilities by changing the layout to random and setting the distribution to \texttt{"uniang"}, which is a  ``gaussian donut" layout.  Indeed, we see a nearly round area in the middle of the graph where the layout parameter has forced there to be no vertices.
-%'
-%' <<yeast_code>>=
-%' sample.edges <- yeast$edges[sample(nrow(yeast$edges), 500),]
-%' yeast.samp <- list(edges = sample.edges, vertices = data.frame(label = unique(c(sample.edges$V1,sample.edges$V2))))
-%' @
-%' <<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=FALSE>>=
-%' ggplot(data = yeast.samp$edges, aes(from_id = V1, to_id = V2)) +
-%'   geom_net(vertices = yeast.samp$vertices, ealpha = .25, valpha = .5,
-%'            vcolour = 'magenta', layout = 'random',
-%'            layout.par = list(dist = 'uniang')) +
-%'   expand_limits(x = c(0,1), y = c(0,1)) + theme_net
-%' @
-%'
-%' \begin{figure}
-%' \centering
-%' \includegraphics[width=\textwidth]{figure/yeast_ex-1.pdf}
-%' \caption{\label{fig.cap:yeast_ex} A subset of the complete protein-protein interaction network in \emph{S. cerevisiae}. The layout is random.}
-%' \end{figure}
-%' \afterpage{\clearpage}
-%'
-%'
+  \subsection{Protein Interaction Network in Yeast}
+  This example of a protein interaction network comes from \citet{protein}. It is the complete protein-protein interaction network in the yeast species \emph{S. cerevisiae}. There are 1,870 proteins that make up the vertices of this network, and there are 2,240 edges between them.  These edges represent ``direct physical interactions" between any 2 proteins \citep[][p. 42]{protein}. Because the network is very large, we randomly sampled 500 interactions and their associated proteins to plot it in figure \ref{fig.cap:yeast_ex}.  We also demonstrate the layout capabilities by changing the layout to random and setting the distribution to \texttt{"uniang"}, which is a  ``gaussian donut" layout.  Indeed, we see a nearly round area in the middle of the graph where the layout parameter has forced there to be no vertices.
+
+<<yeast_code>>=
+yeast <- protein
+sample.edges <- yeast$edges[sample(nrow(yeast$edges), 500),]
+yeast.samp <- list(edges = sample.edges, vertices = data.frame(label = unique(c(sample.edges$from,sample.edges$to))))
+
+proteinnet <- merge(yeast.samp$vertices, yeast.samp$edges, by.x="label", by.y="from", all=TRUE)
+@
+<<yeast_ex, echo=TRUE, fig.cap="Protein in protein interation network in yeast.", cache=FALSE>>=
+ggplot(data = proteinnet, aes(from_id = label, to_id = to)) +
+  geom_net(alpha = .25, colour = 'magenta', layout = 'random',
+           layout.par = list(dist = 'uniang')) +
+  theme_net()
+@
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{figure/yeast_ex-1.pdf}
+\caption{\label{fig.cap:yeast_ex} A subset of the complete protein-protein interaction network in \emph{S. cerevisiae}. The layout is random.}
+\end{figure}
+\afterpage{\clearpage}
+
+
 \section{Technical Details}
 
 In order to construct the \texttt{geom} in \texttt{ggplot2}, we needed two \texttt{R} script files: a `stat' file and a `geom' file. The stat file performs all the necessary calculations on the two input data frames, and the geom file performs the drawing of the network.
