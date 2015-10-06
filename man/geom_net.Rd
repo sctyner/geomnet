@@ -8,8 +8,9 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   alpha = 0.25, layout = "kamadakawai", layout.par = list(),
-  fiteach = FALSE, label = FALSE, ecolour = "grey60", directed = FALSE,
-  arrowsize = 1, labelcolour = NULL, ...)
+  fiteach = FALSE, label = FALSE, ecolour = "grey60", ealpha = NULL,
+  epullback = 0, directed = FALSE, arrowsize = 1, labelcolour = NULL,
+  ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -38,7 +39,7 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
-\item{alpha}{numeric value of alpha blending of edges.}
+\item{alpha}{numeric value of alpha blending of vertices.}
 
 \item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
 
@@ -49,6 +50,10 @@ the default plot specification, e.g. \code{\link{borders}}.}
 \item{label}{logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.}
 
 \item{ecolour}{colour for edges.}
+
+\item{ealpha}{numeric value of alpha blending of edges.}
+
+\item{epullback}{numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.}
 
 \item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
 
@@ -85,6 +90,7 @@ p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(aes(colour=rho))
 p + geom_net(aes(colour=rho), label=TRUE)
+p + geom_net(aes(colour=rho), label=TRUE, directed=TRUE, epullback=0.02)
 p + geom_net(colour = "orange", layout = 'circle', size = 6)
 p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
 p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
@@ -131,6 +137,9 @@ ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CitizenshipCountry), linewidth=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+  facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
+ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
+  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=FALSE) + scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 
 ## Les Miserables example

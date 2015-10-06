@@ -16,6 +16,7 @@
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
 #' @param arrowsize numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
+#' @param epullback numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.
 #'
 #' @export
 #' @examples
@@ -26,6 +27,7 @@
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho))
 #' p + geom_net(aes(colour=rho), label=TRUE)
+#' p + geom_net(aes(colour=rho), label=TRUE, directed=TRUE, epullback=0.02)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
@@ -96,13 +98,13 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", ealpha=NULL, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", ealpha=NULL, epullback=0, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
-                  ecolour = ecolour, ealpha=ealpha, directed=directed,
+                  ecolour = ecolour, ealpha=ealpha, epullback=epullback, directed=directed,
                   arrowsize=arrowsize, labelcolour=labelcolour, ...)
   )
 }
@@ -134,7 +136,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     data
   },
 
-  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL,
+  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, epullback=0,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
 
     data$self <- data$to == data$from
@@ -154,6 +156,12 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     selfies <- subset(edges, self == TRUE)
     edges <- subset(edges, self != TRUE) # what are we going to do with self references?
     edges <- unique(subset(edges, !is.na(xend)))
+
+    if (directed) {
+      edges <- transform(edges,
+                         xend = x + (1-epullback)*(xend-x),
+                         yend = y + (1-epullback)*(yend-y))
+    }
 
     arrow = NULL
     if (directed) arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")

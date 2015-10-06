@@ -31,6 +31,7 @@ There are many implementations of static network visualization in R, but none ar
 library(knitr)
 opts_chunk$set(tidy = FALSE, echo=FALSE, cache=FALSE, eval = TRUE, message = FALSE, warning = FALSE,  fig.height = 8, fig.width = 8, fig.align = 'center',fig.show='hide')
 @
+
 <<readingdata, eval=TRUE, echo=FALSE>>=
 library(ggplot2) # needs to be version ≥ 1.0.1.9003
 library(ggnet) # install from github
