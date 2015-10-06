@@ -26,6 +26,12 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     data$to_id[is.na(data$to_id)] <- "..NA.."
     data$to_id <- factor(data$to_id, levels = c(levels, "..NA.."))
 
+    # check that all vertices are included in the data set
+    only_to <- setdiff(levels(data$to_id), levels(data$from_id))
+    only_to <- setdiff(only_to, "..NA..")
+    if (length(only_to) > 0)
+      warning(sprintf("There are %d nodes without node information: %s\n\nDid you use all=T in merge?\n\n", length(only_to), paste(only_to, collapse=", ")))
+
     if (fiteach) return(data)
 
     self$compute_network(data, layout=params$layout, layout.par=params$layout.par)
