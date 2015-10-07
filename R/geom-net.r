@@ -16,7 +16,7 @@
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
 #' @param arrowsize numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
-#' @param epullback numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.
+#' @param arrowgap numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.
 #'
 #' @export
 #' @examples
@@ -27,7 +27,7 @@
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho))
 #' p + geom_net(aes(colour=rho), label=TRUE)
-#' p + geom_net(aes(colour=rho), label=TRUE, labelcolour="black", directed=TRUE, epullback=0.03)
+#' p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, arrowgap=0.01) + theme_net()
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
@@ -42,6 +42,8 @@
 #' p + geom_net(label=TRUE)
 #' p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
 #' p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
+#'     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
+#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, label=TRUE, arrowgap=0.01, labelcolour="black") +
 #'     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 #'
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
@@ -98,13 +100,13 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", ealpha=NULL, epullback=0, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", ealpha=NULL, arrowgap=0, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
-                  ecolour = ecolour, ealpha=ealpha, epullback=epullback, directed=directed,
+                  ecolour = ecolour, ealpha=ealpha, arrowgap=arrowgap, directed=directed,
                   arrowsize=arrowsize, labelcolour=labelcolour, ...)
   )
 }
@@ -117,7 +119,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
                              shape = 19, colour = "grey30",
                              size = 4, fill = NA, alpha = NA, stroke = 0.5,
-                             linewidth=1, angle=0, vjust=-0.5),
+                             linewidth=1, angle=0, vjust=0),
 
   draw_key = function(data, params)  {
     with(data, grobTree(
@@ -132,13 +134,14 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   setup_data = function(data, params, mapping) {
-
+#browser()
     data
   },
 
-  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, epullback=0,
+  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, arrowgap=0,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
 
+#    browser()
     data$self <- data$to == data$from
     edges <- data.frame(
       x = data$x,
@@ -157,14 +160,16 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     edges <- subset(edges, self != TRUE) # what are we going to do with self references?
     edges <- unique(subset(edges, !is.na(xend)))
 
-    if (directed) {
-      edges <- transform(edges,
-                         xend = x + (1-epullback)*(xend-x),
-                         yend = y + (1-epullback)*(yend-y))
-    }
-
     arrow = NULL
-    if (directed) arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
+    if (directed) {
+      arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
+
+      arrowgap <- with(edges, arrowgap/sqrt((xend-x)^2+(yend-y)^2))
+      edges <- transform(edges,
+                         xend = x + (1-arrowgap)*(xend-x),
+                         yend = y + (1-arrowgap)*(yend-y))
+
+    }
 
 #     vertices <- data.frame(
 #       x = unique(c(data$x, data$xend)),
