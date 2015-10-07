@@ -9,7 +9,7 @@ geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   alpha = 0.25, layout = "kamadakawai", layout.par = list(),
   fiteach = FALSE, label = FALSE, ecolour = "grey60", ealpha = NULL,
-  epullback = 0, directed = FALSE, arrowsize = 1, labelcolour = NULL,
+  arrowgap = 0, directed = FALSE, arrowsize = 1, labelcolour = NULL,
   ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
@@ -53,7 +53,7 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{ealpha}{numeric value of alpha blending of edges.}
 
-\item{epullback}{numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.}
+\item{arrowgap}{numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.}
 
 \item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
 
@@ -90,7 +90,7 @@ p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(aes(colour=rho))
 p + geom_net(aes(colour=rho), label=TRUE)
-p + geom_net(aes(colour=rho), label=TRUE, labelcolour="black", directed=TRUE, epullback=0.03)
+p + geom_net(aes(colour=rho), label=TRUE, labelcolour="black", directed=TRUE, arrowgap=0.03)
 p + geom_net(colour = "orange", layout = 'circle', size = 6)
 p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
 p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
