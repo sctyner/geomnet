@@ -17,8 +17,8 @@
 \newcommand{\sct}[1]{{\color{purple} #1}}
 \newcommand{\sctq}[1]{{\color{red} #1}} %things in red are questions for you or concerns that i have.
 
-\title{A Geometry for Network Visualization in \MakeLowercase{\texttt{ggplot2}}}
-\author{Sam Tyner and Heike Hofmann}
+\title{Network Visualizations in \MakeLowercase{\texttt{ggplot2}}}
+\author{Sam Tyner and Fran\c{c}ois Briatte and  Heike Hofmann}
 \date{} % delete this line to display the current date
 %%% BEGIN DOCUMENT
 \begin{document}
