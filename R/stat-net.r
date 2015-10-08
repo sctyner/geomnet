@@ -38,12 +38,19 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   },
 
 compute_network = function(data, layout="kamadakawai", layout.par=list()) {
-#  browser()
   edges <- unique(subset(data, to_id != "..NA..")[,c('from_id', 'to_id')])
 
   net <- network::as.network(edges, matrix.type = "edgelist") #from network package
   m <- network::as.matrix.network.adjacency(net)
 
+  if (is.null(layout)) {
+    vert.coord <- data[, c("x", "y", "from_id")]
+    vert.coord <- subset(vert.coord, from_id %in% row.names(m))
+    vert.coord <- unique(vert.coord)
+    vert.coord$x <- as.numeric(scale(vert.coord$x, center=min(vert.coord$x), scale=diff(range(vert.coord$x))))
+    vert.coord$y <- as.numeric(scale(vert.coord$y, center=min(vert.coord$y), scale=diff(range(vert.coord$y))))
+    names(vert.coord)[3] <- "label"
+  } else {
   #print("it would be nice at this point to check, whether layout is one of the supported functions, and if not,
   require(sna)
   layoutFun <- paste('gplot.layout.',layout,sep='')
@@ -53,15 +60,17 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   vert.coord$X1 <- scale(vert.coord$X1, center=min(vert.coord$X1), scale=diff(range(vert.coord$X1))) # center nodes
   vert.coord$X2 <- scale(vert.coord$X2, center=min(vert.coord$X2), scale=diff(range(vert.coord$X2)))
   names(vert.coord) <- c("x", "y", "label")
-
+}
   edgelist <- network::as.matrix.network.edgelist(net) #network pkg
+
   edge.coord <- data.frame(vert.coord[edgelist[,1],], vert.coord[edgelist[,2],], row.names=NULL)
   names(edge.coord) <- c('x','y', "from", 'xend','yend', "to")
 
-  fromto <- subset(data, to_id != "..NA..")
+  relVars <- setdiff(names(data), c("x", "y"))
+  fromto <- subset(data, to_id != "..NA..")[,relVars]
   edges <- merge(edge.coord, fromto, by.x=c("from", "to"), by.y=c("from_id", "to_id"), all=TRUE)
 
-  fromonly <- subset(data, to_id == "..NA..")
+  fromonly <- subset(data, to_id == "..NA..")[,relVars]
   if (nrow(fromonly) > 0) {
     fromonly <- merge(fromonly, edge.coord[,c("xend", "yend", "to")], by.x = "from_id", by.y="to", all.x=T)
     fromonly <- transform(fromonly,
@@ -70,6 +79,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 
     edges <- rbind(edges, fromonly[, names(edges)])
   }
+  edges <- unique(edges)
   edges
 },
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
