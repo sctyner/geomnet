@@ -35,7 +35,8 @@ opts_chunk$set(tidy = FALSE, echo=FALSE, cache=FALSE, eval = TRUE, message = FAL
 <<readingdata, eval=TRUE, echo=FALSE>>=
 library(ggplot2) # needs to be version ≥ 1.0.1.9003
 library(ggnet) # install from github
-data(blood, football, theme_elements, lesmis,madmen, mm_directed, email)
+data(blood, football, theme_elements, lesmis,madmen, mm_directed, email,
+     bikes)
 
 data(protein)
 library(RColorBrewer)
@@ -67,6 +68,7 @@ for (i in 1:nrow(football$edges)){
 }
 ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)
 
+tripnet <- merge(bikes$trips, bikes$stations, by.x="Start.station", by.y="name", all=TRUE)
 @
 
 \hh{todo list:
@@ -235,8 +237,12 @@ This plot is shown in figure \ref{fig.cap: email_ex_facet}. With the facetting, 
   \subsection{\texttt{ggplot2} Theme Elements}
 This example comes from the \texttt{theme()} help page in the \texttt{ggplot2} documentation \citep{ggplot}.  It is a directed network which shows the structure of the inheritance of theme options in the construction of a \texttt{ggplot2} plot.  There are 53 vertices and 36 edges in this network. Each vertex represents one possible theme option. There is an arrow from one theme option to another if the element represented by the \emph{to} vertex inherits its values from the \emph{from} vertex.  For example, the \texttt{axis.ticks.x} option inherits its value from the \texttt{axis.ticks} value, which inherits its value from the \texttt{line} option.  Thus, setting the \texttt{line} option to a value such as \texttt{element\_blank()} sets the entire inheritance tree to \texttt{element\_blank()}, and no lines appear anywhere on the plot background. Finally, we note that the vertices with no edges were incorporated into the plot by adding their labels to the edges data frame in both the  `from\_id' and `to\_id' columns before passing the edges data frame to \texttt{ggplot}.
 <<theme_ex, echo=TRUE, fig.cap= 'Inheritance structure for \\texttt{theme} elements in \\texttt{ggplot2}.'>>=
+library(dplyr)
+TEnet <- TEnet %>% group_by(parent) %>% mutate(degree=sqrt(10*n()+1))
+
 ggplot(data = TEnet, aes(from_id = parent, to_id = child)) +
-  geom_net(directed = TRUE, label = TRUE, vjust=-.5) +
+  geom_net(aes(fontsize=degree), directed = TRUE, label = TRUE, vjust=-.5,
+           size=3) +
   theme_net() + xlim(c(-0.05, 1.05))
 @
 \begin{figure}
@@ -302,6 +308,38 @@ ggplot(data = lesmisnet, aes(from_id = from, to_id = to, linewidth = value/5)) +
 \centering
 \includegraphics[width=\textwidth]{figure/lesmis_ex-1.pdf}
 \caption{\label{fig.cap:lesmis_ex} Co-appearance network of characters in Victor Hugo's \emph{Les Mis\'{e}rables}.}
+\end{figure}
+\afterpage{\clearpage}
+
+\subsection{Bikesharing in D.C.}
+The data shows the second quartal trips in 2015 taken with bikes from the bike share company https://secure.capitalbikeshare.com/.
+While this bikesharing company is located in the heart of Washington D.C.\ they do have a set of bike stations just outside of Washington in  Rockville, MD and north of it.
+Each station is shown as a dot, lines between stations indicate that at least five trips were taken between these two stations; the wider the line, the more trips have been taken between stations. In order to reflect distance between stations, we use as an additional restriction that the fastest trip was at most ten minutes long.
+
+<<bikes_ex, echo=TRUE, fig.cap="Bikesharing in Rockville", warning=FALSE, fig.keep='all'>>=
+tripnet$Metro = FALSE
+idx <- grep("Metro", tripnet$Start.station)
+tripnet$Metro[idx] <- TRUE
+
+ggplot(aes(from_id=Start.station, to_id=End.station), data=tripnet) +
+  geom_net(aes(linewidth=n/15, colour=Metro), label=TRUE, vjust=-0.5) +
+  theme_net() + xlim(c(-0.1, 1.1)) +
+  scale_colour_manual(values=c("grey40", "darkorange"))
+# compare to https://secure.capitalbikeshare.com/map/
+
+ggplot(aes(from_id=Start.station, to_id=End.station),  data=tripnet) +
+  geom_net(layout=NULL, label=TRUE, vjust=-0.5,
+           aes(x=long, y=lat, linewidth=n/15, colour=Metro)) +
+  theme_net() +
+    scale_colour_manual(values=c("grey40", "darkorange"))
+
+@
+
+\begin{figure}
+\centering
+\includegraphics[width=.49\textwidth]{figure/bikes_ex-1.pdf}
+\includegraphics[width=.49\textwidth]{figure/bikes_ex-2.pdf}
+\caption{\label{fig:bikes} Network of bike trips using a Kamada-Kawai layout (left) and a geographically true representation (right). Metro stations are shown in orange. In the Kamada-Kawai layout based on the trips taken, metro stations take a much more central position than in the geographically true representation. }
 \end{figure}
 \afterpage{\clearpage}
 

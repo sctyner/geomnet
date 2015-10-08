@@ -100,7 +100,7 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", ealpha=NULL, arrowgap=0, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", ealpha=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
@@ -138,11 +138,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     data
   },
 
-  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, arrowgap=0,
+  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
 
 #    browser()
-    data$self <- data$to == data$from
+    data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
       xend = data$xend,
@@ -171,22 +171,6 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
     }
 
-#     vertices <- data.frame(
-#       x = unique(c(data$x, data$xend)),
-#       y = unique(c(data$y, data$yend)))
-#     vertices$colour = data$colour[unique(c(match(data$x, vertices$x),
-#                                            match(data$xend, vertices$x)))]
-#     vertices$shape = data$shape[unique(c(match(data$x, vertices$x),
-#                                           match(data$xend, vertices$x)))]
-#     vertices$size = data$size[unique(c(match(data$x, vertices$x),
-#                                          match(data$xend, vertices$x)))]
-#     vertices$stroke = data$stroke[unique(c(match(data$x, vertices$x),
-#                                            match(data$xend, vertices$x)))]
-#     vertices$fill = data$fill[unique(c(match(data$x, vertices$x),
-#                                          match(data$xend, vertices$x)))]
-#     vertices$alpha = data$alpha[unique(c(match(data$x, vertices$x),
-#                                           match(data$xend, vertices$x)))]
-#     vertices <- unique(vertices)
     vertices <- data.frame(
       x = data$x,
       y = data$y,
