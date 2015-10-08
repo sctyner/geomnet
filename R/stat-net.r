@@ -44,6 +44,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   m <- network::as.matrix.network.adjacency(net)
 
   if (is.null(layout)) {
+    if (is.null(data$x) || is.null(data$y)) stop("If no layout mechanism is specified, x and y coordinates have to be given\n\n")
     vert.coord <- data[, c("x", "y", "from_id")]
     vert.coord <- subset(vert.coord, from_id %in% row.names(m))
     vert.coord <- unique(vert.coord)
