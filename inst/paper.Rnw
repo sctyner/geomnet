@@ -17,6 +17,9 @@
 \newcommand{\sct}[1]{{\color{purple} #1}}
 \newcommand{\sctq}[1]{{\color{red} #1}} %things in red are questions for you or concerns that i have.
 
+%just until we switch to the R journal style file
+\newcommand{\code}[1]{{\tt{ #1}}}
+
 \title{Network Visualizations in \MakeLowercase{\texttt{ggplot2}}}
 \author{Sam Tyner and Fran\c{c}ois Briatte and  Heike Hofmann}
 \date{} % delete this line to display the current date
@@ -140,9 +143,17 @@ We found the current tools to be lacking in this ability, so we chose to fill th
  \hh{XXXX}
 
 \subsection{geom\_net}
-  \subsubsection{Data Structure}
-In order for this geometry to work using data frames, there need to be two separate data frames given to the \texttt{geom\_net} function: one for the edge information and one for the vertex information. The vertex data frame should contain all the relevant vertex information. The only necessary variable is one called \texttt{label} which contains the vertex labels as they are encoded in the edges data set. This will be a formal requirement in the final version of the \texttt{geom\_net} function.  Each row represents one vertex.  Other values of interest, such as grouping variables or degree of each vertex should be stored as columns in this dataframe, with an observation for each vertex.
-  \par The edge data frame should contain all the relevant edge information. The only necessary variables are the ``from vertex" and ``to vertex" for each edge in the network. The From and To vertices should match the names of the vertices in the vertex information data frame. The formal names for these columns are \texttt{from\_id} and \texttt{to\_id}, respectively.  Other variables may also be included for each edge, such as the edge weight or grouping variable.  As before, the variables of interest are columns in the data frame and the rows are each edge in the network.
+\subsubsection{Data Structure}
+\hh{Network analysis is usally working with two sources of information: one data set consisting of a description of the `players', represented as the nodes or vertices in the network, and another data set detailing the relationship between the players, the edge dataset.
+In order for this geometry to work, these two data sets need to be combined into a single dataset. For this, we are using the convention that all of the node information is merged into the edge data set using the `from' as the reference column. Generally, there will be some vertices that are sinks in the network, ie.\ they only show up in the `to' column. We can easily accommodate for these nodes by adding artificial edges in the data set, that have missing information for the `to' column.
+Fortunately, R provides functions that allow for an easy way of producing the required result: both \code{merge} and \code{join} can be used. In \code{merge} the paramter all needs to be set to TRUE, in \code{join}, the parameter setting has to be \code{type=`full'}, and \code{all=TRUE}.
+
+}
+\hh{The formal requirement of  \code{stat\_net} are two columns, called \code{from\_id} and \code{to\_id}. During this routine, columns \code{x, y} and \code{xend, yend} are calculated and used as a required input for \code{geom\_net}.}
+% In order for this geometry to work using data frames, there need to be two separate data frames given to the \texttt{geom\_net} function: one for the edge information and one for the vertex information. The vertex data frame should contain all the relevant vertex information. The only necessary variable is one called \texttt{label} which contains the vertex labels as they are encoded in the edges data set. This will be a formal requirement in the final version of the \texttt{geom\_net} function.  Each row represents one vertex.  Other values of interest, such as grouping variables or degree of each vertex should be stored as columns in this dataframe, with an observation for each vertex.
+%   \par The edge data frame should contain all the relevant edge information. The only necessary variables are the ``from vertex" and ``to vertex" for each edge in the network. The From and To vertices should match the names of the vertices in the vertex information data frame. The formal names for these columns are \texttt{from\_id} and \texttt{to\_id}, respectively.
+
+Other variables may also be included for each edge, such as the edge weight or grouping variable.  %As before, the variables of interest are columns in the data frame and the rows are each edge in the network.
 
   \subsubsection{Vertex Aesthetics}
 
@@ -339,7 +350,7 @@ ggplot(aes(from_id=Start.station, to_id=End.station),  data=tripnet) +
 \centering
 \includegraphics[width=.49\textwidth]{figure/bikes_ex-1.pdf}
 \includegraphics[width=.49\textwidth]{figure/bikes_ex-2.pdf}
-\caption{\label{fig:bikes} Network of bike trips using a Kamada-Kawai layout (left) and a geographically true representation (right). Metro stations are shown in orange. In the Kamada-Kawai layout based on the trips taken, metro stations take a much more central position than in the geographically true representation. }
+\caption{\label{fig:bikes} Network of bike trips using a Kamada-Kawai layout (left) and a geographically true representation (right, \hh{XXX I would like to include a ggmap here, we need to wait until that package is fixed}). Metro stations are shown in orange. In the Kamada-Kawai layout based on the trips taken, metro stations take a much more central position than in the geographically true representation. }
 \end{figure}
 \afterpage{\clearpage}
 
