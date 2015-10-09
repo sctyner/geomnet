@@ -9,13 +9,13 @@ geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   alpha = 0.25, layout = "kamadakawai", layout.par = list(),
   fiteach = FALSE, label = FALSE, ecolour = "grey60", ealpha = NULL,
-  arrowgap = 0, directed = FALSE, arrowsize = 1, labelcolour = NULL,
-  ...)
+  arrowgap = 0.01, directed = FALSE, arrowsize = 1, labelcolour = NULL,
+  vertices = NULL, ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   layout = "kamadakawai", layout.par = list(), fiteach = FALSE,
-  na.rm = FALSE, ...)
+  vertices = NULL, na.rm = FALSE, ...)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -85,12 +85,15 @@ Geom for network visualization within the ggplot2 framework
 \examples{
 library(ggplot2)
 data(blood)
+p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
+p + geom_net(vertices=blood$vertices, aes(colour=..type..))
+
 bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(aes(colour=rho))
 p + geom_net(aes(colour=rho), label=TRUE)
-p + geom_net(aes(colour=rho), label=TRUE, labelcolour="black", directed=TRUE, arrowgap=0.03)
+p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, arrowgap=0.01) + theme_net()
 p + geom_net(colour = "orange", layout = 'circle', size = 6)
 p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
 p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
@@ -105,6 +108,8 @@ p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 p + geom_net(label=TRUE)
 p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
 p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
+    scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, label=TRUE, arrowgap=0.01, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
