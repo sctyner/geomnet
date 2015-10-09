@@ -10,6 +10,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   non_missing_aes = "weight",
 
   setup_params = function(data, params) {
+#    browser()
 #    print(str(params))
 
     params
@@ -19,6 +20,10 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     fiteach=params$fiteach
     if (!is.factor(data$from_id)) data$from_id <- factor(data$from_id)
     if (!is.factor(data$to_id)) data$to_id <- factor(data$to_id)
+
+    if (!is.null(params$vertices)) {
+      data <- merge(data, params$vertices, by.x="from_id", by.y="label", all=TRUE)
+    }
 
     # we want to keep all of the values that are NA in the second edge - give them a special value, so we can pull them out later
     levels <- levels(data$to_id)
@@ -84,7 +89,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   edges
 },
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
-                           layout="kamadakawai", layout.par=list(), fiteach=FALSE) {
+                           layout="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL) {
 
     if (fiteach) return(self$compute_network(data, layout=layout, layout.par=layout.par))
 
@@ -100,13 +105,13 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 #' @export
 stat_net <- function(mapping = NULL, data = NULL, geom = "point",
                      position = "identity", show.legend = NA,
-                     inherit.aes = TRUE, layout="kamadakawai", layout.par=list(), fiteach=FALSE,
+                     inherit.aes = TRUE, layout="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL,
                      na.rm=FALSE, ...) {
   layer(
     stat = StatNet, data = data, mapping = mapping, geom = geom, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach,
-                  na.rm=na.rm, ...
+                  na.rm=na.rm, vertices=vertices, ...
     )
   )
 }

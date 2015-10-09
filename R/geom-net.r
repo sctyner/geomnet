@@ -22,6 +22,9 @@
 #' @examples
 #' library(ggplot2)
 #' data(blood)
+#' p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
+#' p + geom_net(vertices=blood$vertices, aes(colour=..type..))
+#'
 #' bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 #' p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 #' p + geom_net()
@@ -101,13 +104,13 @@
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey60", ealpha=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
-                      labelcolour=NULL, ...) {
+                      labelcolour=NULL, vertices=NULL, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
                   ecolour = ecolour, ealpha=ealpha, arrowgap=arrowgap, directed=directed,
-                  arrowsize=arrowsize, labelcolour=labelcolour, ...)
+                  arrowsize=arrowsize, labelcolour=labelcolour, vertices=vertices,  ...)
   )
 }
 
