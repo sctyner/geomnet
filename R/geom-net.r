@@ -122,7 +122,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
                              shape = 19, colour = "grey30",
                              size = 4, fill = NA, alpha = NA, stroke = 0.5,
-                             linewidth=1, angle=0, vjust=0),
+                             linewidth=1, angle=0, vjust=0, hjust=0.5),
 
   draw_key = function(data, params)  {
     with(data, grobTree(
@@ -199,6 +199,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         angle = data$angle,
         alpha = NA,
         vjust= data$vjust,
+        hjust=data$hjust,
         stringsAsFactors = FALSE
       )
       labels <- unique(labels)
