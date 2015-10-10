@@ -5,6 +5,8 @@
 \usepackage{url}
 \usepackage{afterpage}
 \usepackage{pdflscape}
+\usepackage[font=small,skip=5pt]{caption}
+\usepackage{subcaption}
 \usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 \geometry{letterpaper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
@@ -38,6 +40,7 @@ opts_chunk$set(tidy = FALSE, echo=FALSE, cache=FALSE, eval = TRUE, message = FAL
 <<readingdata, eval=TRUE, echo=FALSE>>=
 library(ggplot2) # needs to be version ≥ 1.0.1.9003
 library(ggnet) # install from github
+source("https://raw.githubusercontent.com/briatte/ggnet/master/ggnet2.R")
 data(blood, football, theme_elements, lesmis,madmen, mm_directed, email,
      bikes)
 
@@ -155,15 +158,29 @@ Fortunately, R provides functions that allow for an easy way of producing the re
 
 Other variables may also be included for each edge, such as the edge weight or grouping variable.  %As before, the variables of interest are columns in the data frame and the rows are each edge in the network.
 
-  \subsubsection{Vertex Aesthetics}
+\subsubsection{Parameters and Aesthetics}
+\hh{Parameters currently implemented:
+\begin{itemize}
+\item layout: layout, layout.par, fiteach
+\item nodes/vertices: colour, size, alpha, shape
+\item edges: ecolour, ealpha, linewidth, stroke
+\item arrow: arrowsize, arrowgap (only if \code{directed = TRUE})
+\item labels: label (as parameter and variable), labelcolour
+\end{itemize}
+}
 
-  In our geometry, we want to create all possible vertex aesthetic to mimic the usual aesthetics in \texttt{ggplot2} for points. The \texttt{vcolor} aesthetic can be an identity color (e.g. \texttt{color = "red"}) to change the color of all vertices, or, in the final version, it will take a factor variable which identifies each vertex as belonging to one of several groups, and it colors the vertices of the graph according to this grouping. In the current version, the \texttt{vcolor} aesthetic does not work like a typical color aesthetic in \texttt{ggplot2}. It can, however, take HEX color characters and assign them to different levels of a factor variable. We use the \texttt{RColorBrewer} package to choose the colors for us in this paper \citep{RColorBrewer}. It will also color the vertices along a color gradient according to the different values of some numeric variable such as degree.  The vertex color defaults to black. % are set to the default color palette in \texttt{ggplot2}, and the palette used can be changed in the usual way within the \texttt{ggplot2} framework, by using \texttt{scale\_color\_brewer}.}
+\subsubsection{Vertex Aesthetics}
+
+In our geometry, we want to create all possible vertex aesthetic to mimic the usual aesthetics in \texttt{ggplot2} for points. The \texttt{vcolor} aesthetic can be an identity color (e.g. \texttt{color = "red"}) to change the color of all vertices, or, in the final version, it will take a factor variable which identifies each vertex as belonging to one of several groups, and it colors the vertices of the graph according to this grouping. In the current version, the \texttt{vcolor} aesthetic does not work like a typical color aesthetic in \texttt{ggplot2}. It can, however, take HEX color characters and assign them to different levels of a factor variable. We use the \texttt{RColorBrewer} package to choose the colors for us in this paper \citep{RColorBrewer}. It will also color the vertices along a color gradient according to the different values of some numeric variable such as degree.  The vertex color defaults to black. % are set to the default color palette in \texttt{ggplot2}, and the palette used can be changed in the usual way within the \texttt{ggplot2} framework, by using \texttt{scale\_color\_brewer}.}
  %The \texttt{vcolor} aesthetic operates in the same way as the \texttt{vfill} aesthetic, but it changes the outline color of the vertex instead of the fill color of the vertex, which is in line with the \texttt{ggplot2} use of the \texttt{color} and \texttt{fill} aesthetics.
 
 The \texttt{vsize} aesthetic can also be set to an identity value to increase or decrease the size of all vertices in the graph, or it can be set to one of any numerical columns in the vertex data frame. Right now, the numerical values are strict point values: if the size of a vertex is two, then it will be two points in diameter. A point is the size of the default fontsize in the \texttt{grid} package. In our final version, the \texttt{vsize} will scale to minimum and maximum values as all other size aesthestics in \texttt{ggplot2} do.  The \texttt{vshape} aesthetic is for changing the shape of the vertices from the default circle to other shapes, like square or triangle.  It also changes the shape of the vertices according to some grouping variable, which is currently required to consist of integer values from 0 to 25.  In the final version, it will be able to change shape based on different levels of a factor variable.  Finally, the \texttt{valpha} aesthetic will change the vertex transparency to a set value, like 1/10 or 0.5.  It operates in exactly the same way as the \texttt{alpha} aesthetic in \texttt{geom\_point}.  This aesthetic is very useful for networks with hundreds or thousands of vertices, which can easily crowd the static visualization. Making the vertices more transparent will better show the underlying structure in the network.
 
 \par Evidently, we created all of these aesthetics to fit in exactly to the \texttt{ggplot2} grammar of graphics. We also created the edge aesthetics in a similar fashion.
+
+
   \subsubsection{Edge Aesthetics}
+
   Again, our edge aesthetics mimic the familiar \texttt{ggplot2} aesthetics, this time for segments.    The \texttt{ecolor} aesthetic changes the color of all of the edges according to the identity function or can change the color according to HEX colors assigned to levels of a grouping variable.  In the final version, the \texttt{ecolor} aesthetic will automatically color according to levels of a grouping variable or according to a gradient scale associated with a numeric variable.
   The \texttt{elinetype} aesthetic can also be used with a grouping variable to change the line type of each edge in the graph from solid to one of the different types of lines in \texttt{ggplot2}. Currently, the column associated with this aesthetic must be integer valued and take on values from zero to six. In the final version, it will change the edge linetypes according to levels of a grouping variable.  The \texttt{esize} aesthetic can also be set to the weight or probability of each edge, or it can be changed for all edges with the identity function. The associated column can take on any numerical values, and currently maps the values directly to points, just like the \texttt{vsize} aesthetic. In the final version, this aesthetic will work exactly like the sizing in \texttt{ggplot2}, by scaling sizes to the minimum and maximum values. This is one of two ways to visualize the number of edges between two vertices.  The other way is through the \texttt{ealpha} aesthetic. The \texttt{ealpha} aesthetic can change the edge transparency to a set value on the interval $[0,1]$.  If there are multiple edge connections given between two vertices in the edge data frame, the \texttt{ealpha} aesthetic can be changed to plot opaque lines between vertices with many mutual connections and varying degrees of transparent lines between vertices with only a few or a single connection. This property is also especially useful for large networks with a lot of connections or with vertices of relatively high degree. Finally, we will add an \texttt{elabel} aesthetic to print the name or number assigned to each edge on or next to it.  This aesthetic will be very useful for visualizing random graphs or Markov processes where each edge probability is of interest.
 
@@ -196,51 +213,118 @@ Layout Name & Description \\
 All layouts that \texttt{geom\_net} is currently capable of graphing are listed in table \ref{table:layouts}. The layouts not marked with an asterisk can also take their associated layout parameters.  The \texttt{layout.par} argument takes a list of named parameters.  For instance, if \texttt{layout = "random"}, we can also set \texttt{layout.par = list(dist = "normal")} to change the distribution of vertex placement from the default uniform to Gaussian.
 
 \section{Examples of Networks}
-In this section, we demonstrate the current capabilities of \texttt{geom\_net} in a series of diverse examples.
+In this section, we demonstrate the current capabilities of \texttt{geom\_net} and \code{ggnet} in a series of side by side examples.
   \subsection{Blood Donation}
   In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive (+) and negative (-) types. The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a person whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed because loops exist on every vertex in this example, as blood between two people of matching ABO and RhD type can always be exchanged.
 <<blood_ex, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.", fig.width=6, fig.height=6>>=
 ggplot(data = bloodnet, aes(from_id = from, to_id = to)) +
-  geom_net(colour="red", layout="circle", label=TRUE, size=3,
-           directed=TRUE, vjust=-0.5, arrowsize=1.5) + theme_net()
+  geom_net(colour="darkred", layout="circle", label=TRUE, size=12,
+           directed=TRUE, vjust=0.5, labelcolour="grey80",
+           arrowsize=1.5, linewidth=0.75, arrowgap=0.04) + theme_net()
 @
-This network is shown in figure \ref{fig.cap:blood_ex}.  Here, we have used the aesthetics \texttt{vcolour} and \texttt{vsize} set to identity values to change the size and color of all vertices. We have also used the \texttt{layout} and \texttt{vlabel} arguments to change the default layout to a circle layout and to print the blood types, respectively. The circle layout places blood types of the same ABO type next to each other and spreads the vertices out far enough to distinguish between the various ``in" and ``out" types.  You can tell clearly from this plot that the O- type is the universal donor: it has out degree of seven and in degree of zero. Additionally, you can see that the AB+ type is the universal recepient, with in degree of seven and out degree of zero. Anyone looking at this plot can quickly determine which type(s) of blood they can receive and which type(s) can receive their blood.
+
+<<blood_ex_ggnet2, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.", fig.width=6, fig.height=6>>=
+ggnet2(network(blood$edges[, 1:2]), mode = "circle", size = 12,
+       label = TRUE, arrow.size = 7.5, arrow.gap=0.04, vjust = 0.5,
+       node.color="darkred", label.color="grey80")
+@
+This network is shown in figure \ref{fig.cap:blood_ex}.  Here, we have used the aesthetics \texttt{colour} and \texttt{size} set to identity values to change the size and color of all vertices. We have also used the \texttt{layout} and \texttt{label} arguments to change the default layout to a circle layout and to print the blood types, respectively. The circle layout places blood types of the same ABO type next to each other and spreads the vertices out far enough to distinguish between the various ``in" and ``out" types.  You can tell clearly from this plot that the O- type is the universal donor: it has an out-degree of seven and an in-degree of zero. Additionally, we can see that the AB+ type is the universal recepient, with an in-degree of seven and an out-degree of zero. Anyone looking at this plot can quickly determine which type(s) of blood they can receive and which type(s) can receive their blood.
 \begin{figure}
-\centering
-\includegraphics[width=0.6\textwidth]{figure/blood_ex-1.pdf}
+\begin{subfigure}[t]{0.49\textwidth}
+\caption{geom\_net}
+\includegraphics[width=\textwidth]{figure/blood_ex-1.pdf}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\caption{ggnet2}
+\includegraphics[width=\textwidth]{figure/blood_ex_ggnet2-1.pdf}
+\end{subfigure}
 \caption{\label{fig.cap:blood_ex} Network of blood donation possibilities in humans by ABO and RhD blood types.}
 \end{figure}
 \afterpage{\clearpage}
 
 \subsection{Email Network}
-  This email network comes from the 2014 VAST Challenge \citep{emailnet}. It is a directed network of emails between company employees with 55 vertices and 9,063 edges. Each vertex is an employee of the company, and each edge is an email sent from one employee to one or more other employees. The arrow of the directed edge points to the recipient(s) of the email. The network contains two business weeks of emails across the entire company. In order to better visualize the structure of the communication network between employees, all emails that were sent out to all employees are removed in the subsequent examples.
-%
-\begin{figure}
-\centering
+  This email network comes from the 2014 VAST Challenge \citep{emailnet}. It is a directed network of emails between company employees with 55 vertices and 9,063 edges. Each vertex is an employee of the company, and each edge is an email sent from one employee to one or more other employees. The arrow of the directed edge points to the recipient(s) of the email. The network contains two business weeks of emails across the entire company. In order to better visualize the structure of the communication network between employees, emails that were sent out to all employees are removed in the subsequent examples.
+
 <<email_ex, fig.cap = 'All emails within a company over a two week period.',echo=TRUE, out.width='\\textwidth'>>=
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType),
-           linewidth=0.5, alpha=0.1, size=4) +
-  scale_colour_brewer(palette="Set1") + theme_net() +
+           linewidth=0.5, ealpha=0.5, size=4, directed=FALSE) +
+  scale_colour_brewer("Employment Type", palette="Set1") + theme_net() +
   theme(legend.position="bottom")
 @
+
+<<email_ex_ggnet2, fig.cap = 'All emails within a company over a two week period.',echo=TRUE, out.width='\\textwidth'>>=
+em.cet = as.character(email$nodes$CurrentEmploymentType)
+names(em.cet) = email$nodes$label
+
+# full version
+em.net = subset(email$edges, nrecipients < 54)[, c("From", "to") ]
+em.net = network(em.net)
+em.net %v% "curr_empl_type" = em.cet[ network.vertex.names(em.net) ]
+
+ggnet2(em.net, size = 4, color = "curr_empl_type", palette = "Set1",
+       arrow.size = 0, edge.alpha = 0.5, color.legend = "Employment Type") +
+  theme(legend.position="bottom")
+@
+%
+\begin{figure}
+\begin{subfigure}[t]{0.49\textwidth}
+\caption{geom\_net}
 \includegraphics[width=\textwidth]{figure/email_ex-1.pdf}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\caption{ggnet2}
+\includegraphics[width=\textwidth]{figure/email_ex_ggnet2-1.pdf}
+\end{subfigure}
 \caption{\label{fig.cap:email_ex} Email network within a company over a two week period.}
 \end{figure}
 \afterpage{\clearpage}
 
 This network is plotted in figure \ref{fig.cap:email_ex}.  There are six distinct clusters in this network which almost perfectly correspond to the six different types of employee in this company: administration, engineering, executive, facilities, information technology, and security. Unfortunately, there is currently no legend to associate color with employment type. This will be remedied in the final version of our geometry. Additionally, the edges between employees in the same cluster are much darker than edges between employees in different clusters. This is due to the value of the \texttt{ealpha} aesthetic: more emails between two employees lead to darker edges.  The value is set to 0.1 in this example, so that 10 or more emails between 2 employees results in a completely opaque edge. This pattern of heavy communication between employees of the same type is fairly unsurprising. To make this visualization more interesting and informative, we facet the network by day: each panel in \ref{fig.cap:email_ex_facet} shows the different email networks associated with each day of the week.
 %\begin{landscape}
-\begin{figure}
-\centering
+
 <<email_ex_facet, fig.height=5, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.',echo=TRUE, out.width='\\textwidth'>>=
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType), fiteach=TRUE,
-           linewidth=0.5, alpha=0.2, size=2) +
+           linewidth=0.5, ealpha=0.5, size=2) +
   scale_colour_brewer(palette="Set1") + theme_net() +
-  theme(legend.position="bottom") + facet_wrap(~day, nrow = 2)
+  facet_wrap(~day, nrow = 2, labeller="label_both") +
+  theme(legend.position="bottom",
+        panel.border = element_rect(fill=NA, colour = "grey60"))
 @
+
+
+<<email_ex_facet_ggnet2, fig.height=4, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.',echo=TRUE, out.width='\\textwidth'>>=
+em.day = subset(email$edges, nrecipients < 54)[, c("From", "to", "day") ]
+em.day = lapply(unique(em.day$day), function(x) subset(em.day, day == x)[, 1:2 ])
+em.day = lapply(em.day, network, directed = TRUE)
+for (i in 1:length(em.day)) {
+  em.day[[ i ]] %v% "curr_empl_type" = em.cet[ network.vertex.names(em.day[[ i ]]) ]
+  em.day[[ i ]] %n% "day" = unique(email$edges$day)[ i ]
+}
+
+g = list(length(em.day))
+for (i in 1:length(em.day)) {
+  g[[ i ]] = ggnet2(em.day[[ i ]], size = 2, color = "curr_empl_type",
+                    palette = "Set1", arrow.size = 0, edge.alpha = 0.5,
+                    legend.position = "none") +
+    ggtitle(paste("Day", em.day[[ i ]] %n% "day")) +
+    theme(panel.border = element_rect(color = "grey50", fill = NA))
+}
+gridExtra::grid.arrange(grobs = g, nrow = 2)
+
+@
+
+\begin{figure}
+\begin{subfigure}[t]{\textwidth}
+\caption{geom\_net}
 \includegraphics[width=\textwidth]{figure/email_ex_facet-1.pdf}
+\end{subfigure}
+\begin{subfigure}[t]{\textwidth}
+\caption{ggnet2}
+\includegraphics[width=\textwidth]{figure/email_ex_facet_ggnet2-1.pdf}
+\end{subfigure}
+
 \caption{\label{fig.cap:email_ex_facet} The same email network as in figure \ref{fig.cap:email_ex} facetted by day of the week.}
 \end{figure}
 %\end{landscape}
