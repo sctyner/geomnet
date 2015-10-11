@@ -197,9 +197,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         shape = data$shape,
         size = data$fontsize,
         angle = data$angle,
-        alpha = NA,
-        vjust= data$vjust,
-        hjust=data$hjust,
+        alpha = data$alpha,
+        vjust = data$vjust,
+        hjust = data$hjust,
         stringsAsFactors = FALSE
       )
       labels <- unique(labels)
