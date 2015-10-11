@@ -1,4 +1,4 @@
-\begin{thebibliography}{16}
+\begin{thebibliography}{17}
 \newcommand{\enquote}[1]{``#1''}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
@@ -13,15 +13,15 @@ Butts, C.~T. (2008), \enquote{{network: a Package for Managing Relational Data
   in R.}} \textit{Journal of Statistical Software}, 24.
 
 \bibitem[{Butts(2014)}]{sna}
---- (2014), \textit{sna: Tools for Social Network Analysis}, r package version
-  2.3-2.
+--- (2014), \textit{sna: Tools for Social Network Analysis}, {R} package
+  version 2.3-2.
 
 \bibitem[{Butts et~al.(2014)Butts, Handcock, and Hunter}]{network}
 Butts, C.~T., Handcock, M.~S., and Hunter, D.~R. (2014), \textit{network:
-  Classes for Relational Data}, Irvine, CA, r package version 1.10.2.
+  Classes for Relational Data}, Irvine, CA, {R} package version 1.10.2.
 
 \bibitem[{Chang(2013)}]{madmen}
-Chang, W. (2013), \textit{R graphics cookbook}, Sebastopol, CA: O'Reilly.
+Chang, W. (2013), \textit{{R} graphics cookbook}, Sebastopol, CA: O'Reilly.
 
 \bibitem[{Cook et~al.(2014)Cook, Grinstein, and Whiting}]{emailnet}
 Cook, K., Grinstein, G., and Whiting, M. (2014), \enquote{Vast Challenge 2014,}
@@ -50,8 +50,12 @@ Knuth, D. (1993), \textit{The Stanford GraphBase : a platform for combinatorial
   computing}, New York, N.Y. Reading, Mass: ACM Press Addison-Wesley.
 
 \bibitem[{Marbach(2011)}]{marbach}
-Marbach, M. (2011), \enquote{Visualizing networks with ggplot2 in R,}
+Marbach, M. (2011), \enquote{Visualizing networks with ggplot2 in {R},}
   \url{https://sumtxt.wordpress.com/2011/07/02/visualizing-networks-with-ggplot2-in-r/}.
+
+\bibitem[{Neuwirth(2014)}]{RColorBrewer}
+Neuwirth, E. (2014), \textit{RColorBrewer: ColorBrewer Palettes}, {R} package
+  version 1.1-2.
 
 \bibitem[{Newman(2010)}]{newman}
 Newman, M. E.~J. (2010), \textit{Networks : an introduction}, Oxford New York:
@@ -61,7 +65,7 @@ Newman, M. E.~J. (2010), \textit{Networks : an introduction}, Oxford New York:
   Briatte, Marbach, and Thoen}]{ggally}
 Schloerke, B., Crowley, J., Cook, D., Hofmann, H., Wickham, H., Briatte, F.,
   Marbach, M., and Thoen, E. (2014), \textit{{GG}ally: Extension to ggplot2.},
-  r package version 0.4.7.
+  {R} package version 0.4.7.
 
 \bibitem[{Watts and Strogatz(1998)}]{smallworld}
 Watts, D. and Strogatz, S. (1998), \enquote{Collective dynamics of
