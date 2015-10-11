@@ -219,7 +219,7 @@ data(blood)
 # source code for geom_net
 ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
   geom_net(colour="darkred", layout="circle", label=TRUE, size=15,
-           directed=TRUE, vjust=0.5, labelcolour="grey80",
+           directed=TRUE, vjust=0.5, labelcolour="grey80", curvature=0,
            arrowsize=1.5, linewidth=0.75, arrowgap=0.05) + theme_net()
 @
 

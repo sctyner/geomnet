@@ -122,7 +122,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
                              shape = 19, colour = "grey30",
                              size = 4, fill = NA, alpha = NA, stroke = 0.5,
-                             linewidth=1, angle=0, vjust=0, hjust=0.5),
+                             linewidth=1, angle=0, vjust=0, hjust=0.5, curvature = 0),
 
   draw_key = function(data, params)  {
     with(data, grobTree(
@@ -173,6 +173,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                          yend = y + (1-arrowgap)*(yend-y))
 
     }
+    if (any(data$curvature != 0))
+      edges_draw <- GeomCurve$draw_panel(edges, panel_scales,
+                      coord, arrow=arrow, curvature=data$curvature[1], angle=90)
+    else edges_draw <- GeomSegment$draw_panel(edges, panel_scales, coord, arrow)
+
 
     vertices <- data.frame(
       x = data$x,
@@ -207,7 +212,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     }
 
     ggplot2:::ggname("geom_net", grobTree(
-      GeomSegment$draw_panel(edges, panel_scales, coord, arrow),
+      edges_draw,
       GeomPoint$draw_panel(vertices, panel_scales, coord),
       label_grob
     ))
