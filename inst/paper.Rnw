@@ -41,7 +41,7 @@ opts_chunk$set(tidy = FALSE, echo=FALSE, cache=FALSE, eval = TRUE, message = FAL
 library(ggplot2) # needs to be version ≥ 1.0.1.9003
 library(ggnet) # install from github
 source("https://raw.githubusercontent.com/briatte/ggnet/master/ggnet2.R")
-data(blood, football, theme_elements, lesmis,madmen, mm_directed, email,
+data(football, theme_elements, lesmis,madmen, mm_directed, email,
      bikes)
 
 data(protein)
@@ -55,12 +55,6 @@ levels(MMnet$Gender) <- c("female", "male")
 MM2net <- merge(mm.directed$edges, mm.directed$vertices, by.x="Name1", by.y="label", all=TRUE)
 levels(MM2net$Gender) <- c("female", "male")
 
-bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
-
-employee <- data.frame(expand.grid(
-              label=unique(email$nodes$label), day=unique(email$edges$day)))
-employee <- merge(employee, email$nodes, by="label")
-emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
 
 TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent", by.y="name", all=TRUE)
 library(dplyr)
@@ -217,14 +211,22 @@ All layouts that \texttt{geom\_net} is currently capable of graphing are listed 
 In this section, we demonstrate the current capabilities of \texttt{geom\_net} and \code{ggnet} in a series of side by side examples.
   \subsection{Blood Donation}
   In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive (+) and negative (-) types. The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a person whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed because loops exist on every vertex in this example, as blood between two people of matching ABO and RhD type can always be exchanged.
+
 <<blood_ex, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.", fig.width=6, fig.height=6>>=
-ggplot(data = bloodnet, aes(from_id = from, to_id = to)) +
+library(ggnet)
+data(blood)
+
+# source code for geom_net
+ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
   geom_net(colour="darkred", layout="circle", label=TRUE, size=15,
            directed=TRUE, vjust=0.5, labelcolour="grey80",
            arrowsize=1.5, linewidth=0.75, arrowgap=0.05) + theme_net()
 @
 
 <<blood_ex_ggnet2, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.", fig.width=6, fig.height=6>>=
+# source code for ggnet2
+library(GGally) # use developmental version on github for now
+
 ggnet2(network(blood$edges[, 1:2]), mode = "circle", size = 15,
        label = TRUE, arrow.size = 7.5, arrow.gap=0.05, vjust = 0.5,
        node.color="darkred", label.color="grey80")
@@ -247,6 +249,8 @@ This network is shown in figure \ref{fig.cap:blood_ex}.  Here, we have used the 
   This email network comes from the 2014 VAST Challenge \citep{emailnet}. It is a directed network of emails between company employees with 55 vertices and 9,063 edges. Each vertex is an employee of the company, and each edge is an email sent from one employee to one or more other employees. The arrow of the directed edge points to the recipient(s) of the email. The network contains two business weeks of emails across the entire company. In order to better visualize the structure of the communication network between employees, emails that were sent out to all employees are removed in the subsequent examples.
 
 <<email_ex, fig.cap = 'All emails within a company over a two week period.',echo=TRUE, out.width='\\textwidth'>>=
+emailnet <- merge(subset(email$edges, nrecipients < 54), email$nodes, by.x="From", by.y="label", all=TRUE)
+
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType),
            linewidth=0.5, ealpha=0.5, size=4, directed=TRUE) +
@@ -286,9 +290,16 @@ Additionally, the edges between employees in the same cluster are  darker than e
 %\begin{landscape}
 
 <<email_ex_facet, fig.height=5, fig.width=8, fig.cap = 'All emails within a company over a two week period facetted by day of the month.',echo=TRUE, out.width='\\textwidth'>>=
+employee <- data.frame(expand.grid(label=unique(email$nodes$label),
+                                   day=unique(email$edges$day)))
+employee <- merge(employee, email$nodes, by="label")
+emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
+
+
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType), fiteach=TRUE,
-           linewidth=0.5, ealpha=0.1, size=2) +
+           linewidth=0.5, ealpha=0.5, size=2, directed=TRUE,
+           arrowsize=.5) +
   scale_colour_brewer(palette="Set1") + theme_net() +
   facet_wrap(~day, nrow = 2, labeller="label_both") +
   theme(legend.position="bottom",
