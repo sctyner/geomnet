@@ -165,19 +165,19 @@ Many \texttt{R} packages already exist for network analysis and visualization su
 % ggplot2 as an implementation framework
 We found the current tools to be lacking in this ability, so we chose to fill this gap by adding network plotting capabilities to the popular and widely used \texttt{R} package \texttt{ggplot2}. Just to give an idea of the popularity and the wide-spread use of \texttt{ggplot2}, from January 1, 2015 to October 4, 2015, \texttt{ggplot2} was downloaded over 1.2 Million times, or approximately 4,342 downloads per day. It has also been downloaded in 215 countries at least once, and in 61 of those countries, including China, Israel, and Colombia, it has been downloaded over 1,000 times\footnote{\texttt{ggplot2} usage statistics taken from \url{http://cran-logs.rstudio.com/}.}. This is the user base we are aiming at by making network visualizations a part of \texttt{ggplot2}.
 
-\hh{There are two main approaches to making use of the ggplot2 framework: (i) implement network visualizations using ggplot2, i.e. providing a wrapper for the user to visualize a network with ggplot2 elements, and (ii) implement networks as an internal layer of ggplot2. We will discuss both of these approaches in this paper. }
+\hh{There are two main approaches to making use of the ggplot2 framework: (i) implement network visualizations using ggplot2, i.e. providing a wrapper for the user to visualize a network with ggplot2 elements, and (ii) implement networks as an internal layer of ggplot2.  For the second approach, two main implementations exist. We will discuss all of these  in this paper. }
 
 \hh{XXX Provide roadmap for the rest of the paper. }
 
 
 
-\section{Two approaches of network visualizations}
+\section{Three approaches of network visualizations}
  The three necessary elements of any network visualization are the vertices, the edges, and the layout.
 %But once those three items are visualized, we usually find our visualization to be lacking. \hh{pull it over to a positive statement}  We may want to color the vertices (or edges) by some sort of grouping variable, or we may want to make vertices of degree ten twice the size of vertices of degree five.
 
 
 \subsection{ggnet}
-\hh{XXX needs massive changes :)}
+\hh{XXX needs massive changes. Francois, could you take care of that?}
 \par The \texttt{GGally} package by \citet{ggally} contains a very useful function written by Fran\c{c}ois Briatte and Moritz Marbach called \texttt{ggnet} that does allow for fairly straightforward customization of these three necessary graph attributes.
  The \texttt{ggnet} function, however, requires the graph input to be a \texttt{network} object according to the \texttt{network} package.  Our work builds off of the \texttt{ggnet} function and presents an intuitive \texttt{geom} for network visualization within the \texttt{ggplot2} framework, without the need for objects other than simple data frames.
  \hh{XXXX}
@@ -249,23 +249,28 @@ Layout Name & Description \\
 
 All layouts that \texttt{geom\_net} is currently capable of graphing are listed in table \ref{table:layouts}. The layouts not marked with an asterisk can also take their associated layout parameters.  The \texttt{layout.par} argument takes a list of named parameters.  For instance, if \texttt{layout = "random"}, we can also set \texttt{layout.par = list(dist = "normal")} to change the distribution of vertex placement from the default uniform to Gaussian.
 
+\subsection{geom\_node and geom\_edge}
+
+\hh{Fraancois, could you include a discussion of the background of the ggnetwork pacakge here?}
+
 \section{Examples of Networks}
 In this section, we demonstrate the current capabilities of \texttt{geom\_net} and \code{ggnet} in a series of side by side examples.
   \subsection{Blood Donation}
   In this directed network, there are eight vertices and 27 edges.  The vertices represent the eight different blood types in humans that are most important for donation: the ABO blood types A, B, AB, and O, combined with the RhD positive (+) and negative (-) types. The edges are directed: a person whose blood type is that of a \emph{from} vertex can to donate blood to a person whose blood type is that of a corresponding \emph{to} vertex. In the example below, loops are removed because loops exist on every vertex in this example, as blood between two people of matching ABO and RhD type can always be exchanged.
 
-<<blood_ex_ggnet, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.", fig.width=6, fig.height=6>>=
-ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
-  geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
-           directed = TRUE, vjust = 0.5, labelcolour = "grey80", curvature = 0,
-           arrowsize = 1.5, linewidth = 0.75, arrowgap = 0.05) +
-  theme_net()
-@
 
 <<blood_ex_ggnet2, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.", fig.width=6, fig.height=6>>=
 ggnet2(network(blood$edges[, 1:2]), mode = "circle", size = 15,
        label = TRUE, arrow.size = 7.5, arrow.gap = 0.95, vjust = 0.5,
        node.color="darkred", label.color="grey80")
+@
+
+<<blood_ex_ggnet, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.", fig.width=6, fig.height=6>>=
+ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
+  geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
+           directed = TRUE, vjust = 0.5, labelcolour = "grey80",
+           arrowsize = 1.5, linewidth = 0.75, arrowgap = 0.05) +
+  theme_net()
 @
 
 <<blood_ex_ggnetwork, echo=TRUE, fig.cap= "Directed network of blood type donations in humans.", fig.width=6, fig.height=6>>=
@@ -280,15 +285,15 @@ ggplot(ggnetwork(network(blood$edges[, 1:2]), layout = "circle"),
 This network is shown in figure \ref{fig.cap:blood_ex}.  Here, we have used the aesthetics \texttt{colour} and \texttt{size} set to identity values to change the size and color of all vertices. We have also used the \texttt{layout} and \texttt{label} arguments to change the default layout to a circle layout and to print the blood types, respectively. The circle layout places blood types of the same ABO type next to each other and spreads the vertices out far enough to distinguish between the various ``in" and ``out" types.  You can tell clearly from this plot that the O- type is the universal donor: it has an out-degree of seven and an in-degree of zero. Additionally, we can see that the AB+ type is the universal recepient, with an in-degree of seven and an out-degree of zero. Anyone looking at this plot can quickly determine which type(s) of blood they can receive and which type(s) can receive their blood.
 
 \begin{figure}
-\begin{subfigure}[t]{.49\textwidth}
-\caption{geom\_net}
-\includegraphics[width=\textwidth]{figure/blood_ex_ggnet-1.pdf}
-\end{subfigure}
-\begin{subfigure}[t]{.49\textwidth}
+\begin{subfigure}[t]{.32\textwidth}
 \caption{ggnet2}
 \includegraphics[width=\textwidth]{figure/blood_ex_ggnet2-1.pdf}
 \end{subfigure}
-\begin{subfigure}[t]{.49\textwidth}
+\begin{subfigure}[t]{.32\textwidth}
+\caption{geom\_net}
+\includegraphics[width=\textwidth]{figure/blood_ex_ggnet-1.pdf}
+\end{subfigure}
+\begin{subfigure}[t]{.32\textwidth}
 \caption{ggnetwork}
 \includegraphics[width=\textwidth]{figure/blood_ex_ggnetwork-1.pdf}
 \end{subfigure}
