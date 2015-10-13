@@ -29,8 +29,8 @@
 #' p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho))
-#' p + geom_net(aes(colour=rho), label=TRUE)
-#' p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, arrowgap=0.01) + theme_net()
+#' p + geom_net(aes(colour=rho), label=TRUE, vjust = -0.5)
+#' p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, curvature=0.2) + theme_net()
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
@@ -165,9 +165,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     arrow = NULL
     if (directed) {
       if (any(data$curvature != 0))
-        arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="open")
+        arrow = arrow(length = unit(arrowsize*10,"points"), type="open")
       else
-        arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
+        arrow = arrow(length = unit(arrowsize*10,"points"), type="closed")
 
       arrowgap <- with(edges, arrowgap/sqrt((xend-x)^2+(yend-y)^2))
       edges <- transform(edges,

@@ -186,7 +186,7 @@ We found the current tools to be lacking in this ability, so we chose to fill th
 \subsubsection{Data Structure}
 \hh{Network analysis is usally working with two sources of information: one data set consisting of a description of the `players', represented as the nodes or vertices in the network, and another data set detailing the relationship between the players, the edge dataset.
 In order for this geometry to work, these two data sets need to be combined into a single dataset. For this, we are using the convention that all of the node information is merged into the edge data set using the `from' as the reference column. Generally, there will be some vertices that are sinks in the network, ie.\ they only show up in the `to' column. We can easily accommodate for these nodes by adding artificial edges in the data set, that have missing information for the `to' column.
-Fortunately, R provides functions that allow for an easy way of producing the required result: both \code{merge} and \code{join} can be used. In \code{merge} the paramter all needs to be set to TRUE, in \code{join}, the parameter setting has to be \code{type=`full'}, and \code{all=TRUE}.
+Fortunately, R provides function that allow for an easy way of producing the required result: both \code{merge} and \code{join} can be used. In \code{merge} the paramter all needs to be set to TRUE, in \code{join}, the parameter setting has to be \code{type=`full'}, and \code{all=TRUE}.
 
 }
 \hh{The formal requirement of  \code{stat\_net} are two columns, called \code{from\_id} and \code{to\_id}. During this routine, columns \code{x, y} and \code{xend, yend} are calculated and used as a required input for \code{geom\_net}.}

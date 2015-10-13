@@ -8,7 +8,7 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   alpha = 0.25, layout = "kamadakawai", layout.par = list(),
-  fiteach = FALSE, label = FALSE, ecolour = "grey60", ealpha = NULL,
+  fiteach = FALSE, label = FALSE, ecolour = "grey40", ealpha = NULL,
   arrowgap = 0.01, directed = FALSE, arrowsize = 1, labelcolour = NULL,
   vertices = NULL, ...)
 
@@ -92,8 +92,8 @@ bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TR
 p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(aes(colour=rho))
-p + geom_net(aes(colour=rho), label=TRUE)
-p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, arrowgap=0.01) + theme_net()
+p + geom_net(aes(colour=rho), label=TRUE, vjust = -0.5)
+p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, curvature=0.2) + theme_net()
 p + geom_net(colour = "orange", layout = 'circle', size = 6)
 p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
 p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
