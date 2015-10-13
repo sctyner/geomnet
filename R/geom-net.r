@@ -164,7 +164,10 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
     arrow = NULL
     if (directed) {
-      arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
+      if (any(data$curvature != 0))
+        arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="open")
+      else
+        arrow = arrow(length = unit(arrowsize*0.3,"cm"), type="closed")
 
       arrowgap <- with(edges, arrowgap/sqrt((xend-x)^2+(yend-y)^2))
       edges <- transform(edges,
