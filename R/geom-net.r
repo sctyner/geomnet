@@ -144,7 +144,6 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
 
-#    browser()
     data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,

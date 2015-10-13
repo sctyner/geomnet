@@ -36,7 +36,7 @@ There are many implementations of static network visualization in R, but none ar
 library(knitr)
 opts_chunk$set(
   tidy = FALSE, echo=FALSE, cache=FALSE, eval = TRUE,
-  message = FALSE, warning = FALSE,
+  message = FALSE, warning = FALSE, highlight = FALSE,
   fig.height = 8, fig.width = 8, fig.align = 'center', fig.show='hide'
 )
 @
