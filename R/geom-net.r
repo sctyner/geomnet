@@ -91,7 +91,7 @@
 #' p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
 #' p + geom_net(layout="fruchtermanreingold")
 #' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
-#' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=value/5))
+#' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 #'
 #' ## College Football Games in the Fall 2000 regular season
 #' # Source: http://www-personal.umich.edu/~mejn/netdata/
@@ -198,14 +198,17 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     )
     vertices <- unique(vertices)
 
-    selfies$radius <- min(0.05, 1/sqrt(nrow(vertices)))
-    selfies <- transform(selfies,
-                         x = x + radius/sqrt(2),
-                         y = y + radius/sqrt(2),
-                         linewidth = size*3,
-                         fill = NA
-    )
-    selfies_draw <- GeomCircle$draw_panel(selfies, panel_scales, coord)
+    selfies_draw <- NULL
+    if (nrow(selfies) > 0) {
+      selfies$radius <- min(0.05, 1/sqrt(nrow(vertices)))
+      selfies <- transform(selfies,
+                           x = x + radius/sqrt(2),
+                           y = y + radius/sqrt(2),
+                           linewidth = size*3,
+                           fill = NA
+      )
+      selfies_draw <- GeomCircle$draw_panel(selfies, panel_scales, coord)
+    }
 
     label_grob <- NULL
     if (label | !is.null(data$label)) {

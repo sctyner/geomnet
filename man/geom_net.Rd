@@ -154,7 +154,7 @@ lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all
 p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
 p + geom_net(layout="fruchtermanreingold")
 p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
-p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=value/5))
+p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 
 ## College Football Games in the Fall 2000 regular season
 # Source: http://www-personal.umich.edu/~mejn/netdata/
