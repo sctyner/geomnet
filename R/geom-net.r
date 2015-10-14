@@ -104,13 +104,13 @@
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey40", ealpha=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
-                      labelcolour=NULL, vertices=NULL, ...) {
+                      labelcolour=NULL, vertices=NULL, selfies = FALSE, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
                   ecolour = ecolour, ealpha=ealpha, arrowgap=arrowgap, directed=directed,
-                  arrowsize=arrowsize, labelcolour=labelcolour, vertices=vertices,  ...)
+                  arrowsize=arrowsize, labelcolour=labelcolour, vertices=vertices, selfies = selfies,  ...)
   )
 }
 
@@ -137,7 +137,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   setup_data = function(data, params, mapping) {
-    selfie <- data$from == data$to
+    selfie <- (data$from == data$to) & (params$selfies == TRUE)
   # maximum radius is at the moment hard coded to 0.05
     data$ymax = max(with(data, pmax(y, yend) + 2*0.05*selfie))
     data$xmax = with(data, pmax(x, xend) + 2*0.05*selfie)
@@ -146,7 +146,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, arrowgap=0.01,
-                        directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL) {
+                        directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL, selfies = FALSE) {
 
     data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
@@ -163,7 +163,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       stringsAsFactors = FALSE
     )
 
-    selfies <- subset(edges, self == TRUE)
+    selfy <- subset(edges, self == TRUE)
     edges <- subset(edges, self != TRUE) # what are we going to do with self references?
     edges <- unique(subset(edges, !is.na(xend)))
 
@@ -199,15 +199,15 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     vertices <- unique(vertices)
 
     selfies_draw <- NULL
-    if (nrow(selfies) > 0) {
-      selfies$radius <- min(0.05, 1/sqrt(nrow(vertices)))
-      selfies <- transform(selfies,
+    if ((nrow(selfy) > 0) & (selfies == TRUE)) {
+      selfy$radius <- min(0.05, 1/sqrt(nrow(vertices)))
+      selfy <- transform(selfy,
                            x = x + radius/sqrt(2),
                            y = y + radius/sqrt(2),
                            linewidth = size*3,
                            fill = NA
       )
-      selfies_draw <- GeomCircle$draw_panel(selfies, panel_scales, coord)
+      selfies_draw <- GeomCircle$draw_panel(selfy, panel_scales, coord)
     }
 
     label_grob <- NULL
