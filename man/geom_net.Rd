@@ -6,11 +6,12 @@
 \title{Geom for network visualization within the ggplot2 framework}
 \usage{
 geom_net(mapping = NULL, data = NULL, stat = "net",
-  position = "identity", show.legend = NA, inherit.aes = TRUE,
-  alpha = 0.25, layout = "kamadakawai", layout.par = list(),
-  fiteach = FALSE, label = FALSE, ecolour = "grey40", ealpha = NULL,
-  arrowgap = 0.01, directed = FALSE, arrowsize = 1, labelcolour = NULL,
-  vertices = NULL, ...)
+  position = "identity", show.legend = NA, na.rm = TRUE,
+  inherit.aes = TRUE, alpha = 0.25, layout = "kamadakawai",
+  layout.par = list(), fiteach = FALSE, label = FALSE,
+  ecolour = "grey40", ealpha = NULL, arrowgap = 0.01, directed = FALSE,
+  arrowsize = 1, labelcolour = NULL, vertices = NULL, selfies = FALSE,
+  ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -33,6 +34,9 @@ on this layer}
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
 \code{FALSE} never includes, and \code{TRUE} always includes.}
+
+\item{na.rm}{If \code{FALSE} (the default), removes missing values with
+a warning. If \code{TRUE} silently removes missing values.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
@@ -66,9 +70,6 @@ include aesthetics whose values you want to set, not map. See
 \code{\link{layer}} for more details.}
 
 \item{geom}{The geometric object to use display the data}
-
-\item{na.rm}{If \code{FALSE} (the default), removes missing values with
-a warning. If \code{TRUE} silently removes missing values.}
 
 \item{linwidth}{width of edges. Defaults to 1/4 of the node size.}
 

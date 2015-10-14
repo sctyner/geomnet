@@ -12,6 +12,8 @@
     draw_key: function
     draw_layer: function
     draw_panel: function
+    extra_params: na.rm
+    handle_na: function
     non_missing_aes: 
     parameters: function
     required_aes: x y radius
