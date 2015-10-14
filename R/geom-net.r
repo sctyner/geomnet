@@ -102,13 +102,13 @@
 #'   scale_colour_brewer("Conference", palette="Paired") + theme_net() +
 #'   theme(legend.position="bottom")
 
-geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, inherit.aes = TRUE,  alpha = 0.25,
+geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  alpha = 0.25,
                       layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey40", ealpha=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, vertices=NULL, selfies = FALSE, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
+    params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
                   ecolour = ecolour, ealpha=ealpha, arrowgap=arrowgap, directed=directed,
                   arrowsize=arrowsize, labelcolour=labelcolour, vertices=vertices, selfies = selfies,  ...)
   )
@@ -147,7 +147,6 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
   draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL, selfies = FALSE) {
-
     data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
@@ -200,7 +199,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
     selfies_draw <- NULL
     if ((nrow(selfy) > 0) & (selfies == TRUE)) {
-      selfy$radius <- min(0.05, 1/sqrt(nrow(vertices)))
+      selfy$radius <- min(0.04, 1/sqrt(nrow(vertices)))
       selfy <- transform(selfy,
                            x = x + radius/sqrt(2),
                            y = y + radius/sqrt(2),
