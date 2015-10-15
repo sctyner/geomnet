@@ -137,10 +137,16 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   setup_data = function(data, params, mapping) {
+
+    data$from <- as.character(data$from)
+    data$to <- as.character(data$to)
     selfie <- (data$from == data$to) & (params$selfies == TRUE)
   # maximum radius is at the moment hard coded to 0.05
     data$ymax = max(with(data, pmax(y, yend) + 2*0.05*selfie))
     data$xmax = with(data, pmax(x, xend) + 2*0.05*selfie)
+
+    data$from <- factor(data$from)
+    data$to <- factor(data$to)
 
     data
   },

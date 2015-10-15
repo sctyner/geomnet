@@ -445,7 +445,7 @@ This example comes from the \texttt{theme()} help page in the \texttt{ggplot2} d
 <<theme_ex, echo=TRUE, fig.cap= 'Inheritance structure for \\texttt{theme} elements in \\texttt{ggplot2}.'>>=
 ggplot(data = TEnet, aes(from_id = parent, to_id = child)) +
   geom_net(aes(fontsize=degree), directed = TRUE, label = TRUE, vjust=-.5,
-           size=3, ecolour="grey70") +
+           size=3, ecolour="grey70", curvature=0.25) +
   theme_net() + xlim(c(-0.05, 1.05))
 @
 <<theme_ex_ggnet2, echo=TRUE, fig.cap= 'Inheritance structure for \\texttt{theme} elements in \\texttt{ggplot2}.'>>=
