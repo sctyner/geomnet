@@ -124,7 +124,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                              size = 4, fill = NA, alpha = NA, stroke = 0.5,
                              linewidth=1, angle=0, vjust=0, hjust=0.5, curvature = 0),
 
-  draw_key = function(data, params)  {
+  draw_key = function(data, params, size)  {
     with(data, grobTree(
       grid::pointsGrob(0.5, 0.5, pch = data$shape,
                        gp = grid::gpar(col = alpha(data$colour, data$alpha),
