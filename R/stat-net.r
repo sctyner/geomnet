@@ -95,7 +95,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
                            layout="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL) {
     if (fiteach) data <- self$compute_network(data, layout=layout, layout.par=layout.par)
 
-    data <- ddply(data, .(group), mutate, .samegroup = to %in% unique(from))
+    data <- plyr::ddply(data, "group", plyr::mutate, .samegroup = to %in% unique(from))
 
     data
   }
