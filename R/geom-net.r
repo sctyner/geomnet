@@ -103,7 +103,7 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour="grey40", ealpha=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour=NULL, ealpha=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, vertices=NULL, selfies = FALSE, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
@@ -151,15 +151,17 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     data
   },
 
-  draw_panel = function(data, panel_scales, coord,  ecolour="grey60", ealpha=NULL, arrowgap=0.01,
+  draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL, selfies = FALSE) {
+
+#    browser()
     data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
       xend = data$xend,
       y = data$y,
       yend = data$yend,
-      colour = ecolour,
+      colour = ecolour %||% ifelse(data$.samegroup, data$colour, "grey40"),
       size = data$linewidth %||% (data$size / 4),
       alpha = ealpha %||% data$alpha,
       linetype=data$linetype,

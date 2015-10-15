@@ -40,6 +40,8 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 
     if (fiteach) return(data)
 
+    data$.samegroup <- FALSE
+
     self$compute_network(data, layout=params$layout, layout.par=params$layout.par)
   },
 
@@ -91,11 +93,13 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 },
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
                            layout="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL) {
+    if (fiteach) data <- self$compute_network(data, layout=layout, layout.par=layout.par)
 
-    if (fiteach) return(self$compute_network(data, layout=layout, layout.par=layout.par))
+    data <- ddply(data, .(group), mutate, .samegroup = to %in% unique(from))
 
     data
   }
+
 )
 
 #' @rdname geom_net
