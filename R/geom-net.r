@@ -37,6 +37,13 @@
 #' p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), linewidth=0.75, label =TRUE,
 #'     labelcolour="black") + facet_wrap(~Ethnicity) +
 #'     scale_colour_brewer(palette="Set2")
+#' ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
+#'   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
+#'          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
+#'          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
+#'          selfies = TRUE, ecolour = "grey40") +
+#'   theme_net()
+
 #'
 #' #Madmen Relationships
 #' data(madmen)
@@ -154,7 +161,6 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL, selfies = FALSE) {
 
-#    browser()
     data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
@@ -163,6 +169,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       yend = data$yend,
       colour = ecolour %||% ifelse(data$.samegroup, data$colour, "grey40"),
       size = data$linewidth %||% (data$size / 4),
+      nodesize = data$size,
       alpha = ealpha %||% data$alpha,
       linetype=data$linetype,
       stroke = data$stroke,
@@ -171,7 +178,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     )
 
     selfy <- subset(edges, self == TRUE)
-    edges <- subset(edges, self != TRUE) # what are we going to do with self references?
+ #   edges <- subset(edges, self != TRUE) # what are we going to do with self references?
     edges <- unique(subset(edges, !is.na(xend)))
 
     arrow = NULL
@@ -205,13 +212,15 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     )
     vertices <- unique(vertices)
 
+#    browser()
+
     selfies_draw <- NULL
     if ((nrow(selfy) > 0) & (selfies == TRUE)) {
       selfy$radius <- min(0.04, 1/sqrt(nrow(vertices)))
       selfy <- transform(selfy,
-                           x = x + radius/sqrt(2),
-                           y = y + radius/sqrt(2),
-                           linewidth = size*3,
+                           x = x + (radius + nodesize/(100*.pt) + size/100)/sqrt(2),
+                           y = y + (radius + nodesize/(100*.pt) + size/100)/sqrt(2),
+                           linewidth = size*.pt,
                            fill = NA
       )
       selfies_draw <- GeomCircle$draw_panel(selfy, panel_scales, coord)
