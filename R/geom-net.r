@@ -178,26 +178,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     )
 
     selfy <- subset(edges, self == TRUE)
- #   edges <- subset(edges, self != TRUE) # what are we going to do with self references?
+    edges <- subset(edges, self != TRUE) # what are we going to do with self references?
     edges <- unique(subset(edges, !is.na(xend)))
 
-    arrow = NULL
-    if (directed) {
-      if (any(data$curvature != 0))
-        arrow = arrow(length = unit(arrowsize*10,"points"), type="open")
-      else
-        arrow = arrow(length = unit(arrowsize*10,"points"), type="closed")
-
-      arrowgap <- with(edges, arrowgap/sqrt((xend-x)^2+(yend-y)^2))
-      edges <- transform(edges,
-                         xend = x + (1-arrowgap)*(xend-x),
-                         yend = y + (1-arrowgap)*(yend-y))
-
-    }
-    if (any(data$curvature != 0))
-      edges_draw <- GeomCurve$draw_panel(edges, panel_scales,
-                      coord, arrow=arrow, curvature=data$curvature[1], angle=90)
-    else edges_draw <- GeomSegment$draw_panel(edges, panel_scales, coord, arrow)
 
     vertices <- data.frame(
       x = data$x,
@@ -212,6 +195,26 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     )
     vertices <- unique(vertices)
 
+    arrow = NULL
+    if (directed) {
+      if (any(data$curvature != 0))
+        arrow = arrow(length = unit(arrowsize*10,"points"), type="open")
+      else
+        arrow = arrow(length = unit(arrowsize*10,"points"), type="closed")
+
+      arrowgap <- with(edges, arrowgap/sqrt((xend-x)^2+(yend-y)^2))
+      edges <- transform(
+        edges,
+        xend = x + (1-arrowgap)*(xend-x),
+        yend = y + (1-arrowgap)*(yend-y)
+      )
+    }
+#    browser()
+    if (any(data$curvature != 0))
+      edges_draw <- GeomCurve$draw_panel(edges, panel_scales,
+                                         coord, arrow=arrow, curvature=data$curvature[1], angle=90)
+    else edges_draw <- GeomSegment$draw_panel(edges, panel_scales, coord, arrow)
+
 #    browser()
 
     selfies_draw <- NULL
@@ -224,6 +227,20 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                            fill = NA
       )
       selfies_draw <- GeomCircle$draw_panel(selfy, panel_scales, coord)
+    }
+
+    selfies_arrows <- NULL
+    if ((nrow(selfy) > 0) & (selfies == TRUE) & (directed == TRUE)) {
+#      browser()
+      selfy_arrows <- transform (
+        selfy,
+        xend = x - 0.5* arrowsize*.pt/100,
+        yend = y-0.04 - size/100,
+        y = y-0.04 - size/100
+      )
+      selfies_arrows <- GeomSegment$draw_panel(selfy_arrows, panel_scales, coord,
+                                               arrow=arrow)
+
     }
 
     label_grob <- NULL
@@ -248,6 +265,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     ggplot2:::ggname("geom_net", grobTree(
       edges_draw,
       selfies_draw,
+      selfies_arrows,
       GeomPoint$draw_panel(vertices, panel_scales, coord),
       label_grob
     ))
