@@ -28,10 +28,13 @@ theme_net <- function (base_size = 11, base_family = "")
   theme_grey(base_size = base_size, base_family = base_family) %+replace%
     theme(
       panel.background = element_blank(),
+
       axis.line = element_blank(),
       axis.text = element_blank(),
       axis.ticks = element_blank(),
-      axis.title = element_blank()
+      axis.title = element_blank(),
+
+      legend.background = element_rect(colour = NA)
     )
 }
 
