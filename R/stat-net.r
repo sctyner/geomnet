@@ -38,6 +38,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     if (length(only_to) > 0)
       warning(sprintf("There are %d nodes without node information: %s\n\nDid you use all=T in merge?\n\n", length(only_to), paste(only_to, collapse=", ")))
 
+    if (! is.null(params$seed)) set.seed(params$seed)
     if (fiteach) return(data)
 
     data$.samegroup <- FALSE
@@ -92,7 +93,8 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   edges
 },
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
-                           layout="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL) {
+                           layout="kamadakawai", layout.par=list(), fiteach=FALSE,
+                           vertices=NULL) {
     if (fiteach) data <- self$compute_network(data, layout=layout, layout.par=layout.par)
 
     data <- plyr::ddply(data, "group", plyr::mutate, .samegroup = to %in% unique(from))

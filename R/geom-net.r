@@ -23,7 +23,7 @@
 #' library(ggplot2)
 #' data(blood)
 #' p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
-#' p + geom_net(vertices=blood$vertices, aes(colour=..type..))
+#' p + geom_net(vertices=blood$vertices, aes(colour=..type..)) + theme_net()
 #'
 #' bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 #' p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
@@ -117,7 +117,8 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
                   ecolour = ecolour, ealpha=ealpha, arrowgap=arrowgap, directed=directed,
-                  arrowsize=arrowsize, labelcolour=labelcolour, vertices=vertices, selfies = selfies,  ...)
+                  arrowsize=arrowsize, labelcolour=labelcolour, vertices=vertices, selfies = selfies,
+                  ...)
   )
 }
 
@@ -193,7 +194,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       stroke = 0.5,
       stringsAsFactors = FALSE
     )
-    vertices <- unique(vertices)
+#    vertices <- unique(vertices)
 
     arrow = NULL
     if (directed) {
