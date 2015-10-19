@@ -34,7 +34,7 @@ theme_net <- function (base_size = 11, base_family = "")
       axis.ticks = element_blank(),
       axis.title = element_blank(),
 
-      legend.background = element_rect(colour = NA)
+      legend.key = element_rect(fill = NA, colour = "white")
     )
 }
 
