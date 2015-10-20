@@ -36,7 +36,10 @@ theme_net <- function (base_size = 11, base_family = "")
       axis.ticks = element_blank(),
       axis.title = element_blank(),
 
-      legend.key = element_rect(fill = NA, colour = "white")
+      legend.key = element_rect(fill = NA, colour = "white"),
+
+      panel.border = element_blank(),
+      panel.grid = element_blank()
     )
 }
 

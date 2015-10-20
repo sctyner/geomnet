@@ -133,14 +133,25 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                              linewidth=1, angle=0, vjust=0, hjust=0.5, curvature = 0),
 
   draw_key = function(data, params, size)  {
+#    browser()
+    arrow = NULL
+    if (params$directed) {
+      if (any(data$curvature != 0))
+        arrow = arrow(length = unit(params$arrowsize*10,"points"), type="open")
+      else
+        arrow = arrow(length = unit(params$arrowsize*10,"points"), type="closed")
+    }
     with(data, grobTree(
-      grid::pointsGrob(0.5, 0.5, pch = data$shape,
+      grid::pointsGrob(0.5 + .15*params$directed, 0.5, pch = data$shape,
                        gp = grid::gpar(col = alpha(data$colour, data$alpha),
                                        fill = alpha(data$fill, data$alpha),
                                        fontsize = data$size * .pt + data$stroke * .stroke/2,
-                                       lwd = data$stroke * .stroke/2)),
-      grid::rectGrob(gp = grid::gpar(col = colour, fill = alpha(fill, alpha), lty = linetype))
-      #      grid::linesGrob(gp = grid::gpar(col = colour, lwd = size * .pt, lineend="butt", lty = linetype))
+                                       lwd = data$stroke * .stroke/2))#,
+#       grid::linesGrob(x = unit(c(1, 0), "npc"), y = unit(c(0.5, 0.5), "npc"),
+#                       gp = grid::gpar(
+#                         col = data$ecolour %||% "grey60", # not right yet
+#                         lwd = data$linewidth, lineend="butt",
+#                         lty = linetype), arrow = arrow)
     ))
   },
 
@@ -168,7 +179,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       xend = data$xend,
       y = data$y,
       yend = data$yend,
-      colour = ecolour %||% ifelse(data$.samegroup, data$colour, "grey50"),
+      colour = ecolour %||% ifelse(data$.samegroup, data$colour, "grey60"),
       size = data$linewidth %||% (data$size / 4),
       nodesize = data$size,
       alpha = ealpha %||% data$alpha,
@@ -269,13 +280,6 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       selfies_arrows,
       GeomPoint$draw_panel(vertices, panel_scales, coord),
       label_grob
-    ))
-  },
-
-  draw_legend = function(data, ...)  {
-    with(data, grobTree(
-      rectGrob(gp = gpar(col = colour, fill = alpha(fill, alpha), lty = linetype)),
-      linesGrob(gp = gpar(col = colour, lwd = size * .pt, lineend="butt", lty = linetype))
     ))
   }
 )
