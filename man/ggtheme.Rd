@@ -3,9 +3,7 @@
 \name{ggtheme}
 \alias{ggtheme}
 \alias{theme_net}
-\title{theme_net
-Themes set the general aspect of the plot such as the colour of the
-background, gridlines, the size and colour of fonts.}
+\title{Theme for network visualization}
 \usage{
 theme_net(base_size = 11, base_family = "")
 }
@@ -15,17 +13,11 @@ theme_net(base_size = 11, base_family = "")
 \item{base_family}{base font family}
 }
 \description{
-theme_net
 Themes set the general aspect of the plot such as the colour of the
 background, gridlines, the size and colour of fonts.
-}
-\details{
-\describe{
-
-\item{\code{theme_net}}{
-The usual ggplot2 theme with no background, no axes, and an aspect ratio of 1 for better
-viewing of networks and graphs.}
-}
+theme_net provides access to the regular ggplot2 theme, but removes any
+background, axes, and ensures an aspect ratio of 1 for better
+viewing of networks and graphs.
 }
 \examples{
 library(ggplot2)

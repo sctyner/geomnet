@@ -146,12 +146,12 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                        gp = grid::gpar(col = alpha(data$colour, data$alpha),
                                        fill = alpha(data$fill, data$alpha),
                                        fontsize = data$size * .pt + data$stroke * .stroke/2,
-                                       lwd = data$stroke * .stroke/2))#,
-#       grid::linesGrob(x = unit(c(1, 0), "npc"), y = unit(c(0.5, 0.5), "npc"),
-#                       gp = grid::gpar(
-#                         col = data$ecolour %||% "grey60", # not right yet
-#                         lwd = data$linewidth, lineend="butt",
-#                         lty = linetype), arrow = arrow)
+                                       lwd = data$stroke * .stroke/2)),
+      grid::linesGrob(x = unit(c(1, 0), "npc"), y = unit(c(0.5, 0.5), "npc"),
+                      gp = grid::gpar(
+                        col = data$colour, data$ecolour %||% "grey60", # not right yet
+                        lwd = data$linewidth, lineend="butt",
+                        lty = linetype), arrow = arrow)
     ))
   },
 

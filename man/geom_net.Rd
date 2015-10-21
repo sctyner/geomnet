@@ -8,10 +8,9 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = TRUE,
   inherit.aes = TRUE, alpha = 0.25, layout = "kamadakawai",
-  layout.par = list(), fiteach = FALSE, label = FALSE,
-  ecolour = "grey40", ealpha = NULL, arrowgap = 0.01, directed = FALSE,
-  arrowsize = 1, labelcolour = NULL, vertices = NULL, selfies = FALSE,
-  ...)
+  layout.par = list(), fiteach = FALSE, label = FALSE, ecolour = NULL,
+  ealpha = NULL, arrowgap = 0.01, directed = FALSE, arrowsize = 1,
+  labelcolour = NULL, vertices = NULL, selfies = FALSE, ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -87,7 +86,7 @@ Geom for network visualization within the ggplot2 framework
 library(ggplot2)
 data(blood)
 p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
-p + geom_net(vertices=blood$vertices, aes(colour=..type..))
+p + geom_net(vertices=blood$vertices, aes(colour=..type..)) + theme_net()
 
 bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
@@ -101,6 +100,12 @@ p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, dire
 p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), linewidth=0.75, label =TRUE,
     labelcolour="black") + facet_wrap(~Ethnicity) +
     scale_colour_brewer(palette="Set2")
+ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
+  geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
+         directed = TRUE, vjust = 0.5, labelcolour = "grey80",
+         arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
+         selfies = TRUE, ecolour = "grey40") +
+  theme_net()
 
 #Madmen Relationships
 data(madmen)
