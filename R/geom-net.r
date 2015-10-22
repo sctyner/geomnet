@@ -28,7 +28,7 @@
 #' bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 #' p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 #' p + geom_net()
-#' p + geom_net(aes(colour=rho))
+#' p + geom_net(aes(colour=rho)) + theme_net()
 #' p + geom_net(aes(colour=rho), label=TRUE, vjust = -0.5)
 #' p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, curvature=0.2) + theme_net()
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)

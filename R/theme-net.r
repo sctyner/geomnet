@@ -65,7 +65,7 @@ theme_net_old <- function(base_size = 11, base_family = "") {
     axis.text = element_blank(),
     axis.ticks = element_blank(),
     axis.title = element_blank(),
-    legend.background = element_rect(colour = NA),
+    legend.background = element_rect(colour = NA, fill = NA),
     legend.margin = unit(0.2, "cm"),
     legend.key = element_rect(fill = NA, colour = "white"),
     legend.key.size = unit(1.2, "lines"),
