@@ -1,4 +1,4 @@
-Package: ggnet
+Package: geomnet
 Type: Package
 Title: Network visualization in the ggplot2 framework
 Version: 0.0.1
