@@ -173,7 +173,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL, selfies = FALSE) {
 
-#    browser()
+ #   browser()
     data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
@@ -192,7 +192,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
     selfy <- subset(edges, self == TRUE)
     edges <- subset(edges, self != TRUE) # what are we going to do with self references?
-    edges <- unique(subset(edges, !is.na(xend)))
+    edges <- subset(edges, !is.na(xend))
 
 
     vertices <- data.frame(
@@ -206,7 +206,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       stroke = 0.5,
       stringsAsFactors = FALSE
     )
-#    vertices <- unique(vertices)
+    vertices <- unique(vertices)
 
     arrow = NULL
     if (directed) {

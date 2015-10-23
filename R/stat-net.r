@@ -3,7 +3,6 @@
 }
 
 
-
 #' @export
 StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   required_aes = c("from_id", "to_id"),
@@ -47,15 +46,21 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   },
 
 compute_network = function(data, layout="kamadakawai", layout.par=list()) {
-  edges <- unique(subset(data, to_id != "..NA..")[,c('from_id', 'to_id')])
+#  require(dplyr)
+  edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
+  edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
 
-  net <- network::as.network(edges, matrix.type = "edgelist") #from network package
-  m <- network::as.matrix.network.adjacency(net)
+  # make a (weighted) sna edgelist
+  net <- network::as.network(edges, matrix.type = "edgelist")
+  edgelist <- sna::as.edgelist.sna(net)
+  edgelist[,3] <- sqrt(edges$wt)  # doesn't change anything for wt == 1
 
+#  net <- network::as.network(edges, matrix.type = "edgelist") #from network package
+#  m <- network::as.matrix.network.adjacency(net)
   if (is.null(layout)) {
     if (is.null(data$x) || is.null(data$y)) stop("If no layout mechanism is specified, x and y coordinates have to be given\n\n")
     vert.coord <- data[, c("x", "y", "from_id")]
-    vert.coord <- subset(vert.coord, from_id %in% row.names(m))
+    vert.coord <- subset(vert.coord, from_id %in% attr(edgelist, "vnames"))
     vert.coord <- unique(vert.coord)
     vert.coord$x <- as.numeric(scale(vert.coord$x, center=min(vert.coord$x), scale=diff(range(vert.coord$x))))
     vert.coord$y <- as.numeric(scale(vert.coord$y, center=min(vert.coord$y), scale=diff(range(vert.coord$y))))
@@ -64,14 +69,14 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   #print("it would be nice at this point to check, whether layout is one of the supported functions, and if not,
   require(sna)
   layoutFun <- paste('gplot.layout.',layout,sep='')
-  vert.coord <- data.frame(do.call(layoutFun, list(m, layout.par = layout.par)))
+  vert.coord <- data.frame(do.call(layoutFun, list(edgelist, layout.par = layout.par)))
 
-  vert.coord$label <- row.names(m)
-  vert.coord$X1 <- scale(vert.coord$X1, center=min(vert.coord$X1), scale=diff(range(vert.coord$X1))) # center nodes
-  vert.coord$X2 <- scale(vert.coord$X2, center=min(vert.coord$X2), scale=diff(range(vert.coord$X2)))
+  vert.coord$label <- attr(edgelist, "vnames") #row.names(m)
+  vert.coord$X1 <- as.numeric(scale(vert.coord$X1, center=min(vert.coord$X1), scale=diff(range(vert.coord$X1)))) # center nodes
+  vert.coord$X2 <- as.numeric(scale(vert.coord$X2, center=min(vert.coord$X2), scale=diff(range(vert.coord$X2))))
   names(vert.coord) <- c("x", "y", "label")
 }
-  edgelist <- network::as.matrix.network.edgelist(net) #network pkg
+#  edgelist <- network::as.matrix.network.edgelist(net) #network pkg
 
   edge.coord <- data.frame(vert.coord[edgelist[,1],], vert.coord[edgelist[,2],], row.names=NULL)
   names(edge.coord) <- c('x','y', "from", 'xend','yend', "to")
@@ -89,6 +94,8 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 
     edges <- rbind(edges, fromonly[, names(edges)])
   }
+#browser()
+  edges <- edges %>% group_by(from, to) %>% mutate(n = n())
   edges <- unique(edges)
   edges
 },
