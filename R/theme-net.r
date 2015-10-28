@@ -25,6 +25,7 @@ theme_net <- function (base_size = 11, base_family = "")
   theme_grey(base_size = base_size, base_family = base_family) %+replace%
     theme(
       plot.background = element_blank(),
+      plot.margin = grid::unit(c(0,0,0,0), unit="cm"),
 
       panel.background = element_blank(),
 

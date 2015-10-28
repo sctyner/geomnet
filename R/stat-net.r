@@ -51,7 +51,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
 
   # make a (weighted) sna edgelist
-  net <- network::as.network(edges, matrix.type = "edgelist")
+  net <- network::as.network(edges[,1:2], matrix.type = "edgelist")
   edgelist <- sna::as.edgelist.sna(net)
   edgelist[,3] <- sqrt(edges$wt)  # doesn't change anything for wt == 1
 
@@ -62,8 +62,8 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
     vert.coord <- data[, c("x", "y", "from_id")]
     vert.coord <- subset(vert.coord, from_id %in% attr(edgelist, "vnames"))
     vert.coord <- unique(vert.coord)
-    vert.coord$x <- as.numeric(scale(vert.coord$x, center=min(vert.coord$x), scale=diff(range(vert.coord$x))))
-    vert.coord$y <- as.numeric(scale(vert.coord$y, center=min(vert.coord$y), scale=diff(range(vert.coord$y))))
+#    vert.coord$x <- as.numeric(scale(vert.coord$x, center=min(vert.coord$x), scale=diff(range(vert.coord$x))))
+#    vert.coord$y <- as.numeric(scale(vert.coord$y, center=min(vert.coord$y), scale=diff(range(vert.coord$y))))
     names(vert.coord)[3] <- "label"
   } else {
   #print("it would be nice at this point to check, whether layout is one of the supported functions, and if not,
@@ -95,9 +95,8 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
     edges <- rbind(edges, fromonly[, names(edges)])
   }
 #browser()
-  edges <- edges %>% group_by(from, to) %>% mutate(n = n())
-  edges <- unique(edges)
-  edges
+#  edges <- edges %>% group_by(from, to) %>% mutate(n = n())
+  unique(edges)
 },
   compute_panel = function(self, data, scales, params, na.rm = FALSE,
                            layout="kamadakawai", layout.par=list(), fiteach=FALSE,
