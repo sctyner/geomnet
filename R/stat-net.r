@@ -50,17 +50,17 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
   edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
 
-#  browser()
-  if (diff(range(edges$wt)) == 0) {
-    net <- network::as.network(edges, matrix.type = "edgelist") #from network package
-    m <- network::as.matrix.network.adjacency(net)
-    edgelist <- network::as.matrix.network.edgelist(net) #network pkg
-  } else {
-  # make a (weighted) sna edgelist
-    net <- network::as.network(edges[,1:2], matrix.type = "edgelist")
-    edgelist <- sna::as.edgelist.sna(net)
+  net <- network::as.network(edges[,1:2], matrix.type = "edgelist")
+  edgelist <- network::as.matrix.network.edgelist(net) #network pkg
+
+  edgeweights <- diff(range(edges$wt)) != 0
+  if (edgeweights) {
+    # make a (weighted) sna edgelist
     edgelist[,3] <- sqrt(edges$wt)  # doesn't change anything for wt == const
   }
+#  else {
+#    m <- network::as.matrix.network.adjacency(net)
+#  }
 
   if (is.null(layout)) {
     if (is.null(data$x) || is.null(data$y)) stop("If no layout mechanism is specified, x and y coordinates have to be given\n\n")
