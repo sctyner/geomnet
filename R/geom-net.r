@@ -210,11 +210,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     vertices <- unique(vertices)
 
     if (directed) {
-      if (any(data$curvature != 0))
-        if(is.null(arrow)) arrow = arrow(length = unit(arrowsize*10,"points"), type="open")
-      else
-        if(is.null(arrow)) arrow = arrow(length = unit(arrowsize*10,"points"), type="closed")
-
+      if (any(data$curvature != 0)) {
+        if (is.null(arrow)) arrow = arrow(length = unit(arrowsize*10,"points"), type="open")
+      } else {
+        if (is.null(arrow)) arrow = arrow(length = unit(arrowsize*10,"points"), type="closed")
+      }
       arrowgap <- with(edges, arrowgap/sqrt((xend-x)^2+(yend-y)^2))
       edges <- transform(
         edges,
