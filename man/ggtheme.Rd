@@ -15,15 +15,14 @@ theme_net(base_size = 11, base_family = "")
 \description{
 Themes set the general aspect of the plot such as the colour of the
 background, gridlines, the size and colour of fonts.
-theme_net provides access to the regular ggplot2 theme, but removes any
+\code{theme_net} provides access to the regular ggplot2 theme, but removes any
 background, axes, and ensures an aspect ratio of 1 for better
 viewing of networks and graphs.
 }
 \examples{
 library(ggplot2)
 data(blood)
-bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
-p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
+p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net() + theme_net()
 }

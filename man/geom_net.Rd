@@ -9,8 +9,9 @@ geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = TRUE,
   inherit.aes = TRUE, alpha = 0.25, layout = "kamadakawai",
   layout.par = list(), fiteach = FALSE, label = FALSE, ecolour = NULL,
-  ealpha = NULL, arrowgap = 0.01, directed = FALSE, arrowsize = 1,
-  labelcolour = NULL, vertices = NULL, selfies = FALSE, ...)
+  ealpha = NULL, arrow = NULL, arrowgap = 0.01, directed = FALSE,
+  arrowsize = 1, labelcolour = NULL, vertices = NULL, selfies = FALSE,
+  ...)
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -56,6 +57,8 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{ealpha}{numeric value of alpha blending of edges.}
 
+\item{arrow}{what kind of arrow should be drawn? See specification of function \code{arrow} in grid package}
+
 \item{arrowgap}{numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.}
 
 \item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
@@ -64,15 +67,15 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{labelcolour}{character of colour for the labels.}
 
+\item{vertices}{data frame containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use a joint to include this information in the data dataframe}
+
+\item{selfies}{logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.}
+
 \item{...}{other arguments passed on to \code{\link{layer}}. This can
 include aesthetics whose values you want to set, not map. See
 \code{\link{layer}} for more details.}
 
 \item{geom}{The geometric object to use display the data}
-
-\item{linwidth}{width of edges. Defaults to 1/4 of the node size.}
-
-\item{arrow}{what kind of arrow should be drawn? See specification of function \code{arrow} in grid package}
 }
 \value{
 A data frame with additional columns:
@@ -91,7 +94,7 @@ p + geom_net(vertices=blood$vertices, aes(colour=..type..)) + theme_net()
 bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
-p + geom_net(aes(colour=rho))
+p + geom_net(aes(colour=rho)) + theme_net()
 p + geom_net(aes(colour=rho), label=TRUE, vjust = -0.5)
 p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, curvature=0.2) + theme_net()
 p + geom_net(colour = "orange", layout = 'circle', size = 6)

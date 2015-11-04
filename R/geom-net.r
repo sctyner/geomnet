@@ -12,11 +12,12 @@
 #' @param label logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
 #' @param labelcolour character of colour for the labels.
 #' @param ecolour colour for edges.
-#' @param linwidth width of edges. Defaults to 1/4 of the node size.
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
+#' @param selfies logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
 #' @param arrowsize numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
 #' @param arrowgap numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.
+#' @param vertices data frame containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use a joint to include this information in the data dataframe
 #'
 #' @export
 #' @examples
@@ -110,13 +111,13 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour=NULL, ealpha=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, vertices=NULL, selfies = FALSE, ...) {
     layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
-                  ecolour = ecolour, ealpha=ealpha, arrowgap=arrowgap, directed=directed,
+                  ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed,
                   arrowsize=arrowsize, labelcolour=labelcolour, vertices=vertices, selfies = selfies,
                   ...)
   )
@@ -170,7 +171,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     data
   },
 
-  draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrowgap=0.01,
+  draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL, selfies = FALSE) {
 
  #   browser()
@@ -208,12 +209,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     )
     vertices <- unique(vertices)
 
-    arrow = NULL
     if (directed) {
       if (any(data$curvature != 0))
-        arrow = arrow(length = unit(arrowsize*10,"points"), type="open")
+        if(is.null(arrow)) arrow = arrow(length = unit(arrowsize*10,"points"), type="open")
       else
-        arrow = arrow(length = unit(arrowsize*10,"points"), type="closed")
+        if(is.null(arrow)) arrow = arrow(length = unit(arrowsize*10,"points"), type="closed")
 
       arrowgap <- with(edges, arrowgap/sqrt((xend-x)^2+(yend-y)^2))
       edges <- transform(
@@ -221,7 +221,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         xend = x + (1-arrowgap)*(xend-x),
         yend = y + (1-arrowgap)*(yend-y)
       )
-    }
+    } else arrow=NULL
 #    browser()
     if (any(data$curvature != 0))
       edges_draw <- GeomCurve$draw_panel(edges, panel_scales,
