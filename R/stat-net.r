@@ -2,7 +2,9 @@
   if (!is.null(a)) a else b
 }
 
-
+#' @rdname geom_net
+#' @importFrom sna as.edgelist.sna
+#' @importFrom network as.network, as.matrix.network.edgelist
 #' @export
 StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   required_aes = c("from_id", "to_id"),
@@ -55,8 +57,6 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   edgeweights <- diff(range(edges$wt)) != 0
   if (edgeweights) {
     # make a (weighted) sna edgelist
-    require(sna)
-
     edgelist <- sna::as.edgelist.sna(net) #sna pkg
     edgelist[,3] <- sqrt(edges$wt)  # doesn't change anything for wt == const
   } else {

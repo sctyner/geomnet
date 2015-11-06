@@ -9,11 +9,8 @@ Description: Network visualization in the ggplot2 framework. This needs to be a 
 License: GPL (>= 2)
 LazyData: TRUE
 Depends:
-    R (>= 2.14)
+    R (>= 2.14),
+    ggplot2 (>= 1.0.1.9003)
 Imports:
-  ggplot2 (>= 1.0.1.9003),
-  grid,
-  proto,
-  dplyr,
-  reshape2,
-  sna
+  sna,
+  network
