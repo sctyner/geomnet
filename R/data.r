@@ -1,3 +1,25 @@
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"bikes"
+
 #' Network of blood types
 #'
 #' A list of two datasets, vertices and edges, containing information on blood type (see \url{http://www.redcrossblood.org/learn-about-blood/blood-types}).
@@ -21,6 +43,72 @@
 #' }
 "blood"
 
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"email"
+
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"football"
+
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"lesmis"
+
 #' Network of romantic relationships in the TV show Mad Men
 #'
 #' A list of two datasets, vertices and edges, containing information on sexual relations in the TV show Mad Men.
@@ -42,3 +130,113 @@
 #' }
 #' }
 "madmen"
+
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"metro_map"
+
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"mm_directed"
+
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"protein"
+
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"soccer"
+
+#' What it is
+#' 
+#' A list of two datasets, vertices and edges, containing data on
+#' 
+#' This data set is from .
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of __ variables of length __:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \itemize{
+#'   \item VarName: Var description
+#'   \item 
+#' }
+#' }
+"theme_elements"
