@@ -115,12 +115,15 @@ p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(aes(colour=rho)) + theme_net()
 p + geom_net(aes(colour=rho), label=TRUE, vjust = -0.5)
-p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black", directed=TRUE, curvature=0.2) + theme_net()
+p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black",
+             directed=TRUE, curvature=0.2) + theme_net()
 p + geom_net(colour = "orange", layout = 'circle', size = 6)
 p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
-p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75, directed = TRUE)
-p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to), linewidth=0.75, label =TRUE,
-    labelcolour="black") + facet_wrap(~Ethnicity) +
+p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75,
+             directed = TRUE)
+p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to),
+             linewidth=0.75, label =TRUE, labelcolour="black") +
+    facet_wrap(~Ethnicity) +
     scale_colour_brewer(palette="Set2")
 ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
@@ -137,42 +140,52 @@ p + geom_net(label=TRUE)
 p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
 p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
-p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, label=TRUE, arrowgap=0.01, labelcolour="black") +
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, label=TRUE,
+             arrowgap=0.01, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 # alternative labelling: specify label variable.
-p + geom_net(aes(colour=Gender, label=Gender), size=6, linewidth=1, fontsize=3, labelcolour="black")
+p + geom_net(aes(colour=Gender, label=Gender), size=6, linewidth=1, fontsize=3,
+             labelcolour="black")
 
 ## visualizing ggplot2 theme elements
 data(theme_elements)
-TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent", by.y="name", all=TRUE)
-ggplot(data = TEnet, aes(from_id = parent, to_id = child)) + geom_net(label=TRUE, vjust=-0.5)
+TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent",
+               by.y="name", all=TRUE)
+ggplot(data = TEnet, aes(from_id = parent, to_id = child)) +
+  geom_net(label=TRUE, vjust=-0.5)
 
 
 ## emails example from VastChallenge 2014
-# care has to be taken to make sure that for each panel all nodes are included with the necessary information.
+# care has to be taken to make sure that for each panel all nodes are included with
+# the necessary information.
 # Otherwise line segments show on the plot without nodes.
 
 data(email)
 employee <- data.frame(expand.grid(
               label=unique(email$nodes$label), day=unique(email$edges$day)))
 employee <- merge(employee, email$nodes, by="label")
-emailnet <- merge(subset(email$edges, nrecipients < 54), employee, by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
+emailnet <- merge(subset(email$edges, nrecipients < 54), employee,
+                  by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
 
 #no facets
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) + scale_colour_brewer(palette="Set2")
+  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
+  scale_colour_brewer(palette="Set2")
 
 #facet by day
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
+  scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-  geom_net(aes(colour= CitizenshipCountry), linewidth=0.5, fiteach=TRUE) + scale_colour_brewer(palette="Set2") +
+  geom_net(aes(colour= CitizenshipCountry), linewidth=0.5, fiteach=TRUE) +
+  scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=FALSE) + scale_colour_brewer(palette="Set2") +
+  geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=FALSE) +
+  scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
 
 ## Les Miserables example

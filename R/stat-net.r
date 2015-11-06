@@ -4,7 +4,7 @@
 
 #' @rdname geom_net
 #' @importFrom sna as.edgelist.sna
-#' @importFrom network as.network, as.matrix.network.edgelist
+#' @importFrom network as.matrix.network.edgelist
 #' @export
 StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   required_aes = c("from_id", "to_id"),
@@ -130,7 +130,7 @@ stat_net <- function(mapping = NULL, data = NULL, geom = "point",
                      position = "identity", show.legend = NA,
                      inherit.aes = TRUE, layout="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL,
                      na.rm=FALSE, ...) {
-  layer(
+  ggplot2::layer(
     stat = StatNet, data = data, mapping = mapping, geom = geom, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach,

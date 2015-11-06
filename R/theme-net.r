@@ -16,10 +16,10 @@
 #' p + geom_net()
 #' p + geom_net() + theme_net()
 #'
-#' @name ggtheme
+#' @name theme_net
 NULL
 #' @export
-#' @rdname ggtheme
+#' @import ggplot2
 theme_net <- function (base_size = 11, base_family = "")
 {
   theme_grey(base_size = base_size, base_family = base_family) %+replace%
