@@ -21,3 +21,24 @@
 #' }
 "blood"
 
+#' Network of romantic relationships in the TV show Mad Men
+#'
+#' A list of two datasets, vertices and edges, containing information on sexual relations in the TV show Mad Men.
+#' This data set was first compiled by Winston Chang for the package gcookbook and was extended here to include
+#' the gender of each of the characters.
+#' The variables are as follows:
+#'
+#' @format A list of two data frames:
+#' \itemize{
+#' \item the edges data set consists of two variables of length 39:
+#' \itemize{
+#'   \item Name1: Name of one of the sexual partners.
+#'   \item Name2: Name of the other sexual partner.
+#' }
+#' \item the vertices data set consists of three variables with information on 45 characters of the show:
+#' \itemize{
+#'   \item label Name of the character,
+#'   \item Gender factor variable of the gender of the character.
+#' }
+#' }
+"madmen"

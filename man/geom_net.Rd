@@ -2,24 +2,26 @@
 % Please edit documentation in R/geom-net.r, R/stat-net.r
 \docType{data}
 \name{geom_net}
+\alias{GeomNet}
 \alias{StatNet}
 \alias{geom_net}
 \alias{stat_net}
 \title{Geom for network visualization within the ggplot2 framework}
-\format{\preformatted{Classes 'StatNet', 'Stat', 'ggproto' <ggproto object: Class StatNet, Stat>
-    compute_group: function
-    compute_layer: function
-    compute_network: function
-    compute_panel: function
+\format{\preformatted{Classes 'GeomNet', 'Geom', 'ggproto' <ggproto object: Class GeomNet, Geom>
+    aesthetics: function
     default_aes: uneval
+    draw_group: function
+    draw_key: function
+    draw_layer: function
+    draw_panel: function
     extra_params: na.rm
-    non_missing_aes: weight
+    handle_na: function
+    non_missing_aes: 
     parameters: function
-    required_aes: from_id to_id
-    retransform: TRUE
+    required_aes: x y
     setup_data: function
-    setup_params: function
-    super:  <ggproto object: Class Stat> 
+    use_defaults: function
+    super:  <ggproto object: Class Geom> 
 }}
 \usage{
 geom_net(mapping = NULL, data = NULL, stat = "net",
@@ -29,6 +31,8 @@ geom_net(mapping = NULL, data = NULL, stat = "net",
   ealpha = NULL, arrow = NULL, arrowgap = 0.01, directed = FALSE,
   arrowsize = 1, labelcolour = NULL, vertices = NULL, selfies = FALSE,
   ...)
+
+GeomNet
 
 StatNet
 

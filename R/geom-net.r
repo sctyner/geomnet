@@ -136,6 +136,7 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
   )
 }
 
+#' @rdname geom_net
 #' @importFrom grid grobTree
 #' @export
 GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
