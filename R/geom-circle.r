@@ -60,6 +60,7 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' This geom is very much exploratory - we are using it for drawing edges for self references.
 #' It is not explored for any more general use, so use with caution!
 #' @inheritParams ggplot2::geom_point
+#' @param radius numeric value giving the radius of the circle to be drawn (0-1 normalized scale)
 #' @export
 #' @examples
 #' # circles are drawn centered at x and y
