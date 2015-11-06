@@ -26,7 +26,46 @@ GeomCircle
 
 geom_circle(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE, ...)
+  inherit.aes = TRUE, radius = 0.05, ...)
+}
+\arguments{
+\item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
+\code{\link{aes_}}. If specified and \code{inherit.aes = TRUE} (the
+default), is combined with the default mapping at the top level of the
+plot. You only need to supply \code{mapping} if there isn't a mapping
+defined for the plot.}
+
+\item{data}{A data frame. If specified, overrides the default data frame
+defined at the top level of the plot.}
+
+\item{stat}{The statistical transformation to use on the data for this
+layer, as a string.}
+
+\item{position}{Position adjustment, either as a string, or the result of
+a call to a position adjustment function.}
+
+\item{na.rm}{If \code{FALSE} (the default), removes missing values with
+a warning.  If \code{TRUE} silently removes missing values.}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.}
+
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link{borders}}.}
+
+\item{...}{other arguments passed on to \code{\link{layer}}. There are
+  three types of arguments you can use here:
+
+  \itemize{
+  \item Aesthetics: to set an aesthetic to a fixed value, like
+     \code{color = "red"} or \code{size = 3}.
+  \item Other arguments to the layer, for example you override the
+    default \code{stat} associated with the layer.
+  \item Other arguments passed on to the stat.
+  }}
 }
 \description{
 Circles are drawn with a specified radius centered at (x, y).
@@ -37,9 +76,9 @@ It is not explored for any more general use, so use with caution!
 # circles are drawn centered at x and y
 library(ggplot2)
 data(mpg)
-ggplot(mpg, aes(displ, hwy)) + geom_circle(size=0.1) + geom_point()
-ggplot(mpg, aes(displ, hwy)) + geom_circle(linetype=2, size=0.05, alpha=0.5)
-ggplot(mpg, aes(displ, hwy)) + geom_circle(aes(linetype=factor(cyl)), size=0.05, alpha=0.5)
+ggplot(mpg, aes(displ, hwy)) + geom_circle(radius=0.1) + geom_point()
+ggplot(mpg, aes(displ, hwy)) + geom_circle(linetype=2, radius=0.05, alpha=0.5)
+ggplot(mpg, aes(displ, hwy)) + geom_circle(aes(linetype=factor(cyl)), radius=0.05, alpha=0.5)
 }
 \keyword{datasets}
 

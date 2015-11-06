@@ -21,10 +21,23 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
   default_aes = ggplot2::aes(
     colour = "grey30", fill=NA, alpha=NA, linewidth=1, linetype="solid"),
 
-  draw_key = ggplot2::draw_key_blank,
+  draw_key = function (data, params, size)
+  {
+    grid::circleGrob(
+      0.5, 0.5,
+      r=0.35,
+      gp = grid::gpar(
+        col = scales::alpha(data$colour, data$alpha),
+        fill = scales::alpha(data$fill, data$alpha),
+        lty = data$linetype,
+        lwd = data$linewidth,
+        fontsize = data$radius*2
+      )
+    )
+  },
 
 
-  draw_panel = function(data, panel_scales, coord, na.rm = TRUE) {
+  draw_panel = function(data, panel_scales, coord,  na.rm = TRUE) {
     coords <- coord$transform(data, panel_scales)
     coords <- scaleRadius(coords)
     grid::circleGrob(
@@ -46,22 +59,23 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' Circles are drawn with a specified radius centered at (x, y).
 #' This geom is very much exploratory - we are using it for drawing edges for self references.
 #' It is not explored for any more general use, so use with caution!
+#' @inheritParams ggplot2::geom_point
 #' @export
 #' @examples
 #' # circles are drawn centered at x and y
 #' library(ggplot2)
 #' data(mpg)
-#' ggplot(mpg, aes(displ, hwy)) + geom_circle(size=0.1) + geom_point()
-#' ggplot(mpg, aes(displ, hwy)) + geom_circle(linetype=2, size=0.05, alpha=0.5)
-#' ggplot(mpg, aes(displ, hwy)) + geom_circle(aes(linetype=factor(cyl)), size=0.05, alpha=0.5)
+#' ggplot(mpg, aes(displ, hwy)) + geom_circle(radius=0.1) + geom_point()
+#' ggplot(mpg, aes(displ, hwy)) + geom_circle(linetype=2, radius=0.05, alpha=0.5)
+#' ggplot(mpg, aes(displ, hwy)) + geom_circle(aes(linetype=factor(cyl)), radius=0.05, alpha=0.5)
 
 geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
                               position = "identity", na.rm = FALSE, show.legend = NA,
-                              inherit.aes = TRUE, ...) {
+                              inherit.aes = TRUE, radius = 0.05, ...) {
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, ...)
+    params = list(na.rm = na.rm, radius = radius, ...)
   )
 }
 
