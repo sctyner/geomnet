@@ -5,7 +5,7 @@
 #' The data is organized as a list of two datasets, vertices (stations) and edges (trips between stations),
 #' as follows:
 #'
-#' @references https://secure.capitalbikeshare.com/
+#' @references \url{https://secure.capitalbikeshare.com/}
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the trips data set consists of six variables of length 53:
@@ -133,6 +133,20 @@
 #'   \item label: Character name
 #' }
 #' }
+#' @examples
+#' # prep the data
+#' lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x = "from",
+#'                    by.y = "label", all = TRUE)
+#' lesmisnet$degree[is.na(lesmisnet$degree)] <- 0
+#'
+#' # create plot
+#' ggplot(data = lesmisnet, aes(from_id = from, to_id = to,
+#'                              linewidth = degree / 5 + 0.1 )) +
+#'   geom_net(aes(size = degree, alpha = degree),
+#'            colour = "grey30", ecolour = "grey60",
+#'            layout = "fruchtermanreingold", label = TRUE, vjust = -0.75) +
+#'   scale_alpha(range = c(0.3, 1)) +
+#'   theme_net()
 "lesmis"
 
 #' Network of romantic relationships in the TV show Mad Men (undirected)

@@ -32,7 +32,7 @@ The data is organized as a list of two datasets, vertices (stations) and edges (
 as follows:
 }
 \references{
-https://secure.capitalbikeshare.com/
+\url{https://secure.capitalbikeshare.com/}
 }
 \keyword{datasets}
 
