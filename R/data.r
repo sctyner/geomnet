@@ -50,23 +50,23 @@
 
 #' Email network (directed)
 #'
-#' A list of two datasets, vertices and edges, containing data on employees and emails sent between them at a fictional company (see http://hcil2.cs.umd.edu/newvarepository/benchmarks.php).
+#' A list of two datasets, vertices and edges, containing data on employees and (fictitious)
+#' email headers from two weeks of internal GAStech company email between employees made available as part of the VAST challenge 2014 (K. Cook, G. Grinstein, M. Whiting, see http://hcil2.cs.umd.edu/newvarepository/benchmarks.php).
 #' The variables are as follows:
 #'
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of ten variables of length 9063:
 #' \itemize{
-#'   \item X: Message ID
 #'   \item From: Email address of sender
-#'   \item eID:  ??? ###
+#'   \item eID:  email ID. If an email ws sent to multiple recipients, the email ID is the same.
 #'   \item Date: Date and time email was sent
 #'   \item Subject: Subject line of email
-#'   \item to: Email address of recepient
+#'   \item to: Email address of recipient
 #'   \item month: Month email was sent
 #'   \item day: Day of month email was sent
 #'   \item year: Year email was sent
-#'   \item nrecipients: Number of recepients of email
+#'   \item nrecipients: Number of recipients of email
 #' }
 #' \item the vertices data set consists of 18 variables with information on 55 employees:
 #' \itemize{
