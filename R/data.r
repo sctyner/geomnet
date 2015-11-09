@@ -1,21 +1,37 @@
-#' What it is
+#' Bike sharing use in the DC Metro Area 
 #' 
-#' A list of two datasets, vertices and edges, containing data on
-#' 
-#' This data set is from .
+#' A list of two datasets, vertices and edges, containing data on bike trips in the Washington DC metro area (see \url{https://secure.capitalbikeshare.com/}).
 #' The variables are as follows:
 #'
 #' @format A list of two data frames:
 #' \itemize{
-#' \item the edges data set consists of __ variables of length __:
+#' \item the edges data set consists of six variables of length 53:
 #' \itemize{
-#'   \item VarName: Var description
-#'   \item 
+#'   \item Start.station: Station where bike trip starts
+#'   \item End.station: Station where bike trip ends
+#'   \item n: Number of trips between the two stations
+#'   \item minlength: ## Duration of shortest trip between the two stations (units?)
+#'   \item min5perc: ## Fifth percentile of trip durations (units?)
+#'   \item village: I'm not sure ###
 #' }
-#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \item the vertices data set consists of 16 variables with information on 21 stations:
 #' \itemize{
-#'   \item VarName: Var description
-#'   \item 
+#'   \item id: Station ID number
+#'   \item name: Station name
+#'   \item terminalName: ??? ###
+#'   \item lastCommWithServer: ??? ###  
+#'   \item lat: Latitude of station location
+#'   \item long: Longitude of station location
+#'   \item installed: ??? ###
+#'   \item locked: ??? ###
+#'   \item installDate: ??? ###
+#'   \item removalDate: ??? ###
+#'   \item temporary: ??? ###
+#'   \item public: ??? ###
+#'   \item nbBikes: Number of bikes at the station
+#'   \item nbEmptyDocks: Number of empty docks at the station
+#'   \item latestUpdateTime: ??? ###
+#'   \item village: ??? ###
 #' }
 #' }
 "bikes"
