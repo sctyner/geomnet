@@ -198,7 +198,7 @@
 #'   \item Gender: Gender of the character
 #' }
 #' }
-"mm_directed"
+"mm.directed"
 
 #' A protein interaction network (undirected)
 #' 
@@ -219,7 +219,7 @@
 #' High school boys' soccer games in Iowa (undirected)
 #' 
 #' A list of two datasets, vertices and edges, containing data on boys' soccer games at Iowa high schools in the 2011-2014 seasons.
-#' This dataset was compiled by Danny Bero (\url{bero.danny@gmail.com}).
+#' This dataset was compiled by Danny Bero (\email{bero.danny@@gmail.com}).
 #' The variables are as follows:
 #'
 #' @format A list of two data frames:

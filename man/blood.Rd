@@ -3,7 +3,7 @@
 \docType{data}
 \name{blood}
 \alias{blood}
-\title{Network of blood types}
+\title{Network of blood types (directed)}
 \format{A list of two data frames:
 \itemize{
 \item the edges data set consists of three variables of length 27:

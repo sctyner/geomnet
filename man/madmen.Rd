@@ -3,7 +3,7 @@
 \docType{data}
 \name{madmen}
 \alias{madmen}
-\title{Network of romantic relationships in the TV show Mad Men}
+\title{Network of romantic relationships in the TV show Mad Men (undirected)}
 \format{A list of two data frames:
 \itemize{
 \item the edges data set consists of two variables of length 39:
