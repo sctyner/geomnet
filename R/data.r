@@ -1,37 +1,26 @@
 #' Bike sharing network (directed)
-#' 
-#' A list of two datasets, vertices and edges, containing data on bike trips in the Washington DC metro area (see \url{https://secure.capitalbikeshare.com/}).
-#' The variables are as follows:
+#'
+#' This network is a summary of the bike trips taken by customers of the bike sharing company Capital Bikeshare (\url{https://secure.capitalbikeshare.com/}) during the second quarter of 2015.
+#' Only trips between stations in the vicinity of Rockville, MD, are included.
+#' The data is organized as a list of two datasets, vertices (stations) and edges (trips between stations),
+#' as follows:
 #'
 #' @format A list of two data frames:
 #' \itemize{
-#' \item the edges data set consists of six variables of length 53:
+#' \item the trips data set consists of six variables of length 53:
 #' \itemize{
 #'   \item Start.station: Station where bike trip starts
 #'   \item End.station: Station where bike trip ends
 #'   \item n: Number of trips between the two stations
-#'   \item minlength: ## Duration of shortest trip between the two stations (units?)
-#'   \item min5perc: ## Fifth percentile of trip durations (units?)
-#'   \item village: I'm not sure ###
+#'   \item minlength: Duration of shortest trip between the two stations (in seconds).Only those stations are included, if the shortest trip between them lasted not more than 15 minutes.
 #' }
 #' \item the vertices data set consists of 16 variables with information on 21 stations:
 #' \itemize{
 #'   \item id: Station ID number
 #'   \item name: Station name
-#'   \item terminalName: ??? ###
-#'   \item lastCommWithServer: ??? ###  
 #'   \item lat: Latitude of station location
 #'   \item long: Longitude of station location
-#'   \item installed: ??? ###
-#'   \item locked: ??? ###
-#'   \item installDate: ??? ###
-#'   \item removalDate: ??? ###
-#'   \item temporary: ??? ###
-#'   \item public: ??? ###
-#'   \item nbBikes: Number of bikes at the station
-#'   \item nbEmptyDocks: Number of empty docks at the station
-#'   \item latestUpdateTime: ??? ###
-#'   \item village: ??? ###
+#'   \item nbDocks: Number of bike docks at the station
 #' }
 #' }
 "bikes"
@@ -60,8 +49,8 @@
 "blood"
 
 #' Email network (directed)
-#' 
-#' A list of two datasets, vertices and edges, containing data on employees and emails sent between them at a fictional company (see http://hcil2.cs.umd.edu/newvarepository/benchmarks.php). 
+#'
+#' A list of two datasets, vertices and edges, containing data on employees and emails sent between them at a fictional company (see http://hcil2.cs.umd.edu/newvarepository/benchmarks.php).
 #' The variables are as follows:
 #'
 #' @format A list of two data frames:
@@ -73,10 +62,10 @@
 #'   \item eID:  ??? ###
 #'   \item Date: Date and time email was sent
 #'   \item Subject: Subject line of email
-#'   \item to: Email address of recepient 
+#'   \item to: Email address of recepient
 #'   \item month: Month email was sent
 #'   \item day: Day of month email was sent
-#'   \item year: Year email was sent 
+#'   \item year: Year email was sent
 #'   \item nrecipients: Number of recepients of email
 #' }
 #' \item the vertices data set consists of 18 variables with information on 55 employees:
@@ -103,7 +92,7 @@
 "email"
 
 #' College football games network (undirected)
-#' 
+#'
 #' A list of two datasets, vertices and edges, containing data on Division I college football games played in Fall 2000 (see \url{http://www-personal.umich.edu/~mejn/netdata/}).
 #' The variables are as follows:
 #'
@@ -111,8 +100,8 @@
 #' \itemize{
 #' \item the edges data set consists of three variables of length 613:
 #' \itemize{
-#'   \item 
-#'   \item 
+#'   \item
+#'   \item
 #' }
 #' \item the vertices data set consists of __ variables with information on __ actors:
 #' \itemize{
@@ -124,7 +113,7 @@
 "football"
 
 #' Coappearance network of characters in Les Miserables (undirected)
-#' 
+#'
 #' A list of two datasets, vertices and edges, containing data on characters and chapters in Victor Hugo's Les Miserables (see \url{http://www-personal.umich.edu/~mejn/netdata/}).
 #' The variables are as follows:
 #'
@@ -167,7 +156,7 @@
 "madmen"
 
 #' Map of Washington DC Metro area
-#' 
+#'
 #' A dataset containing information to draw a map of Washington DC using \code{geom_tile}.
 #'
 #' @format A data frame of three variables of length 1638400:
@@ -179,8 +168,8 @@
 "metro_map"
 
 #' A directed network of Mad Men relationships
-#' 
-#' A list of two datasets, vertices and edges, containing information on sexual advances made in the TV show Mad Men. 
+#'
+#' A list of two datasets, vertices and edges, containing information on sexual advances made in the TV show Mad Men.
 #' This data set was first compiled by Winston Chang for the package gcookbook and was extended here to include
 #' the gender of each of the characters.
 #' The variables are as follows:
@@ -201,7 +190,7 @@
 "mm.directed"
 
 #' A protein interaction network (undirected)
-#' 
+#'
 #' A list of two datasets, vertices and edges, containing data on the complete protein-protein interaction network in the yeast species S. cerevisiae (see \url{http://www3.nd.edu/~networks/resources.htm}).
 #' The variables are as follows:
 #'
@@ -217,7 +206,7 @@
 "protein"
 
 #' High school boys' soccer games in Iowa (undirected)
-#' 
+#'
 #' A list of two datasets, vertices and edges, containing data on boys' soccer games at Iowa high schools in the 2011-2014 seasons.
 #' This dataset was compiled by Danny Bero (\email{bero.danny@@gmail.com}).
 #' The variables are as follows:
@@ -247,7 +236,7 @@
 "soccer"
 
 #' \pkg{ggplot2} theme attribute inheritance network (directed)
-#' 
+#'
 #' A list of two datasets, vertices and edges, containing data on the inheritance structure of theme elements in \pkg{ggplot2} (see \url{http://docs.ggplot2.org/current/theme.html})
 #' The variables are as follows:
 #'
@@ -260,7 +249,7 @@
 #' }
 #' \item the vertices data set consists of one variable with information on 53 theme elements:
 #' \itemize{
-#'   \item name: Name of the theme element 
+#'   \item name: Name of the theme element
 #' }
 #' }
 "theme_elements"

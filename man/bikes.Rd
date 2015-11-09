@@ -6,41 +6,30 @@
 \title{Bike sharing network (directed)}
 \format{A list of two data frames:
 \itemize{
-\item the edges data set consists of six variables of length 53:
+\item the trips data set consists of six variables of length 53:
 \itemize{
   \item Start.station: Station where bike trip starts
   \item End.station: Station where bike trip ends
   \item n: Number of trips between the two stations
-  \item minlength: ## Duration of shortest trip between the two stations (units?)
-  \item min5perc: ## Fifth percentile of trip durations (units?)
-  \item village: I'm not sure ###
+  \item minlength: Duration of shortest trip between the two stations (in seconds).Only those stations are included, if the shortest trip between them lasted not more than 15 minutes.
 }
 \item the vertices data set consists of 16 variables with information on 21 stations:
 \itemize{
   \item id: Station ID number
   \item name: Station name
-  \item terminalName: ??? ###
-  \item lastCommWithServer: ??? ###
   \item lat: Latitude of station location
   \item long: Longitude of station location
-  \item installed: ??? ###
-  \item locked: ??? ###
-  \item installDate: ??? ###
-  \item removalDate: ??? ###
-  \item temporary: ??? ###
-  \item public: ??? ###
-  \item nbBikes: Number of bikes at the station
-  \item nbEmptyDocks: Number of empty docks at the station
-  \item latestUpdateTime: ??? ###
-  \item village: ??? ###
+  \item nbDocks: Number of bike docks at the station
 }
 }}
 \usage{
 bikes
 }
 \description{
-A list of two datasets, vertices and edges, containing data on bike trips in the Washington DC metro area (see \url{https://secure.capitalbikeshare.com/}).
-The variables are as follows:
+This network is a summary of the bike trips taken by customers of the bike sharing company Capital Bikeshare (\url{https://secure.capitalbikeshare.com/}) during the second quarter of 2015.
+Only trips between stations in the vicinity of Rockville, MD, are included.
+The data is organized as a list of two datasets, vertices (stations) and edges (trips between stations),
+as follows:
 }
 \keyword{datasets}
 
