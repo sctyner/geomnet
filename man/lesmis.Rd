@@ -25,5 +25,8 @@ lesmis
 A list of two datasets, vertices and edges, containing data on characters and chapters in Victor Hugo's Les Miserables (see \url{http://www-personal.umich.edu/~mejn/netdata/}).
 The variables are as follows:
 }
+\references{
+D. E. Knuth, The Stanford GraphBase: A Platform for Combinatorial Computing, Addison-Wesley, Reading, MA (1993).
+}
 \keyword{datasets}
 

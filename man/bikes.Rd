@@ -31,5 +31,8 @@ Only trips between stations in the vicinity of Rockville, MD, are included.
 The data is organized as a list of two datasets, vertices (stations) and edges (trips between stations),
 as follows:
 }
+\references{
+https://secure.capitalbikeshare.com/
+}
 \keyword{datasets}
 

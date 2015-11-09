@@ -5,6 +5,7 @@
 #' The data is organized as a list of two datasets, vertices (stations) and edges (trips between stations),
 #' as follows:
 #'
+#' @references https://secure.capitalbikeshare.com/
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the trips data set consists of six variables of length 53:
@@ -117,6 +118,7 @@
 #' A list of two datasets, vertices and edges, containing data on characters and chapters in Victor Hugo's Les Miserables (see \url{http://www-personal.umich.edu/~mejn/netdata/}).
 #' The variables are as follows:
 #'
+#' @references D. E. Knuth, The Stanford GraphBase: A Platform for Combinatorial Computing, Addison-Wesley, Reading, MA (1993).
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of three variables of length 254:
