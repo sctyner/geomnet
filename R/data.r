@@ -157,6 +157,8 @@
 #' the gender of each of the characters.
 #' The variables are as follows:
 #'
+#' @references Winston Chang (2012). gcookbook: Data for "R Graphics Cookbook". R package
+#' version 1.0. \url{http://CRAN.R-project.org/package=gcookbook}
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of two variables of length 39:
@@ -174,15 +176,17 @@
 
 #' Map of Washington DC Metro area
 #'
-#' A dataset containing information to draw a map of Washington DC using \code{geom_tile}.
+#' A dataset containing information to draw a map of Rockville, MD, and vicinity using \code{geom_tile}.
 #' This information was pulled from Google Maps using the \pkg{ggmap} package.
-#' 
 #' @format A data frame of three variables of length 1638400:
 #' \itemize{
-#' \item x: Longitudinal coordinates
-#' \item y: Latitudinal coordinates
+#' \item x: degree of longitude
+#' \item y: degree of latitude
 #' \item fill: fill color in HEX form for that tile location
 #' }
+#' @examples
+#' ggplot(data = metro_map, aes(x = x, y = y)) +
+#' geom_raster(fill = metro_map$fill, alpha = 0.75)
 "metro_map"
 
 #' A directed network of Mad Men relationships
@@ -259,7 +263,7 @@
 #' # create plot
 #' ggplot(data = soccernet, aes(from_id = home, to_id = away)) +
 #'   geom_net(aes(colour = div, group = div), ealpha = .25, layout = 'fruchtermanreingold') +
-#'   facet_wrap(~season) + 
+#'   facet_wrap(~season) +
 #'   theme_net()
 "soccer"
 
