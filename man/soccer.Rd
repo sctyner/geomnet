@@ -8,7 +8,7 @@
 \itemize{
 \item the edges data set consists of 11 variables of length 4484:
 \itemize{
-  \item sub:
+  \item sub: The subregion of the state the school is in (1-8)
   \item home: The home team school
   \item season: The year the game was played
   \item week: Week of the season the game was played
@@ -33,6 +33,17 @@ soccer
 A list of two datasets, vertices and edges, containing data on boys' soccer games at Iowa high schools in the 2011-2014 seasons.
 This dataset was compiled by Danny Bero (\email{bero.danny@gmail.com}).
 The variables are as follows:
+}
+\examples{
+# prep the data
+soccernet <- merge(soccer$edges, soccer$vertices, by.x = "home",
+                   by.y = "label", all = TRUE)
+
+# create plot
+ggplot(data = soccernet, aes(from_id = home, to_id = away)) +
+  geom_net(aes(colour = div, group = div), ealpha = .25, layout = 'fruchtermanreingold') +
+  facet_wrap(~season) +
+  theme_net()
 }
 \keyword{datasets}
 

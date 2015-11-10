@@ -11,7 +11,7 @@
   \item
   \item
 }
-\item the vertices data set consists of __ variables with information on __ actors:
+\item the vertices data set consists of two variables with information on 157 Iowa high schools:
 \itemize{
   \item from: First school in game
   \item to: Second school in game
@@ -22,8 +22,11 @@
 football
 }
 \description{
-A list of two datasets, vertices and edges, containing data on Division I college football games played in Fall 2000 (see \url{http://www-personal.umich.edu/~mejn/netdata/}).
+A list of two datasets, vertices and edges, containing data on Division I college football games in the Fall 2000 season.
 The variables are as follows:
+}
+\references{
+M. Girvan and M. E. J. Newman, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002).
 }
 \keyword{datasets}
 

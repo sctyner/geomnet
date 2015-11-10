@@ -15,6 +15,7 @@ metro_map
 }
 \description{
 A dataset containing information to draw a map of Washington DC using \code{geom_tile}.
+This information was pulled from Google Maps using the \pkg{ggmap} package.
 }
 \keyword{datasets}
 

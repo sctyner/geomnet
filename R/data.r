@@ -52,7 +52,7 @@
 #' Email network (directed)
 #'
 #' A list of two datasets, vertices and edges, containing data on employees and (fictitious)
-#' email headers from two weeks of internal GAStech company email between employees made available as part of the VAST challenge 2014 (K. Cook, G. Grinstein, M. Whiting, see http://hcil2.cs.umd.edu/newvarepository/benchmarks.php).
+#' email headers from two weeks of internal GAStech company email between employees made available as part of the VAST challenge 2014 (K. Cook, G. Grinstein, M. Whiting, see \url{http://hcil2.cs.umd.edu/newvarepository/benchmarks.php}).
 #' The variables are as follows:
 #'
 #' @format A list of two data frames:
@@ -94,9 +94,10 @@
 
 #' College football games network (undirected)
 #'
-#' A list of two datasets, vertices and edges, containing data on Division I college football games played in Fall 2000 (see \url{http://www-personal.umich.edu/~mejn/netdata/}).
+#' A list of two datasets, vertices and edges, containing data on Division I college football games in the Fall 2000 season.
 #' The variables are as follows:
 #'
+#' @references M. Girvan and M. E. J. Newman, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002).
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of three variables of length 613:
@@ -104,7 +105,7 @@
 #'   \item
 #'   \item
 #' }
-#' \item the vertices data set consists of __ variables with information on __ actors:
+#' \item the vertices data set consists of two variables with information on 157 Iowa high schools:
 #' \itemize{
 #'   \item from: First school in game
 #'   \item to: Second school in game
@@ -115,7 +116,7 @@
 
 #' Coappearance network of characters in Les Miserables (undirected)
 #'
-#' A list of two datasets, vertices and edges, containing data on characters and chapters in Victor Hugo's Les Miserables (see \url{http://www-personal.umich.edu/~mejn/netdata/}).
+#' A list of two datasets, vertices and edges, containing data on characters and their coapperance in chapters in Victor Hugo's Les Miserables.
 #' The variables are as follows:
 #'
 #' @references D. E. Knuth, The Stanford GraphBase: A Platform for Combinatorial Computing, Addison-Wesley, Reading, MA (1993).
@@ -174,7 +175,8 @@
 #' Map of Washington DC Metro area
 #'
 #' A dataset containing information to draw a map of Washington DC using \code{geom_tile}.
-#'
+#' This information was pulled from Google Maps using the \pkg{ggmap} package.
+#' 
 #' @format A data frame of three variables of length 1638400:
 #' \itemize{
 #' \item x: Longitudinal coordinates
@@ -207,9 +209,9 @@
 
 #' A protein interaction network (undirected)
 #'
-#' A list of two datasets, vertices and edges, containing data on the complete protein-protein interaction network in the yeast species S. cerevisiae (see \url{http://www3.nd.edu/~networks/resources.htm}).
+#' A list of two datasets, vertices and edges, containing data on the complete protein-protein interaction network in the yeast species S. cerevisiae ( \url{http://www3.nd.edu/~networks/resources.htm}).
 #' The variables are as follows:
-#'
+#' @references H. Jeong, S. Mason, A.L. Barabasi and Z.N. Oltvai, Centrality and lethality of protein networks Nature 411, 41 (2001)
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of two variables of length 4480:
@@ -231,7 +233,7 @@
 #' \itemize{
 #' \item the edges data set consists of 11 variables of length 4484:
 #' \itemize{
-#'   \item sub:
+#'   \item sub: The subregion of the state the school is in (1-8)
 #'   \item home: The home team school
 #'   \item season: The year the game was played
 #'   \item week: Week of the season the game was played
@@ -249,6 +251,16 @@
 #'   \item label: School name
 #' }
 #' }
+#' @examples
+#' # prep the data
+#' soccernet <- merge(soccer$edges, soccer$vertices, by.x = "home",
+#'                    by.y = "label", all = TRUE)
+#'
+#' # create plot
+#' ggplot(data = soccernet, aes(from_id = home, to_id = away)) +
+#'   geom_net(aes(colour = div, group = div), ealpha = .25, layout = 'fruchtermanreingold') +
+#'   facet_wrap(~season) + 
+#'   theme_net()
 "soccer"
 
 #' \pkg{ggplot2} theme attribute inheritance network (directed)

@@ -22,7 +22,7 @@
 lesmis
 }
 \description{
-A list of two datasets, vertices and edges, containing data on characters and chapters in Victor Hugo's Les Miserables (see \url{http://www-personal.umich.edu/~mejn/netdata/}).
+A list of two datasets, vertices and edges, containing data on characters and their coapperance in chapters in Victor Hugo's Les Miserables.
 The variables are as follows:
 }
 \examples{
