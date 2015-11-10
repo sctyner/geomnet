@@ -18,8 +18,10 @@ A dataset containing information to draw a map of Rockville, MD, and vicinity us
 This information was pulled from Google Maps using the \pkg{ggmap} package.
 }
 \examples{
+\dontrun{
 ggplot(data = metro_map, aes(x = x, y = y)) +
 geom_raster(fill = metro_map$fill, alpha = 0.75)
+}
 }
 \keyword{datasets}
 

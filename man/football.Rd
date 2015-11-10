@@ -25,6 +25,34 @@ football
 A list of two datasets, vertices and edges, containing data on Division I college football games in the Fall 2000 season.
 The variables are as follows:
 }
+\examples{
+# data step: merge vertices and edges
+ftnet <- merge(
+  football$edges, football$vertices,
+  by.x = "from", by.y = "label", all = TRUE
+)
+
+# label independent schools
+ftnet$schools <- ifelse(ftnet$value == "Independents", ftnet$from, "")
+
+# create data plot
+ggplot(data = ftnet,
+       aes(from_id = from, to_id = to)) +
+  geom_net(
+    aes(
+      colour = value, group = value,
+      linetype = factor(same.conf != 1),
+      label = schools
+    ),
+    linewidth = 0.5,
+    size = 5, vjust = -0.75, alpha = 0.3,
+    layout = 'fruchtermanreingold'
+  ) +
+  theme_net() +
+  theme(legend.position = "bottom") +
+  scale_colour_brewer("Conference", palette = "Paired")  +
+  guides(linetype = FALSE)
+}
 \references{
 M. Girvan and M. E. J. Newman, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002).
 }

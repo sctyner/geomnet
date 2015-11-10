@@ -22,7 +22,7 @@ madmen
 }
 \description{
 A list of two datasets, vertices and edges, containing information on sexual relations in the TV show Mad Men.
-This data set was first compiled by Winston Chang for the package gcookbook and was extended here to include
+This data set was first compiled by Winston Chang for the package gcookbook (under the same name) and was extended here to include
 the gender of each of the characters.
 The variables are as follows:
 }

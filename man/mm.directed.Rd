@@ -22,9 +22,13 @@ mm.directed
 }
 \description{
 A list of two datasets, vertices and edges, containing information on sexual advances made in the TV show Mad Men.
-This data set was first compiled by Winston Chang for the package gcookbook and was extended here to include
+This data set was first compiled by Winston Chang for the package gcookbook (under the name \code{madmen2}) and was extended here to include
 the gender of each of the characters.
 The variables are as follows:
+}
+\references{
+Winston Chang (2012). gcookbook: Data for "R Graphics Cookbook". R package
+version 1.0. \url{http://CRAN.R-project.org/package=gcookbook}
 }
 \keyword{datasets}
 
