@@ -149,12 +149,17 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
   draw_key = function(data, params, size)  {
 #    browser()
-    arrow = NULL
+#    arrow = arrow
     if (params$directed) {
-      if (any(data$curvature != 0))
+      if(is.null(arrow)){
+      if (any(data$curvature != 0)){
         arrow = arrow(length = unit(params$arrowsize*10,"points"), type="open")
-      else
+        }
+      else{
         arrow = arrow(length = unit(params$arrowsize*10,"points"), type="closed")
+      }
+      }
+      else arrow = arrow
     }
     with(data, grobTree(
       grid::pointsGrob(0.5 + .15*params$directed, 0.5, pch = data$shape,
