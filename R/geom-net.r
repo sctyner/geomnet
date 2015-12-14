@@ -43,7 +43,7 @@
 #'     scale_colour_brewer(palette="Set2")
 #' ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
 #'   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
-#'          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
+#'          directed = TRUE, vjust = 0.5, labelcolour = "grey80", arrow = fix_arrows,
 #'          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
 #'          selfies = TRUE, ecolour = "grey40") +
 #'   theme_net()
@@ -124,14 +124,15 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, directed = FALSE, #arrowsize=1,
                       labelcolour=NULL, vertices=NULL, selfies = FALSE, ...) {
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
                   ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed,
-                  arrowsize=arrowsize, labelcolour=labelcolour, vertices=vertices, selfies = selfies,
+                  #arrowsize=arrowsize, 
+                  labelcolour=labelcolour, vertices=vertices, selfies = selfies,
                   ...)
   )
 }
@@ -143,7 +144,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   required_aes = c("x", "y"),
 
   default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
-                             shape = 19, colour = "grey40",
+                             shape = 19, colour = "grey40", arrowsize = 1,
                              size = 4, fill = NA, alpha = NA, stroke = 0.5,
                              linewidth=1, angle=0, vjust=0, hjust=0.5, curvature = 0),
 
@@ -191,7 +192,8 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01,
-                        directed=FALSE, arrowsize=1, label=FALSE, labelcolour=NULL, selfies = FALSE) {
+                        directed=FALSE, #arrowsize=1, 
+                        label=FALSE, labelcolour=NULL, selfies = FALSE) {
 
  #   browser()
     data$self <- as.character(data$to) == as.character(data$from)
@@ -230,9 +232,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
     if (directed) {
       if (any(data$curvature != 0)) {
-        if (is.null(arrow)) arrow = arrow(length = unit(arrowsize*10,"points"), type="open")
+        if (is.null(arrow)) arrow = arrow(length = unit(data$arrowsize*10,"points"), type="open")
       } else {
-        if (is.null(arrow)) arrow = arrow(length = unit(arrowsize*10,"points"), type="closed")
+        if (is.null(arrow)) arrow = arrow(length = unit(data$arrowsize*10,"points"), type="closed")
       }
       arrowgap <- with(edges, arrowgap/sqrt((xend-x)^2+(yend-y)^2))
       edges <- transform(
