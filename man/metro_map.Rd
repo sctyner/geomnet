@@ -6,9 +6,9 @@
 \title{Map of Washington DC Metro area}
 \format{A data frame of three variables of length 1638400:
 \itemize{
-\item x: Longitudinal coordinates
-\item y: Latitudinal coordinates
-\item fill: fill color in HEX form for that tile location
+\item x: Numeric variable with longitudinal coordinates
+\item y: Numeric variable with latitudinal coordinates
+\item fill: Character variable with fill color in HEX form for that tile location
 }}
 \usage{
 metro_map
@@ -16,6 +16,10 @@ metro_map
 \description{
 A dataset containing information to draw a map of Washington DC using \code{geom_tile}.
 This information was pulled from Google Maps using the \pkg{ggmap} package.
+}
+\references{
+D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2.
+The R Journal, 5(1), 144-161. \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
 }
 \keyword{datasets}
 

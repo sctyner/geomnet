@@ -8,14 +8,13 @@
 \itemize{
 \item the edges data set consists of three variables of length 613:
 \itemize{
-  \item
-  \item
+  \item from, to: Character variables describing the teams playing in the game
+  \item same.conf: An indicator variable that is 1 if the two teams are in the same conference and 0 otherwise.
 }
 \item the vertices data set consists of two variables with information on 157 Iowa high schools:
 \itemize{
-  \item from: First school in game
-  \item to: Second school in game
-  \item same.conf: An indicator variable that is 1 if the two teams are in the same conference and 0 otherwise.
+  \item label: Character variable containing the school names
+  \item value: Character variable containing the conference of the schools
 }
 }}
 \usage{

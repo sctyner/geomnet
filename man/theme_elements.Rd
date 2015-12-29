@@ -6,12 +6,12 @@
 \title{\pkg{ggplot2} theme attribute inheritance network (directed)}
 \format{A list of two data frames:
 \itemize{
-\item the edges data set consists of two variables of length 48:
+\item the edges data frame consists of two variables of length 48:
 \itemize{
   \item child: Theme element that inherits its properties from the corresponding parent element
   \item parent: Theme element that passes its properties to its children
 }
-\item the vertices data set consists of one variable with information on 53 theme elements:
+\item the vertices data frame consists of one variable with information on 53 theme elements:
 \itemize{
   \item name: Name of the theme element
 }

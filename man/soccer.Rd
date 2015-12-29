@@ -8,22 +8,22 @@
 \itemize{
 \item the edges data set consists of 11 variables of length 4484:
 \itemize{
-  \item sub: The subregion of the state the school is in (1-8)
-  \item home: The home team school
-  \item season: The year the game was played
-  \item week: Week of the season the game was played
-  \item date: Date game was played
-  \item away: The away team school
-  \item ha: Home team, away team, or neutral?
-  \item result: Did the home team win, lose, or tie?
-  \item score: Game final score, home team first
-  \item diff: Home team score minus away team score
+  \item sub: Integer variable with the subregion of the state the school is in (1-8)
+  \item home: Factor variable containing the home team school
+  \item season: Integer variable with the year the game was played
+  \item week: Integer variable with the week of the season the game was played
+  \item date: Factor variable containing the date the game was played
+  \item away: Factor variable containing the away team school
+  \item ha: Factor variable stating if the first team is the home team, away team, or neutral?
+  \item result: Factor variable stating if the home team won, lost, or tied?
+  \item score: Factor variable with game final score, home team first
+  \item diff: Integer variable with home team score minus away team score
   \item same_div: An indicator variable that is 1 if the schools are in the same division and 0 otherwise
 }
 \item the vertices data set consists of two variables with information on 157 schools:
 \itemize{
-  \item div: Division school is in (1, 2, or 3A)
-  \item label: School name
+  \item div: Factor variable with division school is in (1, 2, or 3A)
+  \item label: Factor variable with school name
 }
 }}
 \usage{

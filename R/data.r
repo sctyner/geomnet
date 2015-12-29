@@ -8,14 +8,15 @@
 #' @references \url{https://secure.capitalbikeshare.com/}
 #' @format A list of two data frames:
 #' \itemize{
-#' \item the trips data set consists of six variables of length 53:
+#' \item the trips data set consists of four variables of length 53:
 #' \itemize{
 #'   \item Start.station: Station where bike trip starts
 #'   \item End.station: Station where bike trip ends
 #'   \item n: Number of trips between the two stations
-#'   \item minlength: Duration of shortest trip between the two stations (in seconds).Only those stations are included, if the shortest trip between them lasted not more than 15 minutes.
+#'   \item minlength: Duration of shortest trip between the two stations (in seconds). Only those stations are included, if the shortest trip between them lasted not more than 15 minutes.
 #' }
-#' \item the vertices data set consists of 16 variables with information on 21 stations:
+#' 
+#' \item the vertices data set consists of five variables with information on 21 stations:
 #' \itemize{
 #'   \item id: Station ID number
 #'   \item name: Station name
@@ -35,16 +36,16 @@
 #' \itemize{
 #' \item the edges data set consists of three variables of length 27:
 #' \itemize{
-#'   \item from, to factor variables of blood types describing the relationship 'is compatible with'
-#'   \item group_to factor variable with levels 'same' and 'diff' for same or different blood type group not regarding the rho-gam factor.
+#'   \item from, to: factor variables of blood types describing the relationship 'is compatible with'
+#'   \item group_to: factor variable with levels 'same' and 'diff' for same or different blood type group not regarding the rho-gam factor.
 #' }
 #' \item the vertices data set consists of five variables and 32 rows:
 #' \itemize{
-#'   \item label factor variable of blood types,
-#'   \item type factor variable of blood type, not regarding the rhesus factor,
-#'   \item rho factor variable: 'pos' and 'neg' describing the rhesus factor,
-#'   \item Ethnicity factor variable of four variables: 'Caucasians', 'African.American', 'Hispanic', and 'Asian',
-#'   \item Predominance numeric variable consisting of the percentage points of each blood type within each ethnicity.
+#'   \item label: factor variable of blood types,
+#'   \item type: factor variable of blood type, not regarding the rhesus factor,
+#'   \item rho: factor variable: 'pos' and 'neg' describing the rhesus factor,
+#'   \item Ethnicity: factor variable of four variables: 'Caucasians', 'African.American', 'Hispanic', and 'Asian',
+#'   \item Predominance: numeric variable consisting of the percentage points of each blood type within each ethnicity.
 #' }
 #' }
 "blood"
@@ -69,7 +70,7 @@
 #'   \item year: Year email was sent
 #'   \item nrecipients: Number of recipients of email
 #' }
-#' \item the vertices data set consists of 18 variables with information on 55 employees:
+#' \item the nodes data set consists of 18 variables with information on 55 employees:
 #' \itemize{
 #'   \item label: Employee's email address
 #'   \item LastName: Employee's last name
@@ -102,14 +103,13 @@
 #' \itemize{
 #' \item the edges data set consists of three variables of length 613:
 #' \itemize{
-#'   \item
-#'   \item
+#'   \item from, to: Character variables describing the teams playing in the game
+#'   \item same.conf: An indicator variable that is 1 if the two teams are in the same conference and 0 otherwise.
 #' }
 #' \item the vertices data set consists of two variables with information on 157 Iowa high schools:
 #' \itemize{
-#'   \item from: First school in game
-#'   \item to: Second school in game
-#'   \item same.conf: An indicator variable that is 1 if the two teams are in the same conference and 0 otherwise.
+#'   \item label: Character variable containing the school names
+#'   \item value: Character variable containing the conference of the schools
 #' }
 #' }
 "football"
@@ -157,17 +157,17 @@
 #' the gender of each of the characters.
 #' The variables are as follows:
 #'
+#' @references Winston Chang. 2013. R Graphics Cookbook. O'Reilly Media, Inc..
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of two variables of length 39:
 #' \itemize{
-#'   \item Name1: Name of one of the sexual partners.
-#'   \item Name2: Name of the other sexual partner.
+#'   \item Name1, Name2: Factor variables containing names of characters with a sexual relationship
 #' }
 #' \item the vertices data set consists of three variables with information on 45 characters of the show:
 #' \itemize{
-#'   \item label Name of the character,
-#'   \item Gender factor variable of the gender of the character.
+#'   \item label: Factor variable with name of the character,
+#'   \item Gender: Factor variable of the gender of the character.
 #' }
 #' }
 "madmen"
@@ -177,11 +177,13 @@
 #' A dataset containing information to draw a map of Washington DC using \code{geom_tile}.
 #' This information was pulled from Google Maps using the \pkg{ggmap} package.
 #' 
+#' @references D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2.
+#' The R Journal, 5(1), 144-161. \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
 #' @format A data frame of three variables of length 1638400:
 #' \itemize{
-#' \item x: Longitudinal coordinates
-#' \item y: Latitudinal coordinates
-#' \item fill: fill color in HEX form for that tile location
+#' \item x: Numeric variable with longitudinal coordinates
+#' \item y: Numeric variable with latitudinal coordinates
+#' \item fill: Character variable with fill color in HEX form for that tile location
 #' }
 "metro_map"
 
@@ -196,28 +198,27 @@
 #' \itemize{
 #' \item the edges data set consists of two variables of length 87:
 #' \itemize{
-#'   \item Name1: Name of the character who made a sexual advance toward the character in Name2
-#'   \item Name2: Name of the character receiving, not necessarily reciprocating, Name1's advance.
+#'   \item Name1: Character variable with name of the character who made a sexual advance toward the character in Name2
+#'   \item Name2: Character variable with name of the character receiving, not necessarily reciprocating, Name1's advance.
 #' }
 #' \item the vertices data set consists of two variables with information on 52 characters:
 #' \itemize{
-#'   \item label: Name of the character
-#'   \item Gender: Gender of the character
+#'   \item label: Factor variable with name of the character
+#'   \item Gender: Factor variable with gender of the character
 #' }
 #' }
 "mm.directed"
 
 #' A protein interaction network (undirected)
 #'
-#' A list of two datasets, vertices and edges, containing data on the complete protein-protein interaction network in the yeast species S. cerevisiae ( \url{http://www3.nd.edu/~networks/resources.htm}).
+#' A list of two datasets, vertices and edges, containing data on the complete protein-protein interaction network in the yeast species S. cerevisiae (\url{http://www3.nd.edu/~networks/resources.htm}).
 #' The variables are as follows:
 #' @references H. Jeong, S. Mason, A.L. Barabasi and Z.N. Oltvai, Centrality and lethality of protein networks Nature 411, 41 (2001)
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of two variables of length 4480:
 #' \itemize{
-#'   \item from: Protein 1 ID
-#'   \item to: Protein 2 ID that interacts with protein 1
+#'   \item from, to: Integer variables describing interactions between proteins, which are identified integers
 #' }
 #' \item the vertices vector consists of the corresponding IDs of 2113 proteins in the edges data set
 #' }
@@ -233,22 +234,22 @@
 #' \itemize{
 #' \item the edges data set consists of 11 variables of length 4484:
 #' \itemize{
-#'   \item sub: The subregion of the state the school is in (1-8)
-#'   \item home: The home team school
-#'   \item season: The year the game was played
-#'   \item week: Week of the season the game was played
-#'   \item date: Date game was played
-#'   \item away: The away team school
-#'   \item ha: Home team, away team, or neutral?
-#'   \item result: Did the home team win, lose, or tie?
-#'   \item score: Game final score, home team first
-#'   \item diff: Home team score minus away team score
+#'   \item sub: Integer variable with the subregion of the state the school is in (1-8)
+#'   \item home: Factor variable containing the home team school
+#'   \item season: Integer variable with the year the game was played
+#'   \item week: Integer variable with the week of the season the game was played
+#'   \item date: Factor variable containing the date the game was played
+#'   \item away: Factor variable containing the away team school
+#'   \item ha: Factor variable stating if the first team is the home team, away team, or neutral?
+#'   \item result: Factor variable stating if the home team won, lost, or tied?
+#'   \item score: Factor variable with game final score, home team first
+#'   \item diff: Integer variable with home team score minus away team score
 #'   \item same_div: An indicator variable that is 1 if the schools are in the same division and 0 otherwise
 #' }
 #' \item the vertices data set consists of two variables with information on 157 schools:
 #' \itemize{
-#'   \item div: Division school is in (1, 2, or 3A)
-#'   \item label: School name
+#'   \item div: Factor variable with division school is in (1, 2, or 3A)
+#'   \item label: Factor variable with school name
 #' }
 #' }
 #' @examples
@@ -270,12 +271,12 @@
 #'
 #' @format A list of two data frames:
 #' \itemize{
-#' \item the edges data set consists of two variables of length 48:
+#' \item the edges data frame consists of two variables of length 48:
 #' \itemize{
 #'   \item child: Theme element that inherits its properties from the corresponding parent element
 #'   \item parent: Theme element that passes its properties to its children
 #' }
-#' \item the vertices data set consists of one variable with information on 53 theme elements:
+#' \item the vertices data frame consists of one variable with information on 53 theme elements:
 #' \itemize{
 #'   \item name: Name of the theme element
 #' }

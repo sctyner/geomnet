@@ -131,7 +131,7 @@ p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to),
     scale_colour_brewer(palette="Set2")
 ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
-         directed = TRUE, vjust = 0.5, labelcolour = "grey80",
+         directed = TRUE, vjust = 0.5, labelcolour = "grey80", arrow = fix_arrows,
          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
          selfies = TRUE, ecolour = "grey40") +
   theme_net()

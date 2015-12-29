@@ -8,13 +8,13 @@
 \itemize{
 \item the edges data set consists of two variables of length 87:
 \itemize{
-  \item Name1: Name of the character who made a sexual advance toward the character in Name2
-  \item Name2: Name of the character receiving, not necessarily reciprocating, Name1's advance.
+  \item Name1: Character variable with name of the character who made a sexual advance toward the character in Name2
+  \item Name2: Character variable with name of the character receiving, not necessarily reciprocating, Name1's advance.
 }
 \item the vertices data set consists of two variables with information on 52 characters:
 \itemize{
-  \item label: Name of the character
-  \item Gender: Gender of the character
+  \item label: Factor variable with name of the character
+  \item Gender: Factor variable with gender of the character
 }
 }}
 \usage{

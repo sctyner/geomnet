@@ -18,7 +18,7 @@
   \item year: Year email was sent
   \item nrecipients: Number of recipients of email
 }
-\item the vertices data set consists of 18 variables with information on 55 employees:
+\item the nodes data set consists of 18 variables with information on 55 employees:
 \itemize{
   \item label: Employee's email address
   \item LastName: Employee's last name

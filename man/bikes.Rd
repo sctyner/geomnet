@@ -6,14 +6,15 @@
 \title{Bike sharing network (directed)}
 \format{A list of two data frames:
 \itemize{
-\item the trips data set consists of six variables of length 53:
+\item the trips data set consists of four variables of length 53:
 \itemize{
   \item Start.station: Station where bike trip starts
   \item End.station: Station where bike trip ends
   \item n: Number of trips between the two stations
-  \item minlength: Duration of shortest trip between the two stations (in seconds).Only those stations are included, if the shortest trip between them lasted not more than 15 minutes.
+  \item minlength: Duration of shortest trip between the two stations (in seconds). Only those stations are included, if the shortest trip between them lasted not more than 15 minutes.
 }
-\item the vertices data set consists of 16 variables with information on 21 stations:
+
+\item the vertices data set consists of five variables with information on 21 stations:
 \itemize{
   \item id: Station ID number
   \item name: Station name

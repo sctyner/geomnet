@@ -8,8 +8,7 @@
 \itemize{
 \item the edges data set consists of two variables of length 4480:
 \itemize{
-  \item from: Protein 1 ID
-  \item to: Protein 2 ID that interacts with protein 1
+  \item from, to: Integer variables describing interactions between proteins, which are identified integers
 }
 \item the vertices vector consists of the corresponding IDs of 2113 proteins in the edges data set
 }}
@@ -17,7 +16,7 @@
 protein
 }
 \description{
-A list of two datasets, vertices and edges, containing data on the complete protein-protein interaction network in the yeast species S. cerevisiae ( \url{http://www3.nd.edu/~networks/resources.htm}).
+A list of two datasets, vertices and edges, containing data on the complete protein-protein interaction network in the yeast species S. cerevisiae (\url{http://www3.nd.edu/~networks/resources.htm}).
 The variables are as follows:
 }
 \references{
