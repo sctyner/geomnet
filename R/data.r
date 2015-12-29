@@ -112,6 +112,33 @@
 #'   \item value: Character variable containing the conference of the schools
 #' }
 #' }
+#' @examples
+#' # data step: merge vertices and edges
+#' ftnet <- merge(
+#'   football$edges, football$vertices,
+#'   by.x = "from", by.y = "label", all = TRUE
+#' )
+#'
+#' # label independent schools
+#' ftnet$schools <- ifelse(ftnet$value == "Independents", ftnet$from, "")
+#'
+#' # create data plot
+#' ggplot(data = ftnet,
+#'        aes(from_id = from, to_id = to)) +
+#'   geom_net(
+#'     aes(
+#'       colour = value, group = value,
+#'       linetype = factor(same.conf != 1),
+#'       label = schools
+#'     ),
+#'     linewidth = 0.5,
+#'     size = 5, vjust = -0.75, alpha = 0.3,
+#'     layout = 'fruchtermanreingold'
+#'   ) +
+#'   theme_net() +
+#'   theme(legend.position = "bottom") +
+#'   scale_colour_brewer("Conference", palette = "Paired")  +
+#'   guides(linetype = FALSE)
 "football"
 
 #' Coappearance network of characters in Les Miserables (undirected)
@@ -153,7 +180,7 @@
 #' Network of romantic relationships in the TV show Mad Men (undirected)
 #'
 #' A list of two datasets, vertices and edges, containing information on sexual relations in the TV show Mad Men.
-#' This data set was first compiled by Winston Chang for the package gcookbook and was extended here to include
+#' This data set was first compiled by Winston Chang for the package gcookbook (under the same name) and was extended here to include
 #' the gender of each of the characters.
 #' The variables are as follows:
 #'
@@ -174,26 +201,33 @@
 
 #' Map of Washington DC Metro area
 #'
-#' A dataset containing information to draw a map of Washington DC using \code{geom_tile}.
+#' A dataset containing information to draw a map of Rockville, MD, and vicinity using \code{geom_tile}.
 #' This information was pulled from Google Maps using the \pkg{ggmap} package.
 #' 
 #' @references D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2.
 #' The R Journal, 5(1), 144-161. \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
 #' @format A data frame of three variables of length 1638400:
 #' \itemize{
-#' \item x: Numeric variable with longitudinal coordinates
-#' \item y: Numeric variable with latitudinal coordinates
-#' \item fill: Character variable with fill color in HEX form for that tile location
+#' \item x: degree of longitude
+#' \item y: degree of latitude
+#' \item fill: fill color in HEX form for that tile location
+#' }
+#' @examples
+#' \dontrun{
+#' ggplot(data = metro_map, aes(x = x, y = y)) +
+#' geom_raster(fill = metro_map$fill, alpha = 0.75)
 #' }
 "metro_map"
 
 #' A directed network of Mad Men relationships
 #'
 #' A list of two datasets, vertices and edges, containing information on sexual advances made in the TV show Mad Men.
-#' This data set was first compiled by Winston Chang for the package gcookbook and was extended here to include
+#' This data set was first compiled by Winston Chang for the package gcookbook (under the name \code{madmen2}) and was extended here to include
 #' the gender of each of the characters.
 #' The variables are as follows:
 #'
+#' @references Winston Chang (2012). gcookbook: Data for "R Graphics Cookbook". R package
+#' version 1.0. \url{http://CRAN.R-project.org/package=gcookbook}
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of two variables of length 87:
@@ -260,7 +294,7 @@
 #' # create plot
 #' ggplot(data = soccernet, aes(from_id = home, to_id = away)) +
 #'   geom_net(aes(colour = div, group = div), ealpha = .25, layout = 'fruchtermanreingold') +
-#'   facet_wrap(~season) + 
+#'   facet_wrap(~season) +
 #'   theme_net()
 "soccer"
 

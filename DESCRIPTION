@@ -4,13 +4,16 @@ Title: Network visualization in the ggplot2 framework
 Version: 0.0.1
 Date: 2015-10-01
 Author: Samantha Tyner, Heike Hofmann
-Maintainer: Samantha Tyner <hofmann@iastate.edu>
-Description: Network visualization in the ggplot2 framework. This needs to be a proper sentence.
+Maintainer: Samantha Tyner <sctyner@iastate.edu>
+Description: Network visualization in the ggplot2 framework. Network
+    functionality is provided in a single ggplot2 layer by calling the geom 'net'.
+    Layouts are calculated using the sna package, example networks are included.
 License: GPL (>= 2)
 LazyData: TRUE
 Depends:
     R (>= 2.14),
     ggplot2 (>= 1.0.1.9003)
 Imports:
-  sna,
-  network
+    sna,
+    network
+RoxygenNote: 5.0.1
