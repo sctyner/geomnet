@@ -16,4 +16,6 @@ Depends:
 Imports:
     sna,
     network
+Suggests: 
+    dplyr
 RoxygenNote: 5.0.1
