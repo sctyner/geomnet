@@ -208,9 +208,9 @@
 #' The R Journal, 5(1), 144-161. \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
 #' @format A data frame of three variables of length 1638400:
 #' \itemize{
-#' \item x: degree of longitude
-#' \item y: degree of latitude
-#' \item fill: fill color in HEX form for that tile location
+#' \item x: Numeric variable containing degree of longitude
+#' \item y: Numeric variable containing degree of latitude
+#' \item fill: Character variable containing fill color in HEX form for that tile location
 #' }
 #' @examples
 #' \dontrun{
