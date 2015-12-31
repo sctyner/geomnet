@@ -9,6 +9,8 @@ Description: Network visualization in the ggplot2 framework. Network
     functionality is provided in a single ggplot2 layer by calling the geom 'net'.
     Layouts are calculated using the sna package, example networks are included.
 License: GPL (>= 2)
+URL: http://github.com/sctyner/geomnet
+BugReports: https://github.com/sctyner/geomnet/issues
 LazyData: TRUE
 Depends:
     R (>= 2.14),
