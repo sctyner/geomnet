@@ -11,6 +11,7 @@
 #' @param fiteach logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
 #' @param label logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
 #' @param labelcolour character of colour for the labels.
+#' @param fontsize numeric. If labels are present, changes the size of the label. 
 #' @param ecolour colour for edges.
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
 #' @param selfies logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.

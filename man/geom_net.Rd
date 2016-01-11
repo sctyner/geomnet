@@ -84,6 +84,8 @@ include aesthetics whose values you want to set, not map. See
 \code{\link{layer}} for more details.}
 
 \item{geom}{The geometric object to use display the data}
+
+\item{fontsize}{numeric. If labels are present, changes the size of the label.}
 }
 \value{
 A data frame with additional columns:
