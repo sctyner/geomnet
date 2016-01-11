@@ -2,6 +2,6 @@
 
 You can now install geomnet directly from CRAN.
 
-`install.packages('geomnet)`
+`install.packages('geomnet')`
 
 Enjoy! 
