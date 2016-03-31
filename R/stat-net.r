@@ -10,15 +10,16 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   required_aes = c("from_id", "to_id"),
   non_missing_aes = "weight",
 
-  setup_params = function(data, params) {
-#    browser()
-#    print(str(params))
-
-    params
-  },
+#   setup_params = function(data, params) {
+#     cat("setup_params\n")
+# #    browser()
+# #    print(str(params))
+#
+#     params
+#   },
 
   setup_data = function(self, data, params) {
-
+#cat("setup_data stat_net\n")
     fiteach=params$fiteach
     if (!is.factor(data$from_id)) data$from_id <- factor(data$from_id)
     if (!is.factor(data$to_id)) data$to_id <- factor(data$to_id)
@@ -48,7 +49,9 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   },
 
 compute_network = function(data, layout="kamadakawai", layout.par=list()) {
-  require(dplyr)
+#cat("compute_network\n")
+    require(dplyr)
+#  browser()
   edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
   edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
 
@@ -102,11 +105,11 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 
     edges <- rbind(edges, fromonly[, names(edges)])
   }
-#browser()
 #  edges <- edges %>% group_by(from, to) %>% mutate(n = n())
   unique(edges)
 },
-  compute_panel = function(self, data, scales, params, na.rm = FALSE,
+
+compute_panel = function(self, data, scales, params, na.rm = FALSE,
                            layout="kamadakawai", layout.par=list(), fiteach=FALSE,
                            vertices=NULL) {
     if (fiteach) data <- self$compute_network(data, layout=layout, layout.par=layout.par)
@@ -115,8 +118,16 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
     if (any(data$group) != -1)
       data <- data %>% group_by(group) %>% mutate(.samegroup = to %in% unique(from))
 
+#    browser()
     data
-  }
+  },
+
+compute_layer = function(self, data, params, panel) {
+#  cat("compute_layer in stat_net\n")
+#  browser()
+# shouldn't be necessary, but if not in here, data frame loses the right format
+  data
+}
 
 )
 
