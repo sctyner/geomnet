@@ -9,7 +9,6 @@
 StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   required_aes = c("from_id", "to_id"),
   non_missing_aes = "weight",
-
   setup_params = function(data, params) {
 #    browser()
 #    print(str(params))
@@ -18,7 +17,6 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   },
 
   setup_data = function(self, data, params) {
-
     fiteach=params$fiteach
     if (!is.factor(data$from_id)) data$from_id <- factor(data$from_id)
     if (!is.factor(data$to_id)) data$to_id <- factor(data$to_id)
