@@ -11,7 +11,7 @@
 #' @param fiteach logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
 #' @param label logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
 #' @param labelcolour character of colour for the labels.
-#' @param fontsize numeric. If labels are present, changes the size of the label. 
+#' @param fontsize numeric. If labels are present, changes the size of the label.
 #' @param ecolour colour for edges.
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
 #' @param selfies logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.
@@ -132,7 +132,7 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
                   ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed,
-                  arrowsize=arrowsize, 
+                  arrowsize=arrowsize,
                   labelcolour=labelcolour, vertices=vertices, selfies = selfies,
                   ...)
   )
@@ -178,7 +178,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   setup_data = function(data, params, mapping) {
+#    cat("setup_data geom_net\n")
 
+#browser()
     data$from <- as.character(data$from)
     data$to <- as.character(data$to)
     selfie <- (data$from == data$to) & (params$selfies == TRUE)
@@ -193,7 +195,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01,
-                        directed=FALSE, arrowsize=1, 
+                        directed=FALSE, arrowsize=1,
                         label=FALSE, labelcolour=NULL, selfies = FALSE) {
 
  #   browser()
@@ -289,7 +291,6 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         size = data$fontsize,
         angle = data$angle,
         alpha = data$alpha,
-        vjust = data$vjust,
         hjust = data$hjust,
         stringsAsFactors = FALSE
       )
