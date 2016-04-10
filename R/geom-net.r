@@ -247,10 +247,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       )
     } else arrow=NULL
 #    browser()
-    if (any(data$curvature != 0))
+    if (any(data$curvature != 0)){
       edges_draw <- GeomCurve$draw_panel(edges, panel_scales,
                                          coord, arrow=arrow, curvature=data$curvature[1], angle=90)
-    else edges_draw <- GeomSegment$draw_panel(edges, panel_scales, coord, arrow)
+    }
+      else {edges_draw <- GeomSegment$draw_panel(edges, panel_scales, coord, arrow, lineend = "round")}
 
 #    browser()
 
