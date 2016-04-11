@@ -70,7 +70,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
     edgelist <- sna::as.edgelist.sna(net) #sna pkg
     edgelist[,3] <- sqrt(edges$wt)  # doesn't change anything for wt == const
   } else {
-    edgelist <- network::as.matrix.network.edgelist(net) #network pkg
+    edgelist <- sna::as.edgelist.sna(net) # switched from network to sna for consistency
   }
 #  else {
 #    m <- network::as.matrix.network.adjacency(net)

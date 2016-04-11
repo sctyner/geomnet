@@ -125,12 +125,12 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, labelgeom = 'text', ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, vertices=NULL, selfies = FALSE, ...) {
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label,
+    params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label, labelgeom=labelgeom,
                   ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed,
                   arrowsize=arrowsize,
                   labelcolour=labelcolour, vertices=vertices, selfies = selfies,
@@ -196,7 +196,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1,
-                        label=FALSE, labelcolour=NULL, selfies = FALSE) {
+                        label=FALSE, labelgeom='text', labelcolour=NULL, selfies = FALSE) {
 
  #   browser()
     data$self <- as.character(data$to) == as.character(data$from)
@@ -293,10 +293,14 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         angle = data$angle,
         alpha = data$alpha,
         hjust = data$hjust,
+        fill = data$colour,
         stringsAsFactors = FALSE
       )
       labels <- unique(labels)
-      label_grob <- GeomText$draw_panel(labels, panel_scales, coord)
+      if (labelgeom=='label'){
+      label_grob <- GeomLabel$draw_panel(labels, panel_scales, coord)
+      }
+      else {label_grob <- GeomText$draw_panel(labels, panel_scales, coord)}
     }
 
     ggplot2:::ggname("geom_net", grobTree(
