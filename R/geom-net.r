@@ -1,5 +1,6 @@
 #' Geom for network visualization within the ggplot2 framework
 #'
+
 #' @inheritParams ggplot2::stat_identity
 #' @param stat character string of the network stat corresponding to geom_net.
 #' @param alpha numeric value of alpha blending of vertices.
@@ -116,6 +117,7 @@
 #' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 #'
 #' ## College Football Games in the Fall 2000 regular season
+#' # Hello world! 
 #' # Source: http://www-personal.umich.edu/~mejn/netdata/
 #' data(football)
 #' ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)
