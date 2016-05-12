@@ -159,7 +159,6 @@ compute_layer = function(self, data, params, panel, na.rm = FALSE,
                        layout.par=params$layout.par, fiteach=params$fiteach,
                        vertices=params$vertices)
   }
-  return(data)
 })
 
 #' @rdname geom_net
