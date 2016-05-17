@@ -243,7 +243,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       edges <- transform(
         edges,
         xend = x + (1-arrowgap)*(xend-x),
-        yend = y + (1-arrowgap)*(yend-y)
+        yend = y + (1-arrowgap)*(yend-y),
+        x = x + arrowgap*(xend-x),
+        y = y + arrowgap*(yend-y)
       )
     } else arrow=NULL
 #    browser()
