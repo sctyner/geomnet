@@ -294,6 +294,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         angle = data$angle,
         alpha = data$alpha,
         hjust = data$hjust,
+        vjust = data$vjust,
         stringsAsFactors = FALSE
       )
       labels <- unique(labels)
