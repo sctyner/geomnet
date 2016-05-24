@@ -133,7 +133,7 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label, labelgeom=labelgeom,
-                  ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed,
+                  ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed, repel = repel,
                   arrowsize=arrowsize,
                   labelcolour=labelcolour, vertices=vertices, selfies = selfies,
                   ...)
@@ -197,7 +197,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01,
-                        directed=FALSE, arrowsize=1,
+                        directed=FALSE, arrowsize=1, repel = FALSE,
                         label=FALSE, labelgeom='text', labelcolour=NULL, selfies = FALSE) {
 
  #   browser()
