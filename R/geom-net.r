@@ -312,11 +312,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       if (labelgeom=='label'){
         if(repel){
           label_grob <- ggrepel::GeomLabelRepel$draw_panel(labels, panel_scales, coord)
-        } else {label_grob <- ggrepel::GeomLabel$draw_panel(labels, panel_scales, coord)}
+        } else {label_grob <- ggplot2::GeomLabel$draw_panel(labels, panel_scales, coord)}
       } else {
         if(repel){
           label_grob <- ggrepel::GeomTextRepel$draw_panel(labels, panel_scales, coord)
-        } else{label_grob <- ggrepel::GeomText$draw_panel(labels, panel_scales, coord)}
+        } else{label_grob <- gplot2::GeomText$draw_panel(labels, panel_scales, coord)}
       }
       
   }
