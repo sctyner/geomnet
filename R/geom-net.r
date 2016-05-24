@@ -207,6 +207,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       xend = data$xend,
       y = data$y,
       yend = data$yend,
+      weight = data$weight,
       colour = ecolour %||% ifelse(data$.samegroup, data$colour, "grey60"),
       size = data$linewidth %||% (data$size / 4),
       nodesize = data$size,
@@ -245,7 +246,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       edges <- transform(
         edges,
         xend = x + (1-arrowgap)*(xend-x),
-        yend = y + (1-arrowgap)*(yend-y)
+        yend = y + (1-arrowgap)*(yend-y),
+        x = x + arrowgap*(xend-x),
+        y = y + arrowgap*(yend-y)
       )
     } else arrow=NULL
 #    browser()
@@ -296,6 +299,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         alpha = data$alpha,
         hjust = data$hjust,
         fill = data$colour,
+        vjust = data$vjust,
         stringsAsFactors = FALSE
       )
       labels <- unique(labels)
