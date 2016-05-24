@@ -127,7 +127,7 @@
 #'   theme(legend.position="bottom")
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, labelgeom = 'text', repel = TRUE, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
+                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, labelgeom = 'text', repel = FALSE, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
                       labelcolour=NULL, vertices=NULL, selfies = FALSE, ...) {
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
