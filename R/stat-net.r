@@ -10,7 +10,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   required_aes = c("from_id", "to_id"),
   non_missing_aes = "weight",
   setup_params = function(data, params) {
-#    browser()
+  #  browser()
 #    print(str(params))
 
     params
@@ -57,8 +57,8 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 
 compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 # cat("compute_network\n")
-    require(dplyr)
 #  browser()
+    require(dplyr)
   edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
   edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
 
@@ -70,7 +70,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
     edgelist <- sna::as.edgelist.sna(net) #sna pkg
     edgelist[,3] <- sqrt(edges$wt)  # doesn't change anything for wt == const
   } else {
-    edgelist <- network::as.matrix.network.edgelist(net) #network pkg
+    edgelist <- sna::as.edgelist.sna(net) # switched from network to sna for consistency
   }
 #  else {
 #    m <- network::as.matrix.network.adjacency(net)
@@ -113,7 +113,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
     edges <- rbind(edges, fromonly[, names(edges)])
   }
 #  edges <- edges %>% group_by(from, to) %>% mutate(n = n())
-  unique(edges)
+  data.frame(unique(edges))
 },
 
 compute_panel = function(self, data, scales, na.rm = FALSE,
@@ -171,7 +171,8 @@ stat_net <- function(mapping = NULL, data = NULL, geom = "point",
                      position = "identity", show.legend = NA,
                      inherit.aes = TRUE, layout="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL,
                      na.rm=FALSE, ...) {
-  ggplot2::layer(
+# browser()
+    ggplot2::layer(
     stat = StatNet, data = data, mapping = mapping, geom = geom, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(layout=layout, layout.par=layout.par, fiteach=fiteach,
