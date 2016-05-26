@@ -12,10 +12,10 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = TRUE,
   inherit.aes = TRUE, alpha = 0.25, layout = "kamadakawai",
-  layout.par = list(), fiteach = FALSE, label = FALSE, ecolour = NULL,
-  ealpha = NULL, arrow = NULL, arrowgap = 0.01, directed = FALSE,
-  arrowsize = 1, labelcolour = NULL, vertices = NULL, selfies = FALSE,
-  ...)
+  layout.par = list(), fiteach = FALSE, label = FALSE,
+  labelgeom = "text", repel = FALSE, ecolour = NULL, ealpha = NULL,
+  arrow = NULL, arrowgap = 0.01, directed = FALSE, arrowsize = 1,
+  labelcolour = NULL, vertices = NULL, selfies = FALSE, ...)
 
 GeomNet
 
@@ -202,6 +202,7 @@ p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
 p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 
 ## College Football Games in the Fall 2000 regular season
+# Hello world! 
 # Source: http://www-personal.umich.edu/~mejn/netdata/
 data(football)
 ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)

@@ -1,5 +1,5 @@
 ---
-title: "Comparing the speed of graph drawing in ggplot2 and base plot"
+title: "Network Visualization with `ggplot2`"
 author: "Samantha Tyner, Francoise Briatte, and Heike Hofmann"
 date: "`r Sys.Date()`"
 output: 
@@ -22,9 +22,17 @@ knitr::opts_chunk$set(fig.width = 6,
 
 # Introduction
 
+This vignette provides access to the online supplement to the paper ``Network Visualization with `ggplot2` ``. 
+
+The code to access data for all of the examples and to reproduce all of the figures is available at [tyner-briatte-hofmann.R](https://raw.githubusercontent.com/sctyner/ggnet-paper/master/tyner-briatte-hofmann.R).
+
+A summary of the speed comparisons is shown in the paper. A more detailed outline together with the code to reproduce findings is given in the next section.
+
+# Speed Comparisons
+
 This vignette compares the speeds of our package to the other `ggplot2`-based network visualization package `ggnetwork`, the `GGally` function `ggnet2()`, and the visualization capabilities of the `igraph` and `network` packages. 
 
-# Speed Comparison 1 
+## Speed Comparison 1 
 
 In this first example, we visualize the protein-protein interaction network in the yeast species *S. cerevisiae* using several different methods.
 
@@ -155,7 +163,7 @@ ggplot(g, aes(x = `Visualization approach`, y = time,
 ```
 
 
-# Comparing different systems
+## Comparing different systems
 
 The second test relies on random undirected networks in which the probability of an edge 
 between two nodes was set to $p = 0.2$.
