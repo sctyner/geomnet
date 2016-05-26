@@ -1,5 +1,5 @@
 ---
-title: "Comparing the speed of graph drawing in ggplot2 and base plot"
+title: "Network Visualization with `ggplot2`"
 author: "Samantha Tyner, Francoise Briatte, and Heike Hofmann"
 date: "`r Sys.Date()`"
 output: 
@@ -22,9 +22,17 @@ knitr::opts_chunk$set(fig.width = 6,
 
 # Introduction
 
+This vignette provides access to the online supplement to the paper ``Network Visualization with `ggplot2` ``. 
+
+The code to access data for all of the examples and to reproduce all of the figures is available at [tyner-briatte-hofmann.R](https://raw.githubusercontent.com/sctyner/ggnet-paper/master/tyner-briatte-hofmann.R).
+
+A summary of the speed comparisons is shown in the paper. A more detailed outline together with the code to reproduce findings is given in the next section.
+
+# Speed Comparisons
+
 This vignette compares the speeds of our package to the other `ggplot2`-based network visualization package `ggnetwork`, the `GGally` function `ggnet2()`, and the visualization capabilities of the `igraph` and `network` packages. 
 
-# Speed Comparison 1 
+## Speed Comparison 1 
 
 In this first example, we visualize the protein-protein interaction network in the yeast species *S. cerevisiae* using several different methods.
 
@@ -154,15 +162,13 @@ ggplot(g, aes(x = `Visualization approach`, y = time,
   geom_boxplot() +
   scale_fill_brewer(palette = "Set2") +
   coord_flip() +
-  labs(y = "\nPlotting time (seconds)", x = "Visualization approach\n") +
-  guides(fill = FALSE) +
-  theme_classic(18) +
-  theme(axis.text = element_text(size = rel(1)))
+  labs(y = "\nPlotting time (in seconds)", x = "Implementation\n") +
+  guides(fill = FALSE) 
 ```
 
 # Speed Comparison 2
 
-For the second speed comparison, we tested the speeds of these same packages on 11 different machines (our own machines and some of our friends' and colleagues' machines). The data containing runtimes of for all of these machines can be found [here](https://github.com/sctyner/ggnet-paper/tree/master/runtimes). 
+The figure summarizes the results of these benchmarks using a convenience sample of machines accessible to the authors, including authors' hardware and additional results from friends' and colleagues' machines. The data containing runtimes of for all of these machines can be found [here](https://github.com/sctyner/ggnet-paper/tree/master/runtimes). 
 
 This time, we visualize graphs of various sizes that we generated randomly with edge probability 0.2 using the `sna` package. The sizes we generated are overall fairly small, from 25 to 250 nodes, going up by 25 each time. Each network visualization method was test 100 times in total for each size of network. 
 
@@ -243,20 +249,10 @@ for (k in 0:9) {
   }
 ```
 
-Again, for this plot we use our data that is available on Github.
+Again, for this plot we use our data that is available on Github. Network sizes are plotted horizontally, execution times of 100 runs under each visualization approach are plotted on the $y$-axis. Each panel shows a different machine as indicated by the facet label. Note that each panel is scaled separately to account for differences in the overall speed of these machines.
 
-```{r speed2_cheat, echo=FALSE}
-  g = paste0("~/Desktop/NetworksResearch/ggnet-paper/runtimes/", list.files(path = "~/Desktop/NetworksResearch/ggnet-paper/runtimes", pattern = "runtimes-(.*)csv$", recursive = T)) %>%
-        lapply(read.csv, stringsAsFactors = FALSE) %>%
-        bind_rows %>%
-        gather(`Visualization approach`, time, -network_size, -iteration) %>%
-        group_by(network_size, `Visualization approach`) %>%
-        summarise(mean_time = mean(time),
-                  q05 = quantile(time, 0.05),
-                  q95 = quantile(time, 0.95))
-```
 ```{r speed2_code, echo = TRUE, eval=FALSE}  
-# get all files containing runtime information 
+# get all files containing runtime information and combine them into a single data frame.
 g = list.files(pattern = "runtimes-(.*)csv$") %>%
         lapply(read.csv, stringsAsFactors = FALSE) %>%
         bind_rows %>%
@@ -267,19 +263,24 @@ g = list.files(pattern = "runtimes-(.*)csv$") %>%
                   q95 = quantile(time, 0.95))
 ```
 
-```{r speed2_plot}
-   ggplot(g, aes(x = network_size, y = mean_time,
-                    fill = `Visualization approach`)) +
-    geom_ribbon(aes(ymin = q05, ymax = q95), alpha = 1/3) +
-    geom_line(aes(color = `Visualization approach`)) +
-    scale_y_continuous(breaks = seq(0, max(g$q95), 5)) +
-    scale_x_continuous(breaks = seq(25, 250, 25)) +
-    labs(y = "Average plotting time (seconds)\n", x = "\nNetwork size") +
-    theme_classic(18) +
-    theme(
-      axis.text = element_text(size = rel(1)),
-      legend.text = element_text(size = rel(1)),
-      legend.justification = c(0,1),
-      legend.position = c(0,1)
-    )
+
+```{r all-runtimes, eval=TRUE, echo=FALSE, fig.width = 8, fig.height = 8}
+link_to_full_comparison <- "https://raw.githubusercontent.com/sctyner/ggnet-paper/master/data/compare-all.csv"
+g <- readr::read_csv(link_to_full_comparison)
+
+qplot(data = g, network_size, time, colour = `Visualization approach`, alpha = I(0.1)) +
+  facet_wrap(facets = ~setup, scales = "free_y") +
+  geom_smooth(fill="white") +
+  scale_colour_brewer("Implementation", palette = "Set1") +
+  xlab("Network size (edge probability p = 0.2)") +
+  ylab("Time (in seconds)") +
+  theme_bw() +
+  theme(legend.position = "bottom")
 ```
+
+
+What these plots indicate is that we have surprisingly large variability in relative run times across different machines.
+However, the results support some  general findings.
+
+The  plotting routine in the network package  is by far the slowest across all machines, while the  plotting with `igraph` is generally among the fastest. Our three approaches generally feature in between these two, with `ggnet2` being as fast or faster than `igraph` plotting, followed by `ggnetwork` and `geomnet`, which is generally the slowest among the three. These differences become more pronounced as the size of the network increases.
+
