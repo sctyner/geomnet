@@ -154,16 +154,18 @@ ggplot(g, aes(x = `Visualization approach`, y = time,
   guides(fill = FALSE) 
 ```
 
+
 # Comparing different systems
 
-The second test relies on random undirected networks in which the probability of an edge %to exist
+The second test relies on random undirected networks in which the probability of an edge 
 between two nodes was set to $p = 0.2$.
 We generated 100 of these networks at network sizes from 25 to 250 nodes, using increments of 25.
 
 
-```{runtimes, eval=FALSE, echo=FALSE, fig.cap="Plotting times of random undirected networks of different sizes under each of the available visualization approaches using their default settings. Note that each panel is scaled independently to highlight relative differences in the visualization approaches rather than speed of different hardware."}
+```{r all-runtimes, eval=TRUE, echo=FALSE, fig.width = 8, fig.height = 8}
 link_to_full_comparison <- "https://raw.githubusercontent.com/sctyner/ggnet-paper/master/data/compare-all.csv"
 g <- readr::read_csv(link_to_full_comparison)
+
 qplot(data = g, network_size, time, colour = `Visualization approach`, alpha = I(0.1)) +
   facet_wrap(facets = ~setup, scales = "free_y") +
   geom_smooth(fill="white") +
@@ -175,8 +177,8 @@ qplot(data = g, network_size, time, colour = `Visualization approach`, alpha = I
 ```
 
 
-Figure~\ref{fig.cap:runtimes-random} summarizes the results of these benchmarks using a convenience sample of machines accessible to the authors, including authors' hardware and additional results from friends' and colleagues' machines.
+The figure summarizes the results of these benchmarks using a convenience sample of machines accessible to the authors, including authors' hardware and additional results from friends' and colleagues' machines.
 Network sizes are plotted horizontally, execution times of 100 runs under each visualization approach are plotted on the $y$-axis. Each panel shows a different machine as indicated by the facet label. Note that each panel is scaled separately to account for differences in the overall speed of these machines.
 What these plots indicate is that we have surprisingly large variability in relative run times across different machines.
 However, the results support some  general findings.
-The \pkg{network} plotting routine is by far the slowest across all machines, while the \pkg{igraph} plotting is generally among the fastest. Our three approaches generally feature in between \pkg{igraph} and \pkg{network} with \pkg{ggnet2} being as fast or faster than \pkg{igraph} plotting, followed by \pkg{ggnetwork} and \pkg{geomnet}, which is generally the slowest among the three. These differences become more pronounced as the size of the network increases.
+The  plotting routine in the network package  is by far the slowest across all machines, while the  plotting with `igraph` is generally among the fastest. Our three approaches generally feature in between these two, with `ggnet2` being as fast or faster than `igraph` plotting, followed by `ggnetwork` and `geomnet`, which is generally the slowest among the three. These differences become more pronounced as the size of the network increases.
