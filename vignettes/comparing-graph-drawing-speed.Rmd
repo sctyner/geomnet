@@ -137,11 +137,15 @@ if (!file.exists("runtimes-protein-100.csv")) {
 }
 ```
 
-Finally, compare the 100 runtimes for each method side-by-side.
+Finally, compare the 100 runtimes for each method side-by-side. In the resulting plot below, we use our own data, which can be found [here](https://raw.githubusercontent.com/sctyner/ggnet-paper/master/runtimes-protein/runtimes-protein-100.csv). 
 
-```{r speed1_plot, echo=TRUE}
+```{r speed1_cheatdata, echo=FALSE}
 link_to_data <- "https://raw.githubusercontent.com/sctyner/ggnet-paper/master/runtimes-protein/runtimes-protein-100.csv"
-
+```
+```{r speed1_viewdata, echo = TRUE, eval = FALSE}
+link_to_data <- "runtimes-protein-100.csv"
+```
+```{r speed1_plot, echo=TRUE}
 g = read.csv(link_to_data, stringsAsFactors = FALSE) %>%
       gather(`Visualization approach`, time, -iteration)
 
@@ -154,4 +158,128 @@ ggplot(g, aes(x = `Visualization approach`, y = time,
   guides(fill = FALSE) +
   theme_classic(18) +
   theme(axis.text = element_text(size = rel(1)))
+```
+
+# Speed Comparison 2
+
+For the second speed comparison, we tested the speeds of these same packages on 11 different machines (our own machines and some of our friends' and colleagues' machines). The data containing runtimes of for all of these machines can be found [here](https://github.com/sctyner/ggnet-paper/tree/master/runtimes). 
+
+This time, we visualize graphs of various sizes that we generated randomly with edge probability 0.2 using the `sna` package. The sizes we generated are overall fairly small, from 25 to 250 nodes, going up by 25 each time. Each network visualization method was test 100 times in total for each size of network. 
+
+```{r speed_2code, eval = FALSE}
+# note: plot.network might be slower because it actually prints the plots, so to
+# compare the methods, we need to evaluate the ggplot plots by printing them too
+
+# create 10 files per size 
+for (k in 0:9) {
+
+  # the 10 different sizes   
+  for (i in seq(250, 25, -25)) {
+    
+    f = paste0("runtimes-", sprintf("%04.0f", i), "-", k, ".csv")
+    
+    if (!file.exists(f)) {
+
+      d = data.frame()
+
+      # in each file store the runtimes of plotting 10 random graphs 
+      # do this for each of the 5 methods 
+      for (j in 1:10) {
+
+        r = sna::rgraph(i, tprob = 0.2)
+      
+        cat("Network size", i,
+            "iteration", sprintf("%3.0f", 10 * k + j), "/ 100\n")
+
+        n = igraph::graph_from_adjacency_matrix(r, mode = "undirected")
+
+        t1 = system.time({
+          plot(n, vertex.label = NA)
+        })[1]
+
+        n = network::network(r, directed = FALSE)
+
+        t2 = system.time({
+          plot.network(n)
+        })[1]
+
+        t3 = system.time({
+          print(ggnet2(n))
+        })[1]
+
+        e = data.frame(sna::as.edgelist.sna(n))
+
+        t4 = system.time({
+          print(ggplot(data = e) +
+                  geom_net(aes(from_id = X1, to_id = X2)))
+        })[1]
+
+        t5 = system.time({
+          print(ggplot(ggnetwork(n),
+                       aes(x, y, xend = xend, yend = yend)) +
+                  geom_edges() +
+                  geom_nodes())
+        })[1]
+
+        d = rbind(d, data.frame(
+          network_size = i,
+          iteration = 10 * k + j,
+          igraph = t1,
+          network = t2,
+          ggnet2 = t3,
+          geomnet = t4,
+          ggnetwork = t5,
+          row.names = NULL
+        ))
+
+        dev.off()
+
+      }
+
+      write.csv(d, f, row.names = FALSE)
+
+    }
+        
+  }
+```
+
+Again, for this plot we use our data that is available on Github.
+
+```{r speed2_cheat, echo=FALSE}
+  g = paste0("~/Desktop/NetworksResearch/ggnet-paper/runtimes/", list.files(path = "~/Desktop/NetworksResearch/ggnet-paper/runtimes", pattern = "runtimes-(.*)csv$", recursive = T)) %>%
+        lapply(read.csv, stringsAsFactors = FALSE) %>%
+        bind_rows %>%
+        gather(`Visualization approach`, time, -network_size, -iteration) %>%
+        group_by(network_size, `Visualization approach`) %>%
+        summarise(mean_time = mean(time),
+                  q05 = quantile(time, 0.05),
+                  q95 = quantile(time, 0.95))
+```
+```{r speed2_code, echo = TRUE, eval=FALSE}  
+# get all files containing runtime information 
+g = list.files(pattern = "runtimes-(.*)csv$") %>%
+        lapply(read.csv, stringsAsFactors = FALSE) %>%
+        bind_rows %>%
+        gather(`Visualization approach`, time, -network_size, -iteration) %>%
+        group_by(network_size, `Visualization approach`) %>%
+        summarise(mean_time = mean(time),
+                  q05 = quantile(time, 0.05),
+                  q95 = quantile(time, 0.95))
+```
+
+```{r speed2_plot}
+   ggplot(g, aes(x = network_size, y = mean_time,
+                    fill = `Visualization approach`)) +
+    geom_ribbon(aes(ymin = q05, ymax = q95), alpha = 1/3) +
+    geom_line(aes(color = `Visualization approach`)) +
+    scale_y_continuous(breaks = seq(0, max(g$q95), 5)) +
+    scale_x_continuous(breaks = seq(25, 250, 25)) +
+    labs(y = "Average plotting time (seconds)\n", x = "\nNetwork size") +
+    theme_classic(18) +
+    theme(
+      axis.text = element_text(size = rel(1)),
+      legend.text = element_text(size = rel(1)),
+      legend.justification = c(0,1),
+      legend.position = c(0,1)
+    )
 ```
