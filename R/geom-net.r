@@ -12,8 +12,13 @@
 #' @param fiteach logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
 #' @param label logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
 #' @param labelcolour character of colour for the labels.
+#' @param labelgeom character. Which ggplot2 \code{geom} to use to draw the labels. Either "text" or "label".
+#' @param repel logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.
 #' @param fontsize numeric. If labels are present, changes the size of the label.
+#' @param colour colour for nodes
 #' @param ecolour colour for edges.
+#' @param size node size.
+#' @param linewidth width of the edges. 
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
 #' @param selfies logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
@@ -126,9 +131,12 @@
 #'   scale_colour_brewer("Conference", palette="Paired") + theme_net() +
 #'   theme(legend.position="bottom")
 
-geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  alpha = 0.25,
-                      layout="kamadakawai", layout.par=list(), fiteach=FALSE,  label=FALSE, labelgeom = 'text', repel = FALSE, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, directed = FALSE, arrowsize=1,
-                      labelcolour=NULL, vertices=NULL, selfies = FALSE, ...) {
+geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  
+                      layout="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfies = FALSE,
+                      colour = NULL, size = NULL, alpha = 0.25, 
+                      ecolour=NULL, ealpha=NULL, linewidth=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
+                      label=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE, fontsize = NULL,
+                       vertices=NULL, ...) {
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

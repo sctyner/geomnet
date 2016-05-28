@@ -11,11 +11,12 @@
 \usage{
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = TRUE,
-  inherit.aes = TRUE, alpha = 0.25, layout = "kamadakawai",
-  layout.par = list(), fiteach = FALSE, label = FALSE,
-  labelgeom = "text", repel = FALSE, ecolour = NULL, ealpha = NULL,
-  arrow = NULL, arrowgap = 0.01, directed = FALSE, arrowsize = 1,
-  labelcolour = NULL, vertices = NULL, selfies = FALSE, ...)
+  inherit.aes = TRUE, layout = "kamadakawai", layout.par = list(),
+  directed = FALSE, fiteach = FALSE, selfies = FALSE, colour = NULL,
+  size = NULL, alpha = 0.25, ecolour = NULL, ealpha = NULL,
+  linewidth = NULL, arrow = NULL, arrowgap = 0.01, arrowsize = 1,
+  label = FALSE, labelcolour = NULL, labelgeom = "text", repel = FALSE,
+  fontsize = NULL, vertices = NULL, ...)
 
 GeomNet
 
@@ -63,33 +64,45 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
-\item{alpha}{numeric value of alpha blending of vertices.}
-
 \item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
 
 \item{layout.par}{list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{?gplot.layout} in the package sna for other choices.}
 
+\item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
+
 \item{fiteach}{logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?}
 
-\item{label}{logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.}
+\item{selfies}{logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.}
+
+\item{colour}{colour for nodes}
+
+\item{size}{node size.}
+
+\item{alpha}{numeric value of alpha blending of vertices.}
 
 \item{ecolour}{colour for edges.}
 
 \item{ealpha}{numeric value of alpha blending of edges.}
 
+\item{linewidth}{width of the edges.}
+
 \item{arrow}{what kind of arrow should be drawn? See specification of function \code{arrow} in grid package}
 
 \item{arrowgap}{numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.}
 
-\item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
-
 \item{arrowsize}{numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.}
+
+\item{label}{logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.}
 
 \item{labelcolour}{character of colour for the labels.}
 
-\item{vertices}{data frame containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use a joint to include this information in the data dataframe}
+\item{labelgeom}{character. Which ggplot2 \code{geom} to use to draw the labels. Either "text" or "label".}
 
-\item{selfies}{logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.}
+\item{repel}{logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.}
+
+\item{fontsize}{numeric. If labels are present, changes the size of the label.}
+
+\item{vertices}{data frame containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use a joint to include this information in the data dataframe}
 
 \item{...}{other arguments passed on to \code{\link{layer}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
@@ -97,8 +110,6 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 to the paired geom/stat.}
 
 \item{geom}{The geometric object to use display the data}
-
-\item{fontsize}{numeric. If labels are present, changes the size of the label.}
 }
 \value{
 A data frame with additional columns:
