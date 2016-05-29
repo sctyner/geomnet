@@ -4,23 +4,19 @@
 \name{metro_map}
 \alias{metro_map}
 \title{Map of Washington DC Metro area}
-\format{A data frame of three variables of length 1638400:
-\itemize{
-\item x: Numeric variable containing degree of longitude
-\item y: Numeric variable containing degree of latitude
-\item fill: Character variable containing fill color in HEX form for that tile location
-}}
+\format{An object of class "ggmap" and "raster" containing a map of the Rockville, MD, area.}
 \usage{
 metro_map
 }
 \description{
-A dataset containing information to draw a map of Rockville, MD, and vicinity using \code{geom_tile}.
+A dataset containing information to draw a map of Rockville, MD, and vicinity using \code{ggmap}.
 This information was pulled from Google Maps using the \pkg{ggmap} package.
 }
 \examples{
 \dontrun{
-ggplot(data = metro_map, aes(x = x, y = y)) +
-geom_raster(fill = metro_map$fill, alpha = 0.75)
+library(ggmap)
+data(metro_map)
+ggmap(metro_map)
 }
 }
 \references{
