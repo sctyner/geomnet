@@ -37,7 +37,7 @@
 #' \item the edges data set consists of three variables of length 27:
 #' \itemize{
 #'   \item from, to: factor variables of blood types describing the relationship 'is compatible with'
-#'   \item group_to: factor variable with levels 'same' and 'diff' for same or different blood type group not regarding the rho-gam factor.
+#'   \item group\_to: factor variable with levels 'same' and 'diff' for same or different blood type group not regarding the rho-gam factor.
 #' }
 #' \item the vertices data set consists of five variables and 32 rows:
 #' \itemize{
@@ -106,7 +106,7 @@
 #'   \item from, to: Character variables describing the teams playing in the game
 #'   \item same.conf: An indicator variable that is 1 if the two teams are in the same conference and 0 otherwise.
 #' }
-#' \item the vertices data set consists of two variables with information on 157 Iowa high schools:
+#' \item the vertices data set consists of two variables with information on 115 Division I schools:
 #' \itemize{
 #'   \item label: Character variable containing the school names
 #'   \item value: Character variable containing the conference of the schools
@@ -201,21 +201,17 @@
 
 #' Map of Washington DC Metro area
 #'
-#' A dataset containing information to draw a map of Rockville, MD, and vicinity using \code{geom_tile}.
+#' A dataset containing information to draw a map of Rockville, MD, and vicinity using \code{ggmap}.
 #' This information was pulled from Google Maps using the \pkg{ggmap} package.
 #' 
 #' @references D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2.
 #' The R Journal, 5(1), 144-161. \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
-#' @format A data frame of three variables of length 1638400:
-#' \itemize{
-#' \item x: Numeric variable containing degree of longitude
-#' \item y: Numeric variable containing degree of latitude
-#' \item fill: Character variable containing fill color in HEX form for that tile location
-#' }
+#' @format An object of class "ggmap" and "raster" containing a map of the Rockville, MD, area. 
 #' @examples
 #' \dontrun{
-#' ggplot(data = metro_map, aes(x = x, y = y)) +
-#' geom_raster(fill = metro_map$fill, alpha = 0.75)
+#' library(ggmap)
+#' data(metro_map)
+#' ggmap(metro_map)
 #' }
 "metro_map"
 
