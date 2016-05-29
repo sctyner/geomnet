@@ -31,7 +31,7 @@ soccer
 }
 \description{
 A list of two datasets, vertices and edges, containing data on boys' soccer games at Iowa high schools in the 2011-2014 seasons.
-This dataset was compiled by Danny Bero (\email{bero.danny@@gmail.com}).
+This dataset was compiled by Danny Bero (\email{bero.danny@gmail.com}).
 The variables are as follows:
 }
 \examples{
