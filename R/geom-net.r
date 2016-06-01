@@ -133,9 +133,9 @@
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  
                       layout="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfies = FALSE,
-                      colour = NULL, size = NULL, alpha = 0.25, 
-                      ecolour=NULL, ealpha=NULL, linewidth=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
-                      label=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE, fontsize = NULL,
+                      alpha = 0.25, 
+                      ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
+                      label=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
                        vertices=NULL, ...) {
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
