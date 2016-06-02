@@ -16,7 +16,7 @@
 #' @param repel logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.
 #' @param colour colour for nodes
 #' @param ecolour colour for edges.
-#' @param linewidth width of the edges. 
+#' @param linewidth width of the edges.
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
 #' @param selfies logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
@@ -46,13 +46,14 @@
 #'              linewidth=0.75, label =TRUE, labelcolour="black") +
 #'     facet_wrap(~Ethnicity) +
 #'     scale_colour_brewer(palette="Set2")
-#' ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
+#' gg <- ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
 #'   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
 #'          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
 #'          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
 #'          selfies = TRUE, ecolour = "grey40") +
 #'   theme_net()
-
+#' gg
+#' dframe <- ggplot_build(gg)$data[[1]] # contains calculated node and edge values
 #'
 #' #Madmen Relationships
 #' data(madmen)
@@ -120,7 +121,7 @@
 #' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 #'
 #' ## College Football Games in the Fall 2000 regular season
-#' # Hello world! 
+#' # Hello world!
 #' # Source: http://www-personal.umich.edu/~mejn/netdata/
 #' data(football)
 #' ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)
@@ -129,9 +130,9 @@
 #'   scale_colour_brewer("Conference", palette="Paired") + theme_net() +
 #'   theme(legend.position="bottom")
 
-geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,  
+geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,
                       layout="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfies = FALSE,
-                      alpha = 0.25, 
+                      alpha = 0.25,
                       ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
                       label=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
                        vertices=NULL, ...) {
@@ -314,7 +315,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 #       }
 #       else {label_grob <- GeomText$draw_panel(labels, panel_scales, coord)}
 #     }
-      
+
       if (labelgeom=='label'){
         if(repel){
           label_grob <- ggrepel::GeomLabelRepel$draw_panel(labels, panel_scales, coord)
@@ -324,7 +325,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
           label_grob <- ggrepel::GeomTextRepel$draw_panel(labels, panel_scales, coord)
         } else{label_grob <- ggplot2::GeomText$draw_panel(labels, panel_scales, coord)}
       }
-      
+
   }
 
     ggplot2:::ggname("geom_net", grobTree(
