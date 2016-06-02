@@ -14,9 +14,7 @@
 #' @param labelcolour character of colour for the labels.
 #' @param labelgeom character. Which ggplot2 \code{geom} to use to draw the labels. Either "text" or "label".
 #' @param repel logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.
-#' @param colour colour for nodes
 #' @param ecolour colour for edges.
-#' @param linewidth width of the edges. 
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
 #' @param selfies logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package

@@ -12,11 +12,10 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = TRUE,
   inherit.aes = TRUE, layout = "kamadakawai", layout.par = list(),
-  directed = FALSE, fiteach = FALSE, selfies = FALSE, colour = NULL,
-  size = NULL, alpha = 0.25, ecolour = NULL, ealpha = NULL,
-  linewidth = NULL, arrow = NULL, arrowgap = 0.01, arrowsize = 1,
-  label = FALSE, labelcolour = NULL, labelgeom = "text", repel = FALSE,
-  fontsize = NULL, vertices = NULL, ...)
+  directed = FALSE, fiteach = FALSE, selfies = FALSE, alpha = 0.25,
+  ecolour = NULL, ealpha = NULL, arrow = NULL, arrowgap = 0.01,
+  arrowsize = 1, label = FALSE, labelcolour = NULL, labelgeom = "text",
+  repel = FALSE, vertices = NULL, ...)
 
 GeomNet
 
@@ -74,17 +73,11 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{selfies}{logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.}
 
-\item{colour}{colour for nodes}
-
-\item{size}{node size.}
-
 \item{alpha}{numeric value of alpha blending of vertices.}
 
 \item{ecolour}{colour for edges.}
 
 \item{ealpha}{numeric value of alpha blending of edges.}
-
-\item{linewidth}{width of the edges.}
 
 \item{arrow}{what kind of arrow should be drawn? See specification of function \code{arrow} in grid package}
 
@@ -99,8 +92,6 @@ the default plot specification, e.g. \code{\link{borders}}.}
 \item{labelgeom}{character. Which ggplot2 \code{geom} to use to draw the labels. Either "text" or "label".}
 
 \item{repel}{logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.}
-
-\item{fontsize}{numeric. If labels are present, changes the size of the label.}
 
 \item{vertices}{data frame containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use a joint to include this information in the data dataframe}
 
