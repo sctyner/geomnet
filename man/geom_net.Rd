@@ -131,12 +131,14 @@ p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to),
              linewidth=0.75, label =TRUE, labelcolour="black") +
     facet_wrap(~Ethnicity) +
     scale_colour_brewer(palette="Set2")
-ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
+gg <- ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
          selfies = TRUE, ecolour = "grey40") +
   theme_net()
+gg
+dframe <- ggplot_build(gg)$data[[1]] # contains calculated node and edge values
 
 #Madmen Relationships
 data(madmen)
@@ -204,7 +206,7 @@ p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
 p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 
 ## College Football Games in the Fall 2000 regular season
-# Hello world! 
+# Hello world!
 # Source: http://www-personal.umich.edu/~mejn/netdata/
 data(football)
 ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)
