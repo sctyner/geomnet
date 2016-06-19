@@ -4,7 +4,7 @@ data(blood)
 set.seed(20140501)
 p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
 p + geom_net(vertices=blood$vertices, aes(colour=..type..)) + theme_net()
-save_vtest("Blood example, basic network in single data set")
+save_vtest(desc = "Blood example, basic network in single data set")
 
 bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
@@ -48,26 +48,28 @@ data(madmen)
 MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 p + geom_net(label=TRUE)
+save_vtest("Mad Men example")
 p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
+save_vtest("Mad Men example colored by gender")
 p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
+save_vtest("Mad Men example colored by gender, different colors")
 p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, label=TRUE,
              arrowgap=0.01, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
-#'
+save_vtest("Mad Men example colored by gender, uses arrowgap")
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 # alternative labelling: specify label variable.
 p + geom_net(aes(colour=Gender, label=Gender), size=6, linewidth=1, fontsize=3,
              labelcolour="black")
-#'
+save_vtest("Mad Men example with alternative labelling")
 ## visualizing ggplot2 theme elements
 data(theme_elements)
 TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent",
                by.y="name", all=TRUE)
 ggplot(data = TEnet, aes(from_id = parent, to_id = child)) +
   geom_net(label=TRUE, vjust=-0.5)
-#'
-#'
+save_vtest("Theme elements in ggplot2")
 ## emails example from VastChallenge 2014
 # care has to be taken to make sure that for each panel all nodes are included with
 # the necessary information.
@@ -84,30 +86,34 @@ emailnet <- merge(subset(email$edges, nrecipients < 54), employee,
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
   scale_colour_brewer(palette="Set2")
-#'
+save_vtest("Email example colored by employment type")
 #facet by day
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
   scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
+save_vtest("Email example, facetted by day")
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CitizenshipCountry), linewidth=0.5, fiteach=TRUE) +
   scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
+save_vtest("Email example, facetted by day, colored by country")
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=FALSE) +
   scale_colour_brewer(palette="Set2") +
   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
-#'
+save_vtest("Final email example")
 ## Les Miserables example
 #'
 data(lesmis)
 lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
 p + geom_net(layout="fruchtermanreingold")
+save_vtest("Bare Les Mis example")
 p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
+save_vtest("Les Mis example including name labels")
 p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
-#'
+save_vtest("Les Mis example, edge widths sized by number of connections")
 ## College Football Games in the Fall 2000 regular season
 # Hello world!
 # Source: http://www-personal.umich.edu/~mejn/netdata/
@@ -117,5 +123,5 @@ p <- ggplot(data=ftnet, aes(from_id=from, to_id=to))
 p + geom_net(aes(colour=value), linewidth=0.75, size=4.5, ecolour="grey80") +
   scale_colour_brewer("Conference", palette="Paired") + theme_net() +
   theme(legend.position="bottom")
-
+save_vtest("Football example")
 end_vcontext()
