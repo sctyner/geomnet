@@ -91,15 +91,18 @@
 #'                   by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
 #'
 #' #no facets
+#' \dontrun{
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
 #'   scale_colour_brewer(palette="Set2")
-#'
+#'}
 #' #facet by day
+#' \dontrun{
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
 #'   scale_colour_brewer(palette="Set2") +
 #'   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
+#'  } 
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 #'   geom_net(aes(colour= CitizenshipCountry), linewidth=0.5, fiteach=TRUE) +
 #'   scale_colour_brewer(palette="Set2") +
