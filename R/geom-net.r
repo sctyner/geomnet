@@ -24,6 +24,7 @@
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' library(ggplot2)
 #' data(blood)
 #' p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
@@ -91,18 +92,14 @@
 #'                   by.x=c("From", "day"), by.y=c("label", "day"), all=TRUE)
 #'
 #' #no facets
-#' \dontrun{
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
 #'   scale_colour_brewer(palette="Set2")
-#'}
 #' #facet by day
-#' \dontrun{
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
 #'   scale_colour_brewer(palette="Set2") +
 #'   facet_wrap(~day, nrow=2) + theme(legend.position="bottom")
-#'  } 
 #' ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 #'   geom_net(aes(colour= CitizenshipCountry), linewidth=0.5, fiteach=TRUE) +
 #'   scale_colour_brewer(palette="Set2") +
@@ -130,6 +127,7 @@
 #' p + geom_net(aes(colour=value), linewidth=0.75, size=4.5, ecolour="grey80") +
 #'   scale_colour_brewer("Conference", palette="Paired") + theme_net() +
 #'   theme(legend.position="bottom")
+#'   }
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,
                       layout="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfies = FALSE,
