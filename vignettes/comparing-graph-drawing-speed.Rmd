@@ -1,11 +1,12 @@
 ---
-title: "Network Visualization with `ggplot2`"
+title: "Speed comparisons of graph drawing packages"
 author: "Samantha Tyner, Francoise Briatte, and Heike Hofmann"
 date: "`r Sys.Date()`"
-output: 
-    rmarkdown::html_vignette:
-        toc: true
+output:
+  rmarkdown::html_vignette:
+  toc: true
 vignette: >
+  %\VignetteIndexEntry{Speed comparisons of graph drawing packages}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -38,7 +39,7 @@ In this first example, we visualize the protein-protein interaction network in t
 
 First, load all of the necessary packages and data sets.
 
-```{r speed1_loadpkg, echo = TRUE, eval = TRUE, message=FALSE, warning = FALSE}
+```{r speed1_loadpkg, echo = TRUE, eval = FALSE, message=FALSE, warning = FALSE}
 ## igraph (current: v1.0.1)
 if (!require(igraph, quietly = TRUE)) {
   install.package("igraph")
@@ -51,13 +52,6 @@ if (!require(network, quietly = TRUE)) {
 }
 library(network)
 
-## ggplot2
-if (!require(ggnetwork, quietly = TRUE) ||
-    packageVersion("ggplot2") < "1.0.1.9003") {
-  devtools::install_github("hadley/ggplot2")
-}
-library(ggplot2)
-
 ## ggnet2
 if (!require(GGally, quietly = TRUE)) {
   install.packages("GGally")
@@ -65,9 +59,6 @@ if (!require(GGally, quietly = TRUE)) {
 library(GGally)
 
 ## geom_net
-if (!require(geomnet, quietly = TRUE)) {
-  devtools::install_github("sctyner/geomnet")
-}
 library(geomnet) # also currently requires dplyr
 
 ## ggnetwork
@@ -76,13 +67,18 @@ if (!require(ggnetwork, quietly = TRUE)) {
 }
 library(ggnetwork)
 
+## pre-loading
+library(sna)
+
+```
+
+```{r, echo = TRUE, message = FALSE}
+## ggplot2
+library(ggplot2)
+
 ## other packages
 library(dplyr)
 library(tidyr)
-
-## pre-loading
-library(scales)
-library(sna)
 
 ## load data 
 data(protein, package = "geomnet")
@@ -148,15 +144,14 @@ if (!file.exists("runtimes-protein-100.csv")) {
 Finally, compare the 100 runtimes for each method side-by-side. In the resulting plot below, we use our own data, which can be found [here](https://raw.githubusercontent.com/sctyner/ggnet-paper/master/runtimes-protein/runtimes-protein-100.csv). 
 
 ```{r speed1_cheatdata, echo=FALSE}
-link_to_data <- "https://raw.githubusercontent.com/sctyner/ggnet-paper/master/runtimes-protein/runtimes-protein-100.csv"
+load("../inst/runtimes-protein.rda")
 ```
 ```{r speed1_viewdata, echo = TRUE, eval = FALSE}
 link_to_data <- "runtimes-protein-100.csv"
-```
-```{r speed1_plot, echo=TRUE}
 g = read.csv(link_to_data, stringsAsFactors = FALSE) %>%
       gather(`Visualization approach`, time, -iteration)
-
+```
+```{r speed1_plot, echo=TRUE}
 ggplot(g, aes(x = `Visualization approach`, y = time,
               fill = `Visualization approach`)) +
   geom_boxplot() +

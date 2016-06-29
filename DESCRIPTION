@@ -14,13 +14,15 @@ BugReports: https://github.com/sctyner/geomnet/issues
 LazyData: TRUE
 Depends:
     R (>= 2.14),
-    ggplot2 (>= 1.0.1.9003)
+    ggplot2 (>= 2.1.0)
 Imports:
     sna,
     network
 Suggests:
+    ggrepel,
+    knitr,
     dplyr,
-    ggrepel
+    tidyr
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
 
