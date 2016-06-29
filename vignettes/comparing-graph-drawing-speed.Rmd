@@ -265,9 +265,9 @@ g = list.files(pattern = "runtimes-(.*)csv$") %>%
 
 
 ```{r all-runtimes, eval=TRUE, echo=FALSE, fig.width = 8, fig.height = 8}
-link_to_full_comparison <- "https://raw.githubusercontent.com/sctyner/ggnet-paper/master/data/compare-all.csv"
-g <- readr::read_csv(link_to_full_comparison)
-
+# link_to_full_comparison <- "https://raw.githubusercontent.com/sctyner/ggnet-paper/master/data/compare-all.csv"
+# g <- readr::read_csv(link_to_full_comparison)
+load("../inst/compare-all.rda")
 qplot(data = g, network_size, time, colour = `Visualization approach`, alpha = I(0.1)) +
   facet_wrap(facets = ~setup, scales = "free_y") +
   geom_smooth(fill="white") +

@@ -18,7 +18,9 @@ Depends:
 Imports:
     sna,
     network
-Suggests: 
+Suggests:
     dplyr,
     ggrepel
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
+
