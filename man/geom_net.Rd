@@ -111,6 +111,7 @@ A data frame with additional columns:
 Geom for network visualization within the ggplot2 framework
 }
 \examples{
+\dontrun{
 library(ggplot2)
 data(blood)
 p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
@@ -181,7 +182,6 @@ emailnet <- merge(subset(email$edges, nrecipients < 54), employee,
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
   scale_colour_brewer(palette="Set2")
-
 #facet by day
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
@@ -214,6 +214,7 @@ p <- ggplot(data=ftnet, aes(from_id=from, to_id=to))
 p + geom_net(aes(colour=value), linewidth=0.75, size=4.5, ecolour="grey80") +
   scale_colour_brewer("Conference", palette="Paired") + theme_net() +
   theme(legend.position="bottom")
+  }
 }
 \keyword{datasets}
 
