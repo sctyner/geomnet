@@ -124,4 +124,40 @@ p + geom_net(aes(colour=value), linewidth=0.75, size=4.5, ecolour="grey80") +
   scale_colour_brewer("Conference", palette="Paired") + theme_net() +
   theme(legend.position="bottom")
 save_vtest("Football example")
+
+## bike share
+data(bikes, package = 'geomnet')
+tripnet <- merge(bikes$trips, bikes$stations, by.x = "Start.station",
+                 by.y = "name", all = TRUE)
+
+tripnet$Metro = FALSE
+idx <- grep("Metro", tripnet$Start.station)
+tripnet$Metro[idx] <- TRUE
+
+# plot the bike sharing network shown in Figure 7b of the paper
+ggplot(aes(from_id = Start.station, to_id = End.station), data = tripnet) +
+  geom_net(aes(linewidth = n / 15, colour = Metro),
+           label = TRUE, repel = TRUE) +
+  theme_net() +
+  xlim(c(-0.1, 1.1)) +
+  scale_colour_manual("Metro Station", values = c("grey40", "darkorange")) +
+  theme(legend.position = "bottom")
+save_vtest("Metro example")
+
+library(ggmap)
+metro_map <- get_map(location = c(left = -77.22257, bottom = 39.05721,
+                                  right = -77.11271, top = 39.14247))
+ggmap(metro_map) +
+  geom_net(data = tripnet, layout = NULL, label = TRUE,
+           vjust = -0.5, ealpha = 0.5,
+           aes(from_id = Start.station,
+               to_id = End.station,
+               x = long, y = lat,
+               linewidth = n / 15,
+               colour = Metro), fontsize = 4) +
+  scale_colour_manual("Metro Station", values = c("grey40", "darkorange")) +
+  theme_net() %+replace% theme(aspect.ratio=NULL) +
+  theme(legend.position = "bottom")
+save_vtest("Metro map example")
+
 end_vcontext()
