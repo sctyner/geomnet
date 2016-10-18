@@ -16,7 +16,7 @@
 #' @param repel logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.
 #' @param ecolour colour for edges.
 #' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
-#' @param selfies logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.
+#' @param selfloops logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
 #' @param arrowsize numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
 #' @param arrowgap numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.
@@ -49,7 +49,7 @@
 #'   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
 #'          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
 #'          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
-#'          selfies = TRUE, ecolour = "grey40") +
+#'          selfloops = TRUE, ecolour = "grey40") +
 #'   theme_net()
 #' gg
 #' dframe <- ggplot_build(gg)$data[[1]] # contains calculated node and edge values
@@ -130,7 +130,7 @@
 #'   }
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,
-                      layout="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfies = FALSE,
+                      layout="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
                       alpha = 0.25,
                       ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
                       label=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
@@ -141,7 +141,7 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
     params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label, labelgeom=labelgeom,
                   ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed, repel = repel,
                   arrowsize=arrowsize,
-                  labelcolour=labelcolour, vertices=vertices, selfies = selfies,
+                  labelcolour=labelcolour, vertices=vertices, selfloops = selfloops,
                   ...)
   )
 }
@@ -191,7 +191,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 #browser()
     data$from <- as.character(data$from)
     data$to <- as.character(data$to)
-    selfie <- (data$from == data$to) & (params$selfies == TRUE)
+    selfie <- (data$from == data$to) & (params$selfloops == TRUE)
   # maximum radius is at the moment hard coded to 0.05
     data$ymax = max(with(data, pmax(y, yend) + 2*0.05*selfie))
     data$xmax = with(data, pmax(x, xend) + 2*0.05*selfie)
@@ -204,7 +204,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, repel = FALSE,
-                        label=FALSE, labelgeom='text', labelcolour=NULL, selfies = FALSE) {
+                        label=FALSE, labelgeom='text', labelcolour=NULL, selfloops = FALSE) {
 
  #   browser()
     data$self <- as.character(data$to) == as.character(data$from)
@@ -267,7 +267,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 #    browser()
 
     selfies_draw <- NULL
-    if ((nrow(selfy) > 0) & (selfies == TRUE)) {
+    if ((nrow(selfy) > 0) & (selfloops == TRUE)) {
       selfy$radius <- min(0.04, 1/sqrt(nrow(vertices)))
       selfy <- transform(selfy,
                            x = x + (radius + nodesize/(100*.pt) + size/100)/sqrt(2),
@@ -279,7 +279,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     }
 
     selfies_arrows <- NULL
-    if ((nrow(selfy) > 0) & (selfies == TRUE) & (directed == TRUE)) {
+    if ((nrow(selfy) > 0) & (selfloops == TRUE) & (directed == TRUE)) {
 #      browser()
       selfy_arrows <- transform (
         selfy,

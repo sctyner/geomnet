@@ -12,7 +12,7 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = TRUE,
   inherit.aes = TRUE, layout = "kamadakawai", layout.par = list(),
-  directed = FALSE, fiteach = FALSE, selfies = FALSE, alpha = 0.25,
+  directed = FALSE, fiteach = FALSE, selfloops = FALSE, alpha = 0.25,
   ecolour = NULL, ealpha = NULL, arrow = NULL, arrowgap = 0.01,
   arrowsize = 1, label = FALSE, labelcolour = NULL, labelgeom = "text",
   repel = FALSE, vertices = NULL, ...)
@@ -71,7 +71,7 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{fiteach}{logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?}
 
-\item{selfies}{logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.}
+\item{selfloops}{logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.}
 
 \item{alpha}{numeric value of alpha blending of vertices.}
 
@@ -136,7 +136,7 @@ gg <- ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
-         selfies = TRUE, ecolour = "grey40") +
+         selfloops = TRUE, ecolour = "grey40") +
   theme_net()
 gg
 dframe <- ggplot_build(gg)$data[[1]] # contains calculated node and edge values
