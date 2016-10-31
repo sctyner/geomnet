@@ -155,7 +155,7 @@ compute_layer = function(self, data, params, panel, na.rm = FALSE,
   else {
     if (ggplot2:::empty(data)) return(data.frame())
 
-    scales <- ggplot2:::panel_scales(panel, data$PANEL[1])
+    scales <- ggplot2:::Layer$get_scales(data$PANEL[1])
     self$compute_panel(data = data, scales = scales,
                        na.rm=params$na.rm, layout=params$layout,
                        layout.par=params$layout.par, fiteach=params$fiteach,
