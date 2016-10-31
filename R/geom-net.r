@@ -135,6 +135,7 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
                       ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
                       label=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
                        vertices=NULL, ...) {
+  
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -158,7 +159,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                              linewidth=1, angle=0, vjust=0, hjust=0.5, curvature = 0),
 
   draw_key = function(data, params, size)  {
-#    browser()
+#    
 #    arrow = arrow
     if (params$directed) {
       if(is.null(arrow)){
@@ -188,7 +189,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   setup_data = function(data, params, mapping) {
 #    cat("setup_data geom_net\n")
 
-#browser()
+#
     data$from <- as.character(data$from)
     data$to <- as.character(data$to)
     selfie <- (data$from == data$to) & (params$selfloops == TRUE)
@@ -206,7 +207,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                         directed=FALSE, arrowsize=1, repel = FALSE,
                         label=FALSE, labelgeom='text', labelcolour=NULL, selfloops = FALSE) {
 
- #   browser()
+ #   
     data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
@@ -257,14 +258,14 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         y = y + arrowgap*(yend-y)
       )
     } else arrow=NULL
-#    browser()
+#    
     if (any(data$curvature != 0)){
       edges_draw <- GeomCurve$draw_panel(edges, panel_scales,
                                          coord, arrow=arrow, curvature=data$curvature[1], angle=90)
     }
       else {edges_draw <- GeomSegment$draw_panel(edges, panel_scales, coord, arrow, lineend = "round")}
 
-#    browser()
+#    
 
     selfies_draw <- NULL
     if ((nrow(selfy) > 0) & (selfloops == TRUE)) {
@@ -280,7 +281,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
     selfies_arrows <- NULL
     if ((nrow(selfy) > 0) & (selfloops == TRUE) & (directed == TRUE)) {
-#      browser()
+#      
       selfy_arrows <- transform (
         selfy,
         xend = x - 0.5* arrowsize*.pt/100,
