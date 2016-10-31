@@ -119,9 +119,9 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 },
 
 compute_panel = function(self, data, scales, na.rm = FALSE,
-                           layout="kamadakawai", layout.par=list(), fiteach=FALSE,
-                           vertices=NULL) {
-# cat("compute_panel in stat_net\n")
+                         layout="kamadakawai", layout.par=list(),
+                         fiteach=FALSE, vertices=NULL) {
+#  cat("compute_panel in stat_net\n")
 #  browser()
 #    if (fiteach)
       data <- self$compute_network(data, layout=layout, layout.par=layout.par)
@@ -134,8 +134,9 @@ compute_panel = function(self, data, scales, na.rm = FALSE,
     data.frame(data)
   },
 
-compute_layer = function(self, data, params, panel, na.rm = FALSE,
-                         layout="kamadakawai", layout.par=list(), fiteach=FALSE,
+compute_layer = function(self, data, params, panel, na.rm = FALSE, layout,
+                        # layout="kamadakawai", layout.par=list(),
+                         fiteach=FALSE,
                          vertices=NULL) {
 #  cat("compute_layer in stat_net\n")
 #  browser()
