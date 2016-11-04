@@ -37,16 +37,16 @@
 #' p + geom_net(aes(colour=rho), labelon=TRUE, vjust = -0.5)
 #' p + geom_net(aes(colour=rho), labelon=TRUE, vjust=-0.5, labelcolour="black",
 #'              directed=TRUE, curvature=0.2) + theme_net()
-#' p + geom_net(colour = "orange", layout = 'circle', size = 6)
-#' p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
-#' p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75,
+#' p + geom_net(colour = "orange", layout.alg = 'circle', size = 6)
+#' p + geom_net(colour = "orange", layout.alg = 'circle', size = 6, linewidth=.75)
+#' p + geom_net(colour = "orange", layout.alg = 'circle', size = 0, linewidth=.75,
 #'              directed = TRUE)
 #' p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to),
-#'              linewidth=0.75, label =TRUE, labelcolour="black") +
+#'              linewidth=0.75, labelon =TRUE, labelcolour="black") +
 #'     facet_wrap(~Ethnicity) +
 #'     scale_colour_brewer(palette="Set2")
 #' gg <- ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
-#'   geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
+#'   geom_net(colour = "darkred", layout.alg = "circle", labelon=TRUE, size = 15,
 #'          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
 #'          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
 #'          selfloops = TRUE, ecolour = "grey40") +
@@ -68,7 +68,7 @@
 #'
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 #' # alternative labelling: specify label variable.
-#' p + geom_net(aes(colour=Gender, label=Gender), size=6, linewidth=1, fontsize=3,
+#' p + geom_net(aes(colour=Gender, labelon=Gender), size=6, linewidth=1, fontsize=3,
 #'              labelcolour="black")
 #'
 #' ## visualizing ggplot2 theme elements

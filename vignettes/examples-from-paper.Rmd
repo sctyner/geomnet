@@ -58,8 +58,8 @@ MMnet <- merge(madmen$edges, madmen$vertices,
 # create plot
 set.seed(10052016)
 ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2)) +
-  geom_net(aes(colour = Gender), layout = "kamadakawai", 
-           size = 2, label = TRUE, vjust = -0.6, ecolour = "grey60",
+  geom_net(aes(colour = Gender), layout.alg = "kamadakawai", 
+           size = 2, labelon = TRUE, vjust = -0.6, ecolour = "grey60",
            directed =FALSE, fontsize = 3, ealpha = 0.5) +
   scale_colour_manual(values = c("#FF69B4", "#0099ff")) +
   xlim(c(-0.05, 1.05)) +
