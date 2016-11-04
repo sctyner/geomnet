@@ -132,13 +132,13 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
                       layout="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
                       alpha = 0.25,
                       ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
-                      label=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
+                      labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
                        vertices=NULL, ...) {
 
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, label=label, labelgeom=labelgeom,
+    params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, labelon=labelon, labelgeom=labelgeom,
                   ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed, repel = repel,
                   arrowsize=arrowsize,
                   labelcolour=labelcolour, vertices=vertices, selfloops = selfloops,
@@ -204,7 +204,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01,
                         directed=FALSE, arrowsize=1, repel = FALSE,
-                        label=FALSE, labelgeom='text', labelcolour=NULL, selfloops = FALSE) {
+                        labelon=FALSE, labelgeom='text', labelcolour=NULL, selfloops = FALSE) {
 
  #
     data$self <- as.character(data$to) == as.character(data$from)
@@ -293,7 +293,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     }
 
     label_grob <- NULL
-    if (label | !is.null(data$label)) {
+    if (labelon | !is.null(data$label)) {
       labels <- data.frame(
         x = data$x,
         y = data$y,
