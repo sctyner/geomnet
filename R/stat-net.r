@@ -55,7 +55,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     data
   },
 
-compute_network = function(data, layout="kamadakawai", layout.par=list()) {
+compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
 # cat("compute_network\n")
 #  browser()
     require(dplyr)
@@ -78,7 +78,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 #    m <- network::as.matrix.network.adjacency(net)
 #  }
 
-  if (is.null(layout)) {
+  if (is.null(layout.alg)) {
     if (is.null(data$x) || is.null(data$y)) stop("If no layout mechanism is specified, x and y coordinates have to be given\n\n")
     vert.coord <- data[, c("x", "y", "from_id")]
     vert.coord <- subset(vert.coord, from_id %in% attr(edgelist, "vnames"))
@@ -89,7 +89,7 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
   } else {
   #print("it would be nice at this point to check, whether layout is one of the supported functions, and if not,
   require(sna)
-  layoutFun <- paste('gplot.layout.',layout,sep='')
+  layoutFun <- paste('gplot.layout.',layout.alg,sep='')
   vert.coord <- data.frame(do.call(layoutFun, list(edgelist, layout.par = layout.par)))
 
   vert.coord$label <- attr(edgelist, "vnames") #row.names(m)
@@ -119,12 +119,12 @@ compute_network = function(data, layout="kamadakawai", layout.par=list()) {
 },
 
 compute_panel = function(self, data, scales, na.rm = FALSE,
-                         layout="kamadakawai", layout.par=list(),
+                         layout.alg="kamadakawai", layout.par=list(),
                          fiteach=FALSE, vertices=NULL) {
 #  cat("compute_panel in stat_net\n")
 #  browser()
 #    if (fiteach)
-      data <- self$compute_network(data, layout=layout, layout.par=layout.par)
+      data <- self$compute_network(data, layout.alg =layout.alg, layout.par=layout.par)
 
     #    data <- plyr::ddply(data, "group", plyr::mutate, .samegroup = to %in% unique(from))
     if (any(data$group) != -1)
@@ -134,7 +134,7 @@ compute_panel = function(self, data, scales, na.rm = FALSE,
     data.frame(data)
   },
 
-compute_layer = function(self, data, params, panel, na.rm = FALSE, layout,
+compute_layer = function(self, data, params, panel, na.rm = FALSE, layout.alg,
                         # layout="kamadakawai", layout.par=list(),
                          fiteach=FALSE,
                          vertices=NULL) {
@@ -148,7 +148,7 @@ compute_layer = function(self, data, params, panel, na.rm = FALSE, layout,
 
       scales <- ggplot2:::Layout$get_scales(data$PANEL[1])
       self$compute_panel(data = data, scales = scales,
-                         na.rm=params$na.rm, layout=params$layout,
+                         na.rm=params$na.rm, layout.alg=params$layout.alg,
                          layout.par=params$layout.par, fiteach=params$fiteach,
                          vertices=params$vertices)
     })
@@ -158,7 +158,7 @@ compute_layer = function(self, data, params, panel, na.rm = FALSE, layout,
 
     scales <- ggplot2:::Layout$get_scales(data$PANEL[1])
     self$compute_panel(data = data, scales = scales,
-                       na.rm=params$na.rm, layout=params$layout,
+                       na.rm=params$na.rm, layout.alg=params$layout.alg,
                        layout.par=params$layout.par, fiteach=params$fiteach,
                        vertices=params$vertices)
   }
@@ -172,13 +172,13 @@ compute_layer = function(self, data, params, panel, na.rm = FALSE, layout,
 #' @export
 stat_net <- function(mapping = NULL, data = NULL, geom = "point",
                      position = "identity", show.legend = NA,
-                     inherit.aes = TRUE, layout="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL,
+                     inherit.aes = TRUE, layout.alg="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL,
                      na.rm=FALSE, ...) {
 # browser()
     ggplot2::layer(
     stat = StatNet, data = data, mapping = mapping, geom = geom, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(layout=layout, layout.par=layout.par, fiteach=fiteach,
+    params = list(layout.alg=layout.alg, layout.par=layout.par, fiteach=fiteach,
                   na.rm=na.rm, vertices=vertices, ...
     )
   )

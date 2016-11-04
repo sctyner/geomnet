@@ -10,7 +10,7 @@
 #' @param layout character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.
 #' @param layout.par list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{?gplot.layout} in the package sna for other choices.
 #' @param fiteach logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
-#' @param label logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
+#' @param labelon logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
 #' @param labelcolour character of colour for the labels.
 #' @param labelgeom character. Which ggplot2 \code{geom} to use to draw the labels. Either "text" or "label".
 #' @param repel logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.
@@ -34,8 +34,8 @@
 #' p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho)) + theme_net()
-#' p + geom_net(aes(colour=rho), label=TRUE, vjust = -0.5)
-#' p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black",
+#' p + geom_net(aes(colour=rho), labelon=TRUE, vjust = -0.5)
+#' p + geom_net(aes(colour=rho), labelon=TRUE, vjust=-0.5, labelcolour="black",
 #'              directed=TRUE, curvature=0.2) + theme_net()
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
@@ -58,11 +58,11 @@
 #' data(madmen)
 #' MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
 #' p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
-#' p + geom_net(label=TRUE)
-#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
-#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
+#' p + geom_net(labelon=TRUE)
+#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, labelon=TRUE, fontsize=3, labelcolour="black")
+#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, labelon=TRUE, labelcolour="black") +
 #'     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
-#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, label=TRUE,
+#' p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, labelon=TRUE,
 #'              arrowgap=0.01, labelcolour="black") +
 #'     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 #'
@@ -76,7 +76,7 @@
 #' TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent",
 #'                by.y="name", all=TRUE)
 #' ggplot(data = TEnet, aes(from_id = parent, to_id = child)) +
-#'   geom_net(label=TRUE, vjust=-0.5)
+#'   geom_net(labelon=TRUE, vjust=-0.5)
 #'
 #'
 #' ## emails example from VastChallenge 2014
@@ -115,8 +115,8 @@
 #' lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all=TRUE)
 #' p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
 #' p + geom_net(layout="fruchtermanreingold")
-#' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
-#' p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
+#' p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5)
+#' p + geom_net(layout="fruchtermanreingold", labelon=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 #'
 #' ## College Football Games in the Fall 2000 regular season
 #' # Source: http://www-personal.umich.edu/~mejn/netdata/
@@ -129,7 +129,7 @@
 #'   }
 
 geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = TRUE, inherit.aes = TRUE,
-                      layout="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
+                      layout.alg="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
                       alpha = 0.25,
                       ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
                       labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
@@ -138,7 +138,7 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, layout=layout, layout.par=layout.par, fiteach=fiteach, labelon=labelon, labelgeom=labelgeom,
+    params = list(na.rm = na.rm, layout.alg=layout.alg, layout.par=layout.par, fiteach=fiteach, labelon=labelon, labelgeom=labelgeom,
                   ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed, repel = repel,
                   arrowsize=arrowsize,
                   labelcolour=labelcolour, vertices=vertices, selfloops = selfloops,
