@@ -134,7 +134,7 @@ compute_panel = function(self, data, scales, na.rm = FALSE,
     data.frame(data)
   },
 
-compute_layer = function(self, data, params, panel, na.rm = FALSE, layout.alg,
+compute_layer = function(self, data, params, layout, na.rm = FALSE, layout.alg,
                         # layout="kamadakawai", layout.par=list(),
                          fiteach=FALSE,
                          vertices=NULL) {
@@ -155,7 +155,7 @@ compute_layer = function(self, data, params, panel, na.rm = FALSE, layout.alg,
   }
   else {
     if (ggplot2:::empty(data)) return(data.frame())
-
+browser()
     scales <- ggplot2:::Layout$get_scales(data$PANEL[1])
     self$compute_panel(data = data, scales = scales,
                        na.rm=params$na.rm, layout.alg=params$layout.alg,

@@ -35,7 +35,7 @@
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho)) + theme_net()
 #' p + geom_net(aes(colour=rho), labelon=TRUE, vjust = -0.5)
-#' p + geom_net(aes(colour=rho), labelon=TRUE, vjust=-0.5, labelcolour="black",
+#' p + geom_net(aes(colour=rho, linetype = group_to, label = from),  vjust=-0.5, labelcolour="black",
 #'              directed=TRUE, curvature=0.2) + theme_net()
 #' p + geom_net(colour = "orange", layout.alg = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout.alg = 'circle', size = 6, linewidth=.75)
@@ -134,7 +134,7 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
                       ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
                       labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
                        vertices=NULL, ...) {
-
+browser()
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -152,43 +152,48 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
 GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   required_aes = c("x", "y"),
 
-  default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5,
+  default_aes = ggplot2::aes(width = 0.75, linetype = "solid", fontsize=5, label = NULL,
                              shape = 19, colour = "grey40", arrowsize = 1,
                              size = 4, fill = NA, alpha = NA, stroke = 0.5,
                              linewidth=1, angle=0, vjust=0, hjust=0.5, curvature = 0),
 
   draw_key = function(data, params, size)  {
-#
+browser()
 #    arrow = arrow
     if (params$directed) {
       if(is.null(arrow)){
       if (any(data$curvature != 0)){
-        arrow = arrow(length = unit(params$arrowsize*10,"points"), type="open")
+        data$arrow = arrow(length = unit(params$arrowsize*10,"points"), type="open")
         }
       else{
-        arrow = arrow(length = unit(params$arrowsize*10,"points"), type="closed")
+        data$arrow = arrow(length = unit(params$arrowsize*10,"points"), type="closed")
       }
       }
-      else arrow = arrow
+      else data$arrow = arrow
     }
     with(data, grobTree(
       grid::pointsGrob(0.5 + .15*params$directed, 0.5, pch = data$shape,
                        gp = grid::gpar(col = alpha(data$colour, data$alpha),
                                        fill = alpha(data$fill, data$alpha),
                                        fontsize = data$size * .pt + data$stroke * .stroke/2,
-                                       lwd = data$stroke * .stroke/2)) #,
-#      grid::linesGrob(x = unit(c(1, 0), "npc"), y = unit(c(0.5, 0.5), "npc"),
-#                      gp = grid::gpar(
-#                        col = data$colour, data$ecolour %||% "grey60", # not right yet
-#                        lwd = data$linewidth, lineend="butt",
-#                        lty = linetype), arrow = arrow)
+                                       lwd = data$stroke * .stroke/2)
+                       ),
+     grid::segmentsGrob(1.1, 1.5, 1.9, 1.5,
+                     gp = grid::gpar(
+                       col = "grey20", # not right yet
+                       lwd = data$linewidth, 
+                       lty = data$linetype,
+                       lineend="butt") 
+#                     arrow = data$arrow
+                     )
+
     ))
   },
 
   setup_data = function(data, params, mapping) {
 #    cat("setup_data geom_net\n")
 
-#
+browser()
     data$from <- as.character(data$from)
     data$to <- as.character(data$to)
     selfie <- (data$from == data$to) & (params$selfloops == TRUE)
@@ -206,7 +211,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                         directed=FALSE, arrowsize=1, repel = FALSE,
                         labelon=FALSE, labelgeom='text', labelcolour=NULL, selfloops = FALSE) {
 
- #
+ browser()
     data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
