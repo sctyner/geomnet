@@ -11,11 +11,11 @@
 \usage{
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = TRUE,
-  inherit.aes = TRUE, layout = "kamadakawai", layout.par = list(),
+  inherit.aes = TRUE, layout.alg = "kamadakawai", layout.par = list(),
   directed = FALSE, fiteach = FALSE, selfloops = FALSE, alpha = 0.25,
   ecolour = NULL, ealpha = NULL, arrow = NULL, arrowgap = 0.01,
-  arrowsize = 1, label = FALSE, labelcolour = NULL, labelgeom = "text",
-  repel = FALSE, vertices = NULL, ...)
+  arrowsize = 1, labelon = FALSE, labelcolour = NULL,
+  labelgeom = "text", repel = FALSE, vertices = NULL, ...)
 
 GeomNet
 
@@ -23,7 +23,7 @@ StatNet
 
 stat_net(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
-  layout = "kamadakawai", layout.par = list(), fiteach = FALSE,
+  layout.alg = "kamadakawai", layout.par = list(), fiteach = FALSE,
   vertices = NULL, na.rm = FALSE, ...)
 }
 \arguments{
@@ -63,8 +63,6 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
-\item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
-
 \item{layout.par}{list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{?gplot.layout} in the package sna for other choices.}
 
 \item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
@@ -85,7 +83,7 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{arrowsize}{numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.}
 
-\item{label}{logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.}
+\item{labelon}{logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.}
 
 \item{labelcolour}{character of colour for the labels.}
 
@@ -101,6 +99,8 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 to the paired geom/stat.}
 
 \item{geom}{The geometric object to use display the data}
+
+\item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
 }
 \value{
 A data frame with additional columns:
@@ -121,19 +121,19 @@ bloodnet <- merge(blood$edges, blood$vertices, by.x="from", by.y="label", all=TR
 p <- ggplot(data = bloodnet, aes(from_id = from, to_id = to))
 p + geom_net()
 p + geom_net(aes(colour=rho)) + theme_net()
-p + geom_net(aes(colour=rho), label=TRUE, vjust = -0.5)
-p + geom_net(aes(colour=rho), label=TRUE, vjust=-0.5, labelcolour="black",
-             directed=TRUE, curvature=0.2) + theme_net()
-p + geom_net(colour = "orange", layout = 'circle', size = 6)
-p + geom_net(colour = "orange", layout = 'circle', size = 6, linewidth=.75)
-p + geom_net(colour = "orange", layout = 'circle', size = 0, linewidth=.75,
+p + geom_net(aes(colour=rho), labelon=TRUE, vjust = -0.5)
+p + geom_net(aes(colour=rho, linetype = group_to, label = from),  vjust=-0.5, labelcolour="black",
+             directed=TRUE) + theme_net()
+p + geom_net(colour = "orange", layout.alg = 'circle', size = 6)
+p + geom_net(colour = "orange", layout.alg = 'circle', size = 6, linewidth=.75)
+p + geom_net(colour = "orange", layout.alg = 'circle', size = 0, linewidth=.75,
              directed = TRUE)
 p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to),
-             linewidth=0.75, label =TRUE, labelcolour="black") +
+             linewidth=0.75, labelon =TRUE, labelcolour="black") +
     facet_wrap(~Ethnicity) +
     scale_colour_brewer(palette="Set2")
 gg <- ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
-  geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
+  geom_net(colour = "darkred", layout.alg = "circle", labelon=TRUE, size = 15,
          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
          selfloops = TRUE, ecolour = "grey40") +
@@ -145,17 +145,17 @@ dframe <- ggplot_build(gg)$data[[1]] # contains calculated node and edge values
 data(madmen)
 MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
-p + geom_net(label=TRUE)
-p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
-p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
+p + geom_net(labelon=TRUE)
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, labelon=TRUE, fontsize=3, labelcolour="black")
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, labelon=TRUE, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
-p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, label=TRUE,
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, labelon=TRUE,
              arrowgap=0.01, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 # alternative labelling: specify label variable.
-p + geom_net(aes(colour=Gender, label=Gender), size=6, linewidth=1, fontsize=3,
+p + geom_net(aes(colour=Gender, labelon=Gender), size=6, linewidth=1, fontsize=3,
              labelcolour="black")
 
 ## visualizing ggplot2 theme elements
@@ -163,7 +163,7 @@ data(theme_elements)
 TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent",
                by.y="name", all=TRUE)
 ggplot(data = TEnet, aes(from_id = parent, to_id = child)) +
-  geom_net(label=TRUE, vjust=-0.5)
+  geom_net(labelon=TRUE, vjust=-0.5)
 
 
 ## emails example from VastChallenge 2014
@@ -202,8 +202,8 @@ data(lesmis)
 lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
 p + geom_net(layout="fruchtermanreingold")
-p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
-p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
+p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5)
+p + geom_net(layout="fruchtermanreingold", labelon=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 
 ## College Football Games in the Fall 2000 regular season
 # Source: http://www-personal.umich.edu/~mejn/netdata/
