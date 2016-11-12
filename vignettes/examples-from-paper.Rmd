@@ -122,7 +122,7 @@ ggnet2(network(blood$edges[, 1:2], directed=TRUE),
 # plot with geomnet (Figure 2b)
 set.seed(12252016)
 ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
-  geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
+  geom_net(colour = "darkred", layout.alg = "circle", labelon = TRUE, size = 15,
            directed = TRUE, vjust = 0.5, labelcolour = "grey80",
            arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
            selfloops = TRUE, ecolour = "grey40") + 

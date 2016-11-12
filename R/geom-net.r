@@ -158,7 +158,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                              linewidth=1, angle=0, vjust=0, hjust=0.5, curvature = 0),
 
   draw_key = function(data, params, size)  {
-#browser()
+# browser()
     draw_arrow <-  NULL
     if (params$directed) {
       if (any(data$curvature != 0)){
@@ -168,9 +168,9 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         draw_arrow <- arrow(length = unit(params$arrowsize*5,"points"), type="closed")
       }
    }
-      
+
     with(data, grobTree(
-      grid::pointsGrob(x = c(.15, .85), y = c(.85, .15), 
+      grid::pointsGrob(x = c(.15, .85), y = c(.85, .15),
                        pch = data$shape, size = unit(data$size, "points"),
                        gp = grid::gpar(col = alpha(data$colour, data$alpha),
                                        fill = alpha(data$fill, data$alpha),
@@ -178,14 +178,14 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                                        lwd = data$stroke * .stroke/2)
                        ),
      grid::segmentsGrob(x0 = .15, y0 = .85 ,
-                        x1 = ifelse(is.null(draw_arrow), .85, .82), 
+                        x1 = ifelse(is.null(draw_arrow), .85, .82),
                         y1 = ifelse(is.null(draw_arrow), .15, .18),
                      gp = grid::gpar(
                        col = alpha(data$colour, data$alpha),
                        fill = alpha(data$colour, data$alpha),
-                       lwd = data$linewidth, 
+                       lwd = data$linewidth,
                        lty = data$linetype,
-                       lineend="butt"), 
+                       lineend="butt"),
                      arrow = draw_arrow
                      )
 
@@ -221,7 +221,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       y = data$y,
       yend = data$yend,
       weight = data$weight,
-      colour = ecolour %||% ifelse(data$.samegroup, data$colour, "grey60"),
+      colour = ecolour %||% ifelse(data$.samegroup, data$colour, "grey40"),
       size = data$linewidth %||% (data$size / 4),
       nodesize = data$size,
       alpha = ealpha %||% data$alpha,
