@@ -36,7 +36,7 @@
 #' p + geom_net(aes(colour=rho)) + theme_net()
 #' p + geom_net(aes(colour=rho), labelon=TRUE, vjust = -0.5)
 #' p + geom_net(aes(colour=rho, linetype = group_to, label = from),  vjust=-0.5, labelcolour="black",
-#'              directed=TRUE, curvature=0.2) + theme_net()
+#'              directed=TRUE) + theme_net()
 #' p + geom_net(colour = "orange", layout.alg = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout.alg = 'circle', size = 6, linewidth=.75)
 #' p + geom_net(colour = "orange", layout.alg = 'circle', size = 0, linewidth=.75,
@@ -159,32 +159,34 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
   draw_key = function(data, params, size)  {
 #browser()
-#    arrow = arrow
+    draw_arrow <-  NULL
     if (params$directed) {
-      if(is.null(arrow)){
       if (any(data$curvature != 0)){
-        data$arrow = arrow(length = unit(params$arrowsize*10,"points"), type="open")
+        draw_arrow <- arrow(length = unit(params$arrowsize*5,"points"), type="open")
         }
       else{
-        data$arrow = arrow(length = unit(params$arrowsize*10,"points"), type="closed")
+        draw_arrow <- arrow(length = unit(params$arrowsize*5,"points"), type="closed")
       }
-      }
-      else data$arrow = arrow
-    }
+   }
+      
     with(data, grobTree(
-      grid::pointsGrob(0.5 + .15*params$directed, 0.5, pch = data$shape,
+      grid::pointsGrob(x = c(.15, .85), y = c(.85, .15), 
+                       pch = data$shape, size = unit(data$size, "points"),
                        gp = grid::gpar(col = alpha(data$colour, data$alpha),
                                        fill = alpha(data$fill, data$alpha),
                                        fontsize = data$size * .pt + data$stroke * .stroke/2,
                                        lwd = data$stroke * .stroke/2)
                        ),
-     grid::segmentsGrob(1.1, 1.5, 1.9, 1.5,
+     grid::segmentsGrob(x0 = .15, y0 = .85 ,
+                        x1 = ifelse(is.null(draw_arrow), .85, .82), 
+                        y1 = ifelse(is.null(draw_arrow), .15, .18),
                      gp = grid::gpar(
-                       col = "grey20", # not right yet
+                       col = alpha(data$colour, data$alpha),
+                       fill = alpha(data$colour, data$alpha),
                        lwd = data$linewidth, 
                        lty = data$linetype,
-                       lineend="butt") 
-#                     arrow = data$arrow
+                       lineend="butt"), 
+                     arrow = draw_arrow
                      )
 
     ))
