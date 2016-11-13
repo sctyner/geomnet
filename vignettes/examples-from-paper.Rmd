@@ -180,7 +180,7 @@ emailnet <- merge(
 set.seed(10312016)
 ggplot(data = emailnet,
        aes(from_id = From, to_id = to)) +
-  geom_net(layout = "fruchtermanreingold",
+  geom_net(layout.alg = "fruchtermanreingold",
     aes(colour = CurrentEmploymentType,
         group = CurrentEmploymentType,
         linewidth = 3 * (...samegroup.. / 8 + .125)),
@@ -194,7 +194,7 @@ ggplot(data = emailnet,
 ```{r email_ggnetwork, size="footnotesize", opts.label="codefig", echo=TRUE}
 # use em.net created in ggnet2step
 set.seed(10312016)
-ggplot(ggnetwork(em.net, arrow.gap = 0.02,layout = "fruchtermanreingold"),
+ggplot(ggnetwork(em.net, arrow.gap = 0.02, layout = "fruchtermanreingold"),
        aes(x, y, xend = xend, yend = yend)) +
   geom_edges(
     aes(color = curr_empl_type),
@@ -257,7 +257,7 @@ emailnet <- merge(subset(email$edges, nrecipients < 54), employee,
 # creating the plot
 set.seed(7042016)
 ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
-  geom_net(layout = "kamadakawai",
+  geom_net(layout.alg = "kamadakawai",
     aes(colour = CurrentEmploymentType,
         group = CurrentEmploymentType,
         linewidth = 2 * (...samegroup.. / 8 + .125)),
@@ -325,9 +325,9 @@ TEnet <- TEnet %>%
 set.seed(3272016)
 ggplot(data = TEnet,
        aes(from_id = parent, to_id = child)) +
-  geom_net(layout = "fruchtermanreingold",
+  geom_net(layout.alg = "fruchtermanreingold",
     aes(fontsize = degree), directed = TRUE,
-    label = TRUE, size = 1, labelcolour = 'black',
+    labelon = TRUE, size = 1, labelcolour = 'black',
     ecolour = "grey70", arrowsize = 0.5,
     linewidth = 0.5, repel = TRUE) +
   theme_net() +
@@ -385,7 +385,7 @@ ftnet$schools <- ifelse(
 set.seed(5232011)
 ggplot(data = ftnet,
        aes(from_id = from, to_id = to)) +
-  geom_net(layout = 'fruchtermanreingold',
+  geom_net(layout.alg = 'fruchtermanreingold',
     aes(colour = value, group = value,
         linetype = factor(same.conf != 1),
         label = schools),
@@ -461,10 +461,10 @@ davis$lcolour <-
 
 set.seed(8262013)
 ggplot(data = davis) + 
-  geom_net(layout = "kamadakawai",
+  geom_net(layout.alg = "kamadakawai",
     aes(from_id = from, to_id = to, 
         colour = type, shape = type), 
-    size = 15, label = TRUE, ealpha = 0.25,
+    size = 15, labelon = TRUE, ealpha = 0.25,
     vjust = 0.5, hjust = 0.5,
     labelcolour = davis$lcolour) +
   theme_net() + 
@@ -505,7 +505,7 @@ tripnet$Metro[idx] <- TRUE
 set.seed(1232016)
 ggplot(aes(from_id = Start.station, to_id = End.station), data = tripnet) +
   geom_net(aes(linewidth = n / 15, colour = Metro),
-           label = TRUE, repel = TRUE) +
+           labelon = TRUE, repel = TRUE) +
   theme_net() +
   xlim(c(-0.1, 1.1)) +
   scale_colour_manual("Metro Station", values = c("grey40", "darkorange")) +
@@ -539,7 +539,7 @@ ggnet2(bikes.net, mode = "fruchtermanreingold", size = 4, label = TRUE,
 ```{r bikes_ggnetwork, echo = TRUE, fig.keep='all'}
 # Non-geographic placement. Use data from ggnet2 step.
 set.seed(1232016)
-ggplot(data = ggnetwork(bikes.net, layout = "fruchtermanreingold"),
+ggplot(data = ggnetwork(bikes.net, layout.alg = "fruchtermanreingold"),
          aes(x, y, xend = xend, yend = yend)) +
   geom_edges(aes(size = n), color = "grey40") +
   geom_nodes(aes(color = factor(station)), size = 4) +
@@ -559,7 +559,7 @@ metro_map <- get_map(location = c(left = -77.22257, bottom = 39.05721,
 ```{r geographic_geomnet, echo=TRUE}
 # geomnet: overlay bike sharing network on geographic map
   ggmap(metro_map) + 
-  geom_net(data = tripnet, layout = NULL, label = TRUE,
+  geom_net(data = tripnet, layout.alg = NULL, labelon = TRUE,
            vjust = -0.5, ealpha = 0.5,
            aes(from_id = Start.station,
                to_id = End.station,
@@ -567,9 +567,8 @@ metro_map <- get_map(location = c(left = -77.22257, bottom = 39.05721,
                linewidth = n / 15,
                colour = Metro)) +
   scale_colour_manual("Metro Station", values = c("grey40", "darkorange")) +
-  theme_net() %+replace% theme(aspect.ratio=NULL) +
-  coord_map() + 
-  theme(legend.position = "bottom")
+  theme_net() %+replace% theme(aspect.ratio=NULL, legend.position = "bottom") +
+  coord_map() 
 ```
 
 # Code to Create Boxplot Speed Comparison
