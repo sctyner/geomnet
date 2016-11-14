@@ -1,7 +1,7 @@
 #' Function for converting various network structures into the correct format for use with geomnet
 #' 
-#' @param net. A network object. Can be a class "network", "igraph", "matrix" (for adjaceny matrices), or "data.frame" object. If net is a "data.frame", must provide the ndata argument and the first column of net must be the "from" node column.
-#' @param ndata. Data frame containing network node list and other node information. Only applicable for class "data.frame." First column name should be node ids. 
+#' @param model. A network object. Can be a class "network", "igraph", "matrix" (for adjaceny matrices), or "data.frame" object. If net is a "data.frame", must provide the data argument and the first column of net must be the "from" node column.
+#' @param data. Data frame containing network node list and other node information. Only applicable for class "data.frame." First column name should be node ids. 
 #' 
 #' @examples 
 #' 
@@ -9,30 +9,27 @@
 #' 
 #' library(network)
 #' data(emon)
-#' reshapeNet(net = emon$Cheyenne)
+#' fortify(emon$Cheyenne)
 #' 
 #' # class igraph (igraph, igraphdata packages)
 #' library(igraph)
 #' library(igraphdata)
 #' data("USairports", package = "igraphdata")
-#' head(reshapeNet(net = USairports))
+#' head(fortify(USairports))
 #' 
 #' # class matrix (for adjacency matrices)
 #' 
 #' adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
 #' str(adjmat)
-#' reshapeNet(net = adjmat)
+#' fortify(adjmat)
 #' 
 #' # eclass data.frame and ndata 
 #' data(blood)
-#' reshapeNet(net = blood$edges, ndata = blood$vertices)
+#' fortify(blood$edges, blood$vertices)
 #' 
 #' @export
-reshapeNet <- function(net, ...){
-  UseMethod("reshapeNet", net)
-}
-#' @export
-reshapeNet.network <- function(net, ...){
+fortify.network <- function(model, data = NULL, ...){
+  net <- model
   require(network)
   node.attr <- network::list.vertex.attributes(net)
   edge.attr <- network::list.edge.attributes(net)
@@ -57,7 +54,9 @@ reshapeNet.network <- function(net, ...){
   
   return(dat)
 }
-reshapeNet.igraph <- function(net, ...){
+#' @export
+fortify.igraph <- function(model, data = NULL, ...){
+  net <- model
   require(igraph)
   node.data <- igraph::as_data_frame(net, what = "vertices")
   names(node.data)[1] <- "ID"
@@ -65,16 +64,19 @@ reshapeNet.igraph <- function(net, ...){
   dat <- merge(edge.data, node.data, by.x = "from", by.y = "ID", all = T )
   return(dat)
 }
-
-reshapeNet.data.frame <- function(net, ndata, ...){
+#' @export
+fortify.data.frame <- function(model, data, ...){
+  net <- model
+  ndata <- data
   if (is.null(ndata)){
     stop("Error: Must provide the node data to the ndata argument.")
   }
   dat <- merge(net, ndata, by.x = names(net)[1], by.y = names(ndata)[1], all = T)
   return(dat)
 }
-
-reshapeNet.matrix <- function(net, ...){
+#' @export
+fortify.matrix <- function(model, data = NULL, ...){
+  net <- model
   if (dim(net)[1] != dim(net)[2]){
     stop("Error: Please supply a square adjacency matrix.")
   }
