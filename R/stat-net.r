@@ -26,6 +26,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 
   setup_data = function(self, data, params) {
 #cat("setup_data stat_net\n")
+#    browser()
     fiteach=params$fiteach
     if (!is.factor(data$from_id)) data$from_id <- factor(data$from_id)
     if (!is.factor(data$to_id)) data$to_id <- factor(data$to_id)
@@ -37,8 +38,9 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     # we want to keep all of the values that are NA in the second edge - give them a special value, so we can pull them out later
     levels <- levels(data$to_id)
     data$to_id <- as.character(data$to_id)
-    data$to_id[is.na(data$to_id)] <- "..NA.."
-    data$to_id <- factor(data$to_id, levels = c(levels, "..NA.."))
+    data$to_id[is.na(data$to_id)] <- data$from_id[is.na(data$to_id)]
+#    data$to_id[is.na(data$to_id)] <- "..NA.."
+#    data$to_id <- factor(data$to_id, levels = c(levels, "..NA.."))
 
     # check that all vertices are included in the data set
     only_to <- setdiff(levels(data$to_id), levels(data$from_id))

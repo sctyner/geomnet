@@ -262,7 +262,7 @@ ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
     aes(colour = CurrentEmploymentType,
         group = CurrentEmploymentType,
         linewidth = 2 * (...samegroup.. / 8 + .125)),
-        fiteach = TRUE, ealpha = 0.5, size = 1.5) +
+        directed = TRUE, fiteach = TRUE, ealpha = 0.5, size = 1.5, na.rm = FALSE) +
   scale_colour_brewer("Employment Type", palette = "Set1") +
   theme_net() +
   facet_wrap(~day, nrow = 2, labeller = "label_both") +
