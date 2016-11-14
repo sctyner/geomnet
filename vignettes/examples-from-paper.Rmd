@@ -28,13 +28,14 @@ if (!require(GGally, quietly = TRUE)) {
 }
 
 ## geom_net
-if (!require(geomnet, quietly = TRUE)) {
+if (!require(geomnet, quietly = TRUE) ||
+    packageVersion("geomnet") < "0.2.0") {
   devtools::install_github("sctyner/geomnet")
 }
 
 ## ggnetwork
 if (!require(ggnetwork, quietly = TRUE) ||
-    packageVersion("ggnetwork") < "0.2.1") {
+    packageVersion("ggnetwork") < "0.5.1") {
   devtools::install_github("briatte/ggnetwork")
 }
 
