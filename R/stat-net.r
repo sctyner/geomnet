@@ -26,19 +26,19 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 
   setup_data = function(self, data, params) {
 #cat("setup_data stat_net\n")
-#    browser()
+    browser()
     fiteach=params$fiteach
-    if (!is.factor(data$from_id)) data$from_id <- factor(data$from_id)
-    if (!is.factor(data$to_id)) data$to_id <- factor(data$to_id)
+#    if (!is.factor(data$from_id)) data$from_id <- factor(data$from_id)
+#    if (!is.factor(data$to_id)) data$to_id <- factor(data$to_id)
 
     if (!is.null(params$vertices)) {
       data <- merge(data, params$vertices, by.x="from_id", by.y="label", all=TRUE)
     }
 
     # we want to keep all of the values that are NA in the second edge - give them a special value, so we can pull them out later
-    levels <- levels(data$to_id)
+    levels <- levels(as.factor(data$to_id))
     data$to_id <- as.character(data$to_id)
-    data$to_id[is.na(data$to_id)] <- data$from_id[is.na(data$to_id)]
+    data$to_id[is.na(data$to_id)] <- as.character(data$from_id)[is.na(data$to_id)]
 #    data$to_id[is.na(data$to_id)] <- "..NA.."
 #    data$to_id <- factor(data$to_id, levels = c(levels, "..NA.."))
 
@@ -59,7 +59,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 
 compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
 # cat("compute_network\n")
-#  browser()
+browser()
     require(dplyr)
   edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
   edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
@@ -147,7 +147,7 @@ compute_layer = function(self, data, params, layout, na.rm = FALSE, layout.alg,
     # only do this plyr statement in the case that fiteach is true.
     plyr::ddply(data, "PANEL", function(data) {
       if (ggplot2:::empty(data)) return(data.frame())
-
+browser()
       scales <- ggplot2:::Layout$get_scales(data$PANEL[1])
       self$compute_panel(data = data, scales = scales,
                          na.rm=params$na.rm, layout.alg=params$layout.alg,
@@ -157,7 +157,7 @@ compute_layer = function(self, data, params, layout, na.rm = FALSE, layout.alg,
   }
   else {
     if (ggplot2:::empty(data)) return(data.frame())
-#browser()
+browser()
     scales <- ggplot2:::Layout$get_scales(data$PANEL[1])
     self$compute_panel(data = data, scales = scales,
                        na.rm=params$na.rm, layout.alg=params$layout.alg,
