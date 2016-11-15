@@ -214,7 +214,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                         labelon=FALSE, labelgeom='text', labelcolour=NULL, selfloops = FALSE) {
 
 # browser()
-    data$self <- as.character(data$to) == as.character(data$from)
+#    data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
       xend = data$xend,
@@ -227,12 +227,12 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       alpha = ealpha %||% data$alpha,
       linetype=data$linetype,
       stroke = data$stroke,
-      self = data$self,
+      selfie = data$.selfie,
       stringsAsFactors = FALSE
     )
 
-    selfy <- subset(edges, self == TRUE)
-    edges <- subset(edges, self != TRUE) # what are we going to do with self references?
+    selfy <- subset(edges, selfie == TRUE)
+    edges <- subset(edges, selfie != TRUE) # what are we going to do with self references?
     edges <- subset(edges, !is.na(xend))
 
 
@@ -274,7 +274,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 #
 
     selfies_draw <- NULL
-    if ((nrow(selfy) > 0) & (selfloops == TRUE)) {
+    if ((nrow(selfy) > 0) & selfloops) {
       selfy$radius <- min(0.04, 1/sqrt(nrow(vertices)))
       selfy <- transform(selfy,
                            x = x + (radius + nodesize/(100*.pt) + size/100)/sqrt(2),
@@ -286,7 +286,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     }
 
     selfies_arrows <- NULL
-    if ((nrow(selfy) > 0) & (selfloops == TRUE) & (directed == TRUE)) {
+    if ((nrow(selfy) > 0) & selfloops & directed) {
 #
       selfy_arrows <- transform (
         selfy,
@@ -296,7 +296,6 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       )
       selfies_arrows <- GeomSegment$draw_panel(selfy_arrows, panel_scales, coord,
                                                arrow=arrow)
-
     }
 
     label_grob <- NULL

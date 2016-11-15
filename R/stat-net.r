@@ -38,6 +38,8 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     # we want to keep all of the values that are NA in the second edge - give them a special value, so we can pull them out later
     levels <- levels(as.factor(data$to_id))
     data$to_id <- as.character(data$to_id)
+    # add .selfie variable to get true selfies out later. 
+    data$.selfie <- as.character(data$from_id) == data$to_id
     data$to_id[is.na(data$to_id)] <- as.character(data$from_id)[is.na(data$to_id)]
 #    data$to_id[is.na(data$to_id)] <- "..NA.."
 #    data$to_id <- factor(data$to_id, levels = c(levels, "..NA.."))
