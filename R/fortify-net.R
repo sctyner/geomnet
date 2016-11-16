@@ -67,10 +67,11 @@ fortify.igraph <- function(model, data = NULL, ...){
 #' @export
 fortify.data.frame <- function(model, data, ...){
   net <- model
-  ndata <- data
-  if (is.null(ndata)){
-    stop("Error: Must provide the node data to the ndata argument.")
+  if (is.null(data)){
+    stop("Error: Must provide the node data to the data argument.")
   }
+  ndata <- data
+  
   dat <- merge(net, ndata, by.x = names(net)[1], by.y = names(ndata)[1], all = T)
   return(dat)
 }
