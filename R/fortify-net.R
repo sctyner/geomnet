@@ -2,7 +2,7 @@
 #' 
 #' @param model. A network object. Can be a class "network", "igraph", "matrix" (for adjaceny matrices), or "data.frame" object. If net is a "data.frame", must provide the data argument and the first column of net must be the "from" node column.
 #' @param data. Data frame containing network node list and other node information. Only applicable for class "data.frame." First column name should be node ids. 
-#' 
+#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @examples 
 #' 
 #' # class network (sna, network, statnet packages)
