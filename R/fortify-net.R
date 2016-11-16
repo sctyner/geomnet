@@ -28,7 +28,7 @@
 #' fortify(blood$edges, blood$vertices)
 #' 
 #' @export
-fortify.network <- function(model, data = NULL, ...){
+fortify.network <- function(model, data = NULL, group = NULL, ...){
   net <- model
   require(network)
   node.attr <- network::list.vertex.attributes(net)
@@ -50,30 +50,59 @@ fortify.network <- function(model, data = NULL, ...){
     edge.data[,(i+2)] <- network::get.edge.attribute(net, edge.attr[i])
   }
   
+  if(!is.null(group)){
+    nodes <- unique(node.data$ID)
+    groups <- unique(edge.data[,group])
+    allnodes <- expand.grid(nodes, groups, stringsAsFactors = F)
+    names(allnodes) <- c("ID", group)
+    node.data.expanded <- merge(allnodes, node.data, by = "ID")
+    matchnames <- intersect(names(edge.data), names(node.data.expanded))
+    dat <- merge(edge.data, node.data.expanded, by.x = matchnames, by.y = matchnames, all = T)
+  } else {
   dat <- merge(edge.data, node.data, by.x = "from", by.y = "ID", all = T)
-  
+  }
   return(dat)
 }
 #' @export
-fortify.igraph <- function(model, data = NULL, ...){
+fortify.igraph <- function(model, data = NULL, group = NULL, ...){
   net <- model
   require(igraph)
   node.data <- igraph::as_data_frame(net, what = "vertices")
   names(node.data)[1] <- "ID"
   edge.data <- igraph::as_data_frame(net, what = "edges")
+  if(!is.null(group)){
+    nodes <- unique(node.data$ID)
+    groups <- unique(edge.data[,group])
+    allnodes <- expand.grid(nodes, groups, stringsAsFactors = F)
+    names(allnodes) <- c("ID", group)
+    node.data.expanded <- merge(allnodes, node.data, by = "ID")
+    matchnames <- intersect(names(edge.data), names(node.data.expanded))
+    dat <- merge(edge.data, node.data.expanded, by.x = matchnames, by.y = matchnames, all = T)
+  } else {
   dat <- merge(edge.data, node.data, by.x = "from", by.y = "ID", all = T )
+  }
   return(dat)
 }
 #' @export
-fortify.data.frame <- function(model, data, ...){
-  net <- model
+fortify.data.frame <- function(model, data, group = NULL, ...){
+  edge.data <- model
   if (is.null(data)){
     stop("Error: Must provide the node data to the data argument.")
   }
-  ndata <- data
-  
-  dat <- merge(net, ndata, by.x = names(net)[1], by.y = names(ndata)[1], all = T)
-  return(dat)
+  node.data <- data
+  if(!is.null(group)){
+    nodes <- unique(node.data[,1])
+    groups <- unique(edge.data[,group])
+    allnodes <- expand.grid(nodes, groups, stringsAsFactors = F)
+    names(allnodes) <- c("ID", group)
+    names(node.data)[1] <- "ID"
+    names(edge.data)[1] <- "from"
+    node.data.expanded <- merge(allnodes, node.data, by = "ID")
+    dat <- merge(edge.data, node.data.expanded, by.x = c("from", group), by.y = c("ID", group), all = T)
+  } else {
+   dat <- merge(edge.data, node.data, by.x = names(edge.data)[1], by.y = names(node.data)[1], all = T)
+  }
+   return(dat)
 }
 #' @export
 fortify.matrix <- function(model, data = NULL, ...){
@@ -108,6 +137,6 @@ fortify.matrix <- function(model, data = NULL, ...){
     c(unique(froms), unique(tos))
   ) )
   node.data <- data.frame(id = allnodes, stringsAsFactors = F)  
-  dat <- merge(edge.data, node.data, by.x = 'from', by.y = 'id')
+  dat <- merge(edge.data, node.data, by.x = 'from', by.y = 'id', all = T)
   return(dat)
-}
+} 
