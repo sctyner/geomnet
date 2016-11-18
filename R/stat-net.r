@@ -38,7 +38,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     # we want to keep all of the values that are NA in the second edge - give them a special value, so we can pull them out later
     levels <- levels(as.factor(data$to_id))
     data$to_id <- as.character(data$to_id)
-    # add .selfie variable to get true selfies out later. 
+    # add .selfie variable to get true selfies out later.
     data$.selfie <- as.character(data$from_id) == data$to_id
     data$to_id[is.na(data$to_id)] <- as.character(data$from_id)[is.na(data$to_id)]
 #    data$to_id[is.na(data$to_id)] <- "..NA.."
@@ -150,7 +150,8 @@ compute_layer = function(self, data, params, layout, na.rm = FALSE, layout.alg,
     plyr::ddply(data, "PANEL", function(data) {
       if (ggplot2:::empty(data)) return(data.frame())
 browser()
-      scales <- ggplot2:::Layout$get_scales(data$PANEL[1])
+      scales <- #ggplot2:::Layout$get_scales(data$PANEL[1])
+        list(x = NULL, y = NULL)
       self$compute_panel(data = data, scales = scales,
                          na.rm=params$na.rm, layout.alg=params$layout.alg,
                          layout.par=params$layout.par, fiteach=params$fiteach,
@@ -160,7 +161,8 @@ browser()
   else {
     if (ggplot2:::empty(data)) return(data.frame())
 browser()
-    scales <- ggplot2:::Layout$get_scales(data$PANEL[1])
+    scales <- list(x = NULL, y = NULL)
+    #scales <- ggplot2:::Layout$get_scales(data$PANEL[1])
     self$compute_panel(data = data, scales = scales,
                        na.rm=params$na.rm, layout.alg=params$layout.alg,
                        layout.par=params$layout.par, fiteach=params$fiteach,
