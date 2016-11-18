@@ -134,7 +134,7 @@ geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "ide
                       ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
                       labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
                        vertices=NULL, ...) {
-#browser()
+##browser()
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -158,7 +158,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                              linewidth=1, angle=0, vjust=0, hjust=0.5, curvature = 0),
 
   draw_key = function(data, params, size)  {
-# browser()
+# #browser()
     draw_arrow <-  NULL
     if (params$directed) {
       if (any(data$curvature != 0)){
@@ -195,7 +195,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   setup_data = function(data, params, mapping) {
 #    cat("setup_data geom_net\n")
 
-#browser()
+##browser()
     data$from <- as.character(data$from)
     data$to <- as.character(data$to)
     selfie <- (data$from == data$to) & (params$selfloops == TRUE)
@@ -213,7 +213,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
                         directed=FALSE, arrowsize=1, repel = FALSE,
                         labelon=FALSE, labelgeom='text', labelcolour=NULL, selfloops = FALSE) {
 
-# browser()
+# #browser()
 #    data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
