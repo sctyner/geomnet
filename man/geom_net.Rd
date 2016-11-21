@@ -63,6 +63,8 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
+\item{layout.alg}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
+
 \item{layout.par}{list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{?gplot.layout} in the package sna for other choices.}
 
 \item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
@@ -99,8 +101,6 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 to the paired geom/stat.}
 
 \item{geom}{The geometric object to use display the data}
-
-\item{layout}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
 }
 \value{
 A data frame with additional columns:
@@ -112,7 +112,7 @@ Geom for network visualization within the ggplot2 framework
 }
 \examples{
 \dontrun{
-library(ggplot2)
+library(geomnet)
 data(blood)
 p <- ggplot(data = blood$edges, aes(from_id = from, to_id = to))
 p + geom_net(vertices=blood$vertices, aes(colour=..type..)) + theme_net()
@@ -155,7 +155,7 @@ p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, labelon=TRU
 
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
 # alternative labelling: specify label variable.
-p + geom_net(aes(colour=Gender, labelon=Gender), size=6, linewidth=1, fontsize=3,
+p + geom_net(aes(colour=Gender, label=Gender), size=6, linewidth=1, fontsize=3,
              labelcolour="black")
 
 ## visualizing ggplot2 theme elements
@@ -201,12 +201,12 @@ ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
 data(lesmis)
 lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
-p + geom_net(layout="fruchtermanreingold")
+p + geom_net(layout.alg="fruchtermanreingold")
 p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5)
-p + geom_net(layout="fruchtermanreingold", labelon=TRUE, vjust=-0.5, aes(linewidth=degree/5))
+p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 
 ## College Football Games in the Fall 2000 regular season
-# Source: http://www-personal.umich.edu/~mejn/netdata/
+# Source: http://www-/personal.umich.edu/~mejn/netdata/
 data(football)
 ftnet <- merge(football$edges, football$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data=ftnet, aes(from_id=from, to_id=to))

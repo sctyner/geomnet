@@ -447,11 +447,11 @@ bip = network(bip,
               names.eval = "weights")
 
 # detect and color the mode
-set.seed(8262013)
-ggnet2(bip, color = "mode", palette = "Set2", 
-       shape = "mode", mode = "kamadakawai",
-       size = 15, label = TRUE) +
-  theme(legend.position="bottom")
+#set.seed(8262013)
+#ggnet2(bip, color = "mode", palette = "Set2", 
+ #      shape = "mode", mode = "kamadakawai",
+  #     size = 15, label = TRUE) +
+#  theme(legend.position="bottom")
 ```
 
 ```{r davis_geom_net, echo=TRUE}

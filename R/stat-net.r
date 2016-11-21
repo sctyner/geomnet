@@ -62,7 +62,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
 # cat("compute_network\n")
 #browser()
-    require(dplyr)
+    requireNamespace("dplyr")
   edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
   edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
 
@@ -92,7 +92,7 @@ compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
     names(vert.coord)[3] <- "label"
   } else {
   #print("it would be nice at this point to check, whether layout is one of the supported functions, and if not,
-  require(sna)
+  requireNamespace("sna")
   layoutFun <- paste('gplot.layout.',layout.alg,sep='')
   vert.coord <- data.frame(do.call(layoutFun, list(edgelist, layout.par = layout.par)))
 
