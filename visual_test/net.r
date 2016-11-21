@@ -14,17 +14,17 @@ save_vtest("Blood example basic net")
 p + geom_net(aes(colour=rho)) + theme_net()
 save_vtest("Blood example nodes colored by rho factor")
 
-p + geom_net(aes(colour=rho), label=TRUE, vjust = 0.5, hjust = 0.5, size = 10,
+p + geom_net(aes(colour=rho), labelon=TRUE, vjust = 0.5, hjust = 0.5, size = 10,
              labelcolour = "grey10")
 save_vtest("Blood example nodes colored by rho factor, labelled")
 
-p + geom_net(aes(colour=rho), label=TRUE, vjust = 0.5, hjust = 0.5, size = 10,
+p + geom_net(aes(colour=rho), labelon=TRUE, vjust = 0.5, hjust = 0.5, size = 10,
              labelcolour = "grey10", arrowgap =0.05,
              directed=TRUE, curvature=0.2) + theme_net()
 save_vtest("Blood example nodes colored by rho factor, labelled, curved edges")
 
 p + geom_net(aes(size=Predominance, colour=rho, shape=rho, linetype=group_to),
-             linewidth=0.75, label =TRUE, labelcolour="black", size = 10,
+             linewidth=0.75, labelon =TRUE, labelcolour="black", size = 10,
              vjust = 0.5, hjust = 0.5) +
     facet_wrap(~Ethnicity) +
     scale_colour_brewer(palette="Set2") +
@@ -33,10 +33,10 @@ save_vtest("Blood example, facetted")
 
 
 gg <- ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
-  geom_net(colour = "darkred", layout = "circle", label = TRUE, size = 15,
+  geom_net(colour = "darkred", layout.alg = "circle", labelon = TRUE, size = 15,
          directed = TRUE, vjust = 0.5, labelcolour = "grey80",
          arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
-         selfies = TRUE, ecolour = "grey40") +
+         selfloops = TRUE, ecolour = "grey40") +
   theme_net()
 gg
 save_vtest("Blood example, with self references")
@@ -47,14 +47,14 @@ save_vtest("Blood example, with self references")
 data(madmen)
 MMnet <- merge(madmen$edges, madmen$vertices, by.x="Name1", by.y="label", all=TRUE)
 p <- ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2))
-p + geom_net(label=TRUE)
+p + geom_net(labelon=TRUE)
 save_vtest("Mad Men example")
-p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, fontsize=3, labelcolour="black")
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, labelon=TRUE, fontsize=3, labelcolour="black")
 save_vtest("Mad Men example colored by gender")
-p + geom_net(aes(colour=Gender), size=6, linewidth=1, label=TRUE, labelcolour="black") +
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, labelon=TRUE, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 save_vtest("Mad Men example colored by gender, different colors")
-p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, label=TRUE,
+p + geom_net(aes(colour=Gender), size=6, linewidth=1, directed=TRUE, labelon=TRUE,
              arrowgap=0.01, labelcolour="black") +
     scale_colour_manual(values=c("#FF69B4", "#0099ff")) + xlim(c(-.05,1.05))
 save_vtest("Mad Men example colored by gender, uses arrowgap")
@@ -68,7 +68,7 @@ data(theme_elements)
 TEnet <- merge(theme_elements$edges, theme_elements$vertices, by.x="parent",
                by.y="name", all=TRUE)
 ggplot(data = TEnet, aes(from_id = parent, to_id = child)) +
-  geom_net(label=TRUE, vjust=-0.5)
+  geom_net(labelon=TRUE, vjust=-0.5)
 save_vtest("Theme elements in ggplot2")
 ## emails example from VastChallenge 2014
 # care has to be taken to make sure that for each panel all nodes are included with
@@ -108,11 +108,11 @@ save_vtest("Final email example")
 data(lesmis)
 lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x="from", by.y="label", all=TRUE)
 p <- ggplot(data=lesmisnet, aes(from_id=from, to_id=to))
-p + geom_net(layout="fruchtermanreingold")
+p + geom_net(layout.alg="fruchtermanreingold")
 save_vtest("Bare Les Mis example")
-p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5)
+p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5)
 save_vtest("Les Mis example including name labels")
-p + geom_net(layout="fruchtermanreingold", label=TRUE, vjust=-0.5, aes(linewidth=degree/5))
+p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5, aes(linewidth=degree/5))
 save_vtest("Les Mis example, edge widths sized by number of connections")
 ## College Football Games in the Fall 2000 regular season
 # Hello world!
@@ -137,7 +137,7 @@ tripnet$Metro[idx] <- TRUE
 # plot the bike sharing network shown in Figure 7b of the paper
 ggplot(aes(from_id = Start.station, to_id = End.station), data = tripnet) +
   geom_net(aes(linewidth = n / 15, colour = Metro),
-           label = TRUE, repel = TRUE) +
+           labelon = TRUE, repel = TRUE) +
   theme_net() +
   xlim(c(-0.1, 1.1)) +
   scale_colour_manual("Metro Station", values = c("grey40", "darkorange")) +
@@ -148,7 +148,7 @@ library(ggmap)
 metro_map <- get_map(location = c(left = -77.22257, bottom = 39.05721,
                                   right = -77.11271, top = 39.14247))
 ggmap(metro_map) +
-  geom_net(data = tripnet, layout = NULL, label = TRUE,
+  geom_net(data = tripnet, layout.alg = NULL, labelon = TRUE,
            vjust = -0.5, ealpha = 0.5,
            aes(from_id = Start.station,
                to_id = End.station,
