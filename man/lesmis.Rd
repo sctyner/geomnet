@@ -32,6 +32,9 @@ lesmisnet <- merge(lesmis$edges, lesmis$vertices, by.x = "from",
 lesmisnet$degree[is.na(lesmisnet$degree)] <- 0
 
 # create plot
+library(geomnet)
+library(dplyr)
+
 ggplot(data = lesmisnet, aes(from_id = from, to_id = to,
                              linewidth = degree / 5 + 0.1 )) +
   geom_net(aes(size = degree, alpha = degree),

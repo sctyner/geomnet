@@ -38,7 +38,8 @@ The variables are as follows:
 # prep the data
 soccernet <- merge(soccer$edges, soccer$vertices, by.x = "home",
                    by.y = "label", all = TRUE)
-
+library(geomnet)
+library(dplyr)
 # create plot
 ggplot(data = soccernet, aes(from_id = home, to_id = away)) +
   geom_net(aes(colour = div, group = div), ealpha = .25, layout.alg = 'fruchtermanreingold') +

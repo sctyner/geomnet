@@ -124,12 +124,11 @@ fortify.matrix <- function(model, data = NULL, ...){
   } else ID <- 1:ncol(net)
   net <- as.data.frame(net, stringsAsFactors = F)
   net$from <- ID 
-  requireNamespace("dplyr")
-  net %>% 
+  net %>%
     tidyr::gather(to, value, -from) %>%
-    filter(value > 0) %>% 
-    mutate(edge.weight = value) %>% 
-    select(from, to, edge.weight) -> edge.data
+    dplyr::filter(value > 0) %>% 
+    dplyr::mutate(edge.weight = value) %>% 
+    dplyr::select(from, to, edge.weight) -> edge.data
   froms <- unique(edge.data$from)
   tos <- unique(edge.data$to)
   if (class(froms) != class(tos)){

@@ -17,13 +17,19 @@ Depends:
     ggplot2 (>= 2.1.0)
 Imports:
     sna,
-    network,
-    dplyr
+    network, 
+    dplyr,
+    tidyr
 Suggests:
     ggrepel,
     knitr,
-    tidyr,
     readr,
-    igraph
+    igraph,
+    igraphdata,
+    GGally, 
+    ggmap,
+    ggnetwork,
+    scales,
+    tnet
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr

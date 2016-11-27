@@ -121,14 +121,16 @@
 #'
 #' # label independent schools
 #' ftnet$schools <- ifelse(ftnet$value == "Independents", ftnet$from, "")
-#'
+#' 
+#' library(geomnet)
+#' library(dplyr)
 #' # create data plot
 #' ggplot(data = ftnet,
 #'        aes(from_id = from, to_id = to)) +
 #'   geom_net(
 #'     aes(
 #'       colour = value, group = value,
-#'       linetype = factor(same.conf != 1),
+#'       linetype = factor(1-same.conf),
 #'       label = schools
 #'     ),
 #'     linewidth = 0.5,
@@ -167,6 +169,9 @@
 #' lesmisnet$degree[is.na(lesmisnet$degree)] <- 0
 #'
 #' # create plot
+#' library(geomnet)
+#' library(dplyr)
+#' 
 #' ggplot(data = lesmisnet, aes(from_id = from, to_id = to,
 #'                              linewidth = degree / 5 + 0.1 )) +
 #'   geom_net(aes(size = degree, alpha = degree),
@@ -285,7 +290,8 @@
 #' # prep the data
 #' soccernet <- merge(soccer$edges, soccer$vertices, by.x = "home",
 #'                    by.y = "label", all = TRUE)
-#'
+#' library(geomnet)
+#' library(dplyr)
 #' # create plot
 #' ggplot(data = soccernet, aes(from_id = home, to_id = away)) +
 #'   geom_net(aes(colour = div, group = div), ealpha = .25, layout.alg = 'fruchtermanreingold') +

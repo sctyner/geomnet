@@ -62,7 +62,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
 compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
 # cat("compute_network\n")
 #browser()
-    requireNamespace("dplyr")
+    
   edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
   edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
 
