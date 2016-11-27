@@ -45,12 +45,11 @@ ggplot(data = ftnet,
     ),
     linewidth = 0.5,
     size = 5, vjust = -0.75, alpha = 0.3,
-    layout = 'fruchtermanreingold'
+    layout.alg = 'fruchtermanreingold'
   ) +
   theme_net() +
   theme(legend.position = "bottom") +
-  scale_colour_brewer("Conference", palette = "Paired")  +
-  guides(linetype = FALSE)
+  scale_colour_brewer("Conference", palette = "Paired") 
 }
 \references{
 M. Girvan and M. E. J. Newman, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002).

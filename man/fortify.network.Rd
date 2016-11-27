@@ -2,19 +2,19 @@
 % Please edit documentation in R/fortify-net.R
 \name{fortify.network}
 \alias{fortify.network}
-\title{Function for converting various network structures into the correct format for use with geomnet}
+\title{Function for converting a network structure into the correct format for use with geomnet}
 \usage{
 \method{fortify}{network}(model, data = NULL, group = NULL, ...)
 }
 \arguments{
-\item{model.}{A network object. Can be a class "network", "igraph", "matrix" (for adjaceny matrices), or "data.frame" object. If net is a "data.frame", must provide the data argument and the first column of net must be the "from" node column.}
+\item{data}{NULL}
 
-\item{data.}{Data frame containing network node list and other node information. Only applicable for class "data.frame." First column name should be node ids.}
+\item{model.}{object of class "network"}
 
 \item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
 }
 \description{
-Function for converting various network structures into the correct format for use with geomnet
+Function for converting a network structure into the correct format for use with geomnet
 }
 \examples{
 

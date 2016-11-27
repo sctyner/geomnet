@@ -17,11 +17,13 @@ Depends:
     ggplot2 (>= 2.1.0)
 Imports:
     sna,
-    network
+    network,
+    dplyr
 Suggests:
     ggrepel,
     knitr,
-    dplyr,
-    tidyr
+    tidyr,
+    readr,
+    igraph
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr

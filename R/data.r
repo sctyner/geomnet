@@ -133,12 +133,11 @@
 #'     ),
 #'     linewidth = 0.5,
 #'     size = 5, vjust = -0.75, alpha = 0.3,
-#'     layout = 'fruchtermanreingold'
+#'     layout.alg = 'fruchtermanreingold'
 #'   ) +
 #'   theme_net() +
 #'   theme(legend.position = "bottom") +
-#'   scale_colour_brewer("Conference", palette = "Paired")  +
-#'   guides(linetype = FALSE)
+#'   scale_colour_brewer("Conference", palette = "Paired") 
 "football"
 
 #' Coappearance network of characters in Les Miserables (undirected)
@@ -172,7 +171,7 @@
 #'                              linewidth = degree / 5 + 0.1 )) +
 #'   geom_net(aes(size = degree, alpha = degree),
 #'            colour = "grey30", ecolour = "grey60",
-#'            layout = "fruchtermanreingold", label = TRUE, vjust = -0.75) +
+#'            layout.alg = "fruchtermanreingold", label = TRUE, vjust = -0.75) +
 #'   scale_alpha(range = c(0.3, 1)) +
 #'   theme_net()
 "lesmis"
@@ -289,7 +288,7 @@
 #'
 #' # create plot
 #' ggplot(data = soccernet, aes(from_id = home, to_id = away)) +
-#'   geom_net(aes(colour = div, group = div), ealpha = .25, layout = 'fruchtermanreingold') +
+#'   geom_net(aes(colour = div, group = div), ealpha = .25, layout.alg = 'fruchtermanreingold') +
 #'   facet_wrap(~season) +
 #'   theme_net()
 "soccer"

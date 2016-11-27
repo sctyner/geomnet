@@ -1,8 +1,4 @@
-#' Function for converting various network structures into the correct format for use with geomnet
-#' 
-#' @param model. A network object. Can be a class "network", "igraph", "matrix" (for adjaceny matrices), or "data.frame" object. If net is a "data.frame", must provide the data argument and the first column of net must be the "from" node column.
-#' @param data. Data frame containing network node list and other node information. Only applicable for class "data.frame." First column name should be node ids. 
-#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' Function for converting a network structure into the correct format for use with geomnet
 #' @examples 
 #' 
 #' # class network (sna, network, statnet packages)
@@ -27,10 +23,12 @@
 #' data(blood)
 #' fortify(blood$edges, blood$vertices)
 #' 
+#' @param model. object of class "network"
+#' @param data NULL
+#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @export
 fortify.network <- function(model, data = NULL, group = NULL, ...){
   net <- model
-  require(network)
   node.attr <- network::list.vertex.attributes(net)
   edge.attr <- network::list.edge.attributes(net)
   N <- network::network.size(net) 
@@ -63,10 +61,12 @@ fortify.network <- function(model, data = NULL, group = NULL, ...){
   }
   return(dat)
 }
-#' @export
+#' @param model. A an "igraph" object
+#' @param data. NULL 
+#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#'  @export
 fortify.igraph <- function(model, data = NULL, group = NULL, ...){
   net <- model
-  require(igraph)
   node.data <- igraph::as_data_frame(net, what = "vertices")
   names(node.data)[1] <- "ID"
   edge.data <- igraph::as_data_frame(net, what = "edges")
@@ -83,6 +83,9 @@ fortify.igraph <- function(model, data = NULL, group = NULL, ...){
   }
   return(dat)
 }
+#' @param model. A network edgelist of class "data.frame" object. The first column should contain the "from" node column.
+#' @param data. Data frame containing network node list and other node information. First column should contain node ids. 
+#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @export
 fortify.data.frame <- function(model, data, group = NULL, ...){
   edge.data <- model
@@ -104,7 +107,11 @@ fortify.data.frame <- function(model, data, group = NULL, ...){
   }
    return(dat)
 }
-#' @export
+#' @param model. An adjacency matrix of class "matrix".
+#' @param data. NULL 
+#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#'
+#'  @export
 fortify.matrix <- function(model, data = NULL, ...){
   net <- model
   if (dim(net)[1] != dim(net)[2]){
@@ -117,6 +124,7 @@ fortify.matrix <- function(model, data = NULL, ...){
   } else ID <- 1:ncol(net)
   net <- as.data.frame(net, stringsAsFactors = F)
   net$from <- ID 
+  requireNamespace("dplyr")
   net %>% 
     tidyr::gather(to, value, -from) %>%
     filter(value > 0) %>% 
