@@ -9,9 +9,9 @@
 \arguments{
 \item{data}{NULL}
 
-\item{model.}{object of class "network"}
+\item{group}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
 
-\item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+\item{model.}{object of class "network"}
 }
 \description{
 Function for converting a network object into the correct format for use with geomnet

@@ -17,7 +17,7 @@
 Function for converting a network edge list in data frame form into the correct format for use with geomnet
 }
 \examples{
-# class data.frame and ndata 
+# class data.frame and ndata
 data(blood)
 fortify(blood$edges, blood$vertices)
 }

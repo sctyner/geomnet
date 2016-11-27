@@ -22,5 +22,6 @@ library(igraph)
 library(igraphdata)
 data("USairports", package = "igraphdata")
 head(fortify(USairports))
+
 }
 
