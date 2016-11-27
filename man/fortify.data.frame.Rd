@@ -2,6 +2,7 @@
 % Please edit documentation in R/fortify-net.R
 \name{fortify.data.frame}
 \alias{fortify.data.frame}
+\title{Function for converting a network edge list in data frame form into the correct format for use with geomnet}
 \usage{
 \method{fortify}{data.frame}(model, data, group = NULL, ...)
 }
@@ -11,5 +12,13 @@
 \item{data.}{Data frame containing network node list and other node information. First column should contain node ids.}
 
 \item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+}
+\description{
+Function for converting a network edge list in data frame form into the correct format for use with geomnet
+}
+\examples{
+# class data.frame and ndata 
+data(blood)
+fortify(blood$edges, blood$vertices)
 }
 

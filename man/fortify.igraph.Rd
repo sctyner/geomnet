@@ -2,6 +2,7 @@
 % Please edit documentation in R/fortify-net.R
 \name{fortify.igraph}
 \alias{fortify.igraph}
+\title{Function for converting an igraph object into the correct format for use with geomnet}
 \usage{
 \method{fortify}{igraph}(model, data = NULL, group = NULL, ...)
 }
@@ -10,7 +11,16 @@
 
 \item{data.}{NULL}
 
-\item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
-@export}
+\item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+}
+\description{
+Function for converting an igraph object into the correct format for use with geomnet
+}
+\examples{
+# class igraph (igraph, igraphdata packages)
+library(igraph)
+library(igraphdata)
+data("USairports", package = "igraphdata")
+head(fortify(USairports))
 }
 

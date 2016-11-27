@@ -1,31 +1,14 @@
-#' Function for converting a network structure into the correct format for use with geomnet
+#' Function for converting a network object into the correct format for use with geomnet
+#' @param model. object of class "network"
+#' @param data NULL
+#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @examples 
-#' 
 #' # class network (sna, network, statnet packages)
 #' 
 #' library(network)
 #' data(emon)
 #' fortify(emon$Cheyenne)
 #' 
-#' # class igraph (igraph, igraphdata packages)
-#' library(igraph)
-#' library(igraphdata)
-#' data("USairports", package = "igraphdata")
-#' head(fortify(USairports))
-#' 
-#' # class matrix (for adjacency matrices)
-#' 
-#' adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
-#' str(adjmat)
-#' fortify(adjmat)
-#' 
-#' # eclass data.frame and ndata 
-#' data(blood)
-#' fortify(blood$edges, blood$vertices)
-#' 
-#' @param model. object of class "network"
-#' @param data NULL
-#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @export
 fortify.network <- function(model, data = NULL, group = NULL, ...){
   net <- model
@@ -61,10 +44,17 @@ fortify.network <- function(model, data = NULL, group = NULL, ...){
   }
   return(dat)
 }
+#' Function for converting an igraph object into the correct format for use with geomnet
 #' @param model. A an "igraph" object
 #' @param data. NULL 
 #' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
-#'  @export
+#' @examples 
+#' # class igraph (igraph, igraphdata packages)
+#' library(igraph)
+#' library(igraphdata)
+#' data("USairports", package = "igraphdata")
+#' head(fortify(USairports))
+#' @export
 fortify.igraph <- function(model, data = NULL, group = NULL, ...){
   net <- model
   node.data <- igraph::as_data_frame(net, what = "vertices")
@@ -83,9 +73,14 @@ fortify.igraph <- function(model, data = NULL, group = NULL, ...){
   }
   return(dat)
 }
+#' Function for converting a network edge list in data frame form into the correct format for use with geomnet
 #' @param model. A network edgelist of class "data.frame" object. The first column should contain the "from" node column.
 #' @param data. Data frame containing network node list and other node information. First column should contain node ids. 
 #' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' @examples 
+#' # class data.frame and ndata 
+#' data(blood)
+#' fortify(blood$edges, blood$vertices)
 #' @export
 fortify.data.frame <- function(model, data, group = NULL, ...){
   edge.data <- model
@@ -107,11 +102,16 @@ fortify.data.frame <- function(model, data, group = NULL, ...){
   }
    return(dat)
 }
+#' Function for converting a network adjacency matrix into the correct format for use with geomnet
 #' @param model. An adjacency matrix of class "matrix".
 #' @param data. NULL 
 #' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
-#'
-#'  @export
+#' # class matrix (for adjacency matrices)
+#' 
+#' adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
+#' str(adjmat)
+#' fortify(adjmat)
+#' @export
 fortify.matrix <- function(model, data = NULL, ...){
   net <- model
   if (dim(net)[1] != dim(net)[2]){

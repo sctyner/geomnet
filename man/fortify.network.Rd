@@ -2,7 +2,7 @@
 % Please edit documentation in R/fortify-net.R
 \name{fortify.network}
 \alias{fortify.network}
-\title{Function for converting a network structure into the correct format for use with geomnet}
+\title{Function for converting a network object into the correct format for use with geomnet}
 \usage{
 \method{fortify}{network}(model, data = NULL, group = NULL, ...)
 }
@@ -14,31 +14,14 @@
 \item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
 }
 \description{
-Function for converting a network structure into the correct format for use with geomnet
+Function for converting a network object into the correct format for use with geomnet
 }
 \examples{
-
 # class network (sna, network, statnet packages)
 
 library(network)
 data(emon)
 fortify(emon$Cheyenne)
-
-# class igraph (igraph, igraphdata packages)
-library(igraph)
-library(igraphdata)
-data("USairports", package = "igraphdata")
-head(fortify(USairports))
-
-# class matrix (for adjacency matrices)
-
-adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
-str(adjmat)
-fortify(adjmat)
-
-# eclass data.frame and ndata 
-data(blood)
-fortify(blood$edges, blood$vertices)
 
 }
 

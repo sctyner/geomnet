@@ -2,6 +2,7 @@
 % Please edit documentation in R/fortify-net.R
 \name{fortify.matrix}
 \alias{fortify.matrix}
+\title{Function for converting a network adjacency matrix into the correct format for use with geomnet}
 \usage{
 \method{fortify}{matrix}(model, data = NULL, ...)
 }
@@ -11,7 +12,13 @@
 \item{data.}{NULL}
 
 \item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+# class matrix (for adjacency matrices)
 
- @export}
+adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
+str(adjmat)
+fortify(adjmat)}
+}
+\description{
+Function for converting a network adjacency matrix into the correct format for use with geomnet
 }
 
