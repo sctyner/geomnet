@@ -54,8 +54,8 @@ data(madmen, package = "geomnet")
 
 # code for geom_net
 # data step: merge edges and nodes by the "from" column
-MMnet <- merge(madmen$edges, madmen$vertices,
-               by.x = "Name1", by.y = "label", all = TRUE)
+
+MMnet <- fortify(madmen$edges, madmen$vertices)
 # create plot
 set.seed(10052016)
 ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2)) +
@@ -178,6 +178,7 @@ emailnet <- merge(
   email$nodes,
   by.x = "From", by.y = "label", all = TRUE)
 
+emailnet <- fortify(subset(email$edges, nrecipients < 54), email$nodes)
 set.seed(10312016)
 ggplot(data = emailnet,
        aes(from_id = From, to_id = to)) +
@@ -257,13 +258,16 @@ emailnet <- merge(subset(email$edges, nrecipients < 54), employee,
                   by.x = c("From", "day"), by.y = c("label", "day"),
                   all = TRUE)
 
+emailnet <- fortify(subset(email$edges, nrecipients < 54), email$nodes, group = "day")
+
 # creating the plot
 set.seed(7042016)
-ggplot(data = emailnet, aes(from_id = From, to_id = to)) +
+ggplot(data = emailnet, aes(from_id = from, to_id = to)) +
   geom_net(layout.alg = "kamadakawai",
     aes(colour = CurrentEmploymentType,
         group = CurrentEmploymentType,
         linewidth = 2 * (...samegroup.. / 8 + .125)),
+        arrowsize = .5,
         directed = TRUE, fiteach = TRUE, ealpha = 0.5, size = 1.5, na.rm = FALSE) +
   scale_colour_brewer("Employment Type", palette = "Set1") +
   theme_net() +
@@ -320,6 +324,8 @@ TEnet <- merge(
   theme_elements$edges,
   theme_elements$vertices,
   by.x = "parent", by.y = "name", all = TRUE)
+
+TEnet <- fortify(theme_elements$edges[,c("parent", "child")], theme_elements$vertices)
 TEnet <- TEnet %>%
   group_by(parent) %>%
   mutate(degree = sqrt(10 * n() + 1))
