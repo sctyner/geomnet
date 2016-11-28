@@ -51,7 +51,7 @@ ggplot(data = ftnet,
   ) +
   theme_net() +
   theme(legend.position = "bottom") +
-  scale_colour_brewer("Conference", palette = "Paired") 
+  scale_colour_brewer("Conference", palette = "Paired")
 }
 \references{
 M. Girvan and M. E. J. Newman, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002).

@@ -4,16 +4,16 @@
 \alias{fortify.matrix}
 \title{Function for converting a network adjacency matrix into the correct format for use with geomnet}
 \usage{
-\method{fortify}{matrix}(model, data = NULL, ...)
+\method{fortify}{matrix}(model, data = NULL, group = NULL, ...)
 }
 \arguments{
 \item{model}{An adjacency matrix of class "matrix".}
 
 \item{data}{NULL - not used in this function}
 
-\item{...}{not used in this function}
-
 \item{group}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+
+\item{...}{not used in this function}
 }
 \description{
 Function for converting a network adjacency matrix into the correct format for use with geomnet

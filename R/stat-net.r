@@ -5,6 +5,9 @@
 #' @rdname geom_net
 #' @importFrom sna as.edgelist.sna
 #' @importFrom network as.matrix.network.edgelist
+#' @importFrom dplyr group_by
+#' @importFrom dplyr mutate
+#' @importFrom dplyr summarise
 #' @export
 StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   required_aes = c("from_id", "to_id"),
@@ -64,7 +67,8 @@ compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
 #browser()
 
   edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
-  edges <- edges %>% group_by(from_id, to_id) %>% summarise(wt = n())
+  edges <- dplyr::group_by(edges, from_id, to_id)
+  edges <- dplyr::summarise(edges, wt = n())
 
     # there should not be any missing values at this point, but just make sure
   if (any(is.na(edges$from_id))) message(sprintf("%d missing values excluded\n", sum(is.na(edges$from_id))))
@@ -121,7 +125,7 @@ compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
 
     edges <- rbind(edges, fromonly[, names(edges)])
   }
-  edges <- edges %>% group_by(from, to) %>% mutate(weight = n())
+  edges <- mutate(group_by(edges, from, to), weight = n())
   unique(edges)
 },
 
@@ -134,8 +138,9 @@ compute_panel = function(self, data, scales, na.rm = FALSE,
       data <- self$compute_network(data, layout.alg =layout.alg, layout.par=layout.par)
 
     #    data <- plyr::ddply(data, "group", plyr::mutate, .samegroup = to %in% unique(from))
-    if (any(data$group) != -1)
-      data <- data %>% group_by(group) %>% mutate(.samegroup = to %in% unique(from))
+    if (any(data$group) != -1) {
+      data <- mutate(group_by(data, group), .samegroup = to %in% unique(from))
+    }
 
    # #browser()
     data.frame(data)

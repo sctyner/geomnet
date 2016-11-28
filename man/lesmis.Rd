@@ -39,7 +39,7 @@ ggplot(data = lesmisnet, aes(from_id = from, to_id = to,
                              linewidth = degree / 5 + 0.1 )) +
   geom_net(aes(size = degree, alpha = degree),
            colour = "grey30", ecolour = "grey60",
-           layout.alg = "fruchtermanreingold", label = TRUE, vjust = -0.75) +
+           layout.alg = "fruchtermanreingold", labelon = TRUE, vjust = -0.75) +
   scale_alpha(range = c(0.3, 1)) +
   theme_net()
 }
