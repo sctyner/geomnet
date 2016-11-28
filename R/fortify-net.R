@@ -1,12 +1,14 @@
 #' Function for converting a network object into the correct format for use with geomnet
-#' @param model. object of class "network"
-#' @param data NULL
+#'
+#' @param model object of class "network"
+#' @param data NULL - not used in this function
 #' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' @param ...  not used in this function
 #' @examples
 #' # class network (sna, network, statnet packages)
 #'
 #' library(network)
-#' data(emon)
+#' data(emon, package = "network")
 #' fortify(emon$Cheyenne)
 #'
 #' @import network
@@ -46,13 +48,14 @@ fortify.network <- function(model, data = NULL, group = NULL, ...){
   return(dat)
 }
 #' Function for converting an igraph object into the correct format for use with geomnet
-#' @param model. A an "igraph" object
-#' @param data. NULL
-#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#'
+#' @param model A an "igraph" object
+#' @param data NULL - not used in this function
+#' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' @param ...  not used in this function
 #' @examples
 #' # class igraph (igraph, igraphdata packages)
 #' library(igraph)
-#' library(igraphdata)
 #' data("USairports", package = "igraphdata")
 #' head(fortify(USairports))
 #'
@@ -76,9 +79,11 @@ fortify.igraph <- function(model, data = NULL, group = NULL, ...){
   return(dat)
 }
 #' Function for converting a network edge list in data frame form into the correct format for use with geomnet
-#' @param model. A network edgelist of class "data.frame" object. The first column should contain the "from" node column.
-#' @param data. Data frame containing network node list and other node information. First column should contain node ids.
-#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#'
+#' @param model A network edgelist of class "data.frame" object. The first column should contain the "from" node column.
+#' @param data Data frame containing network node list and other node information. First column should contain node ids.
+#' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' @param ...  not used in this function
 #' @examples
 #' # class data.frame and ndata
 #' data(blood)
@@ -105,15 +110,19 @@ fortify.data.frame <- function(model, data, group = NULL, ...){
    return(dat)
 }
 #' Function for converting a network adjacency matrix into the correct format for use with geomnet
-#' @param model. An adjacency matrix of class "matrix".
-#' @param data. NULL
-#' @param group. character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
-#' # class matrix (for adjacency matrices)
 #'
+#' @param model An adjacency matrix of class "matrix".
+#' @param data NULL - not used in this function
+#' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' @param ...  not used in this function
+#' @export
+#' @importFrom tidyr gather
+#' @importFrom readr parse_number
+#' @examples
+#' data(emon, package = "network")
 #' adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
 #' str(adjmat)
 #' fortify(adjmat)
-#' @export
 fortify.matrix <- function(model, data = NULL, ...){
   net <- model
   if (dim(net)[1] != dim(net)[2]){
@@ -126,11 +135,25 @@ fortify.matrix <- function(model, data = NULL, ...){
   } else ID <- 1:ncol(net)
   net <- as.data.frame(net, stringsAsFactors = F)
   net$from <- ID
-  net %>%
-    tidyr::gather(to, value, -from) %>%
-    dplyr::filter(value > 0) %>%
-    dplyr::mutate(edge.weight = value) %>%
-    dplyr::select(from, to, edge.weight) -> edge.data
+#  introduce visible binding for global variables
+  to <- NULL
+  from <- NULL
+  value <- NULL
+
+  net <- tidyr::gather(net, to, value, -from)
+
+  #net <- dplyr::filter(net, value > 0)
+  net <- subset(net, value > 0)
+  #net <- dplyr::mutate(net, edge.weight = value)
+  net$edge.weight = net$value
+#  edge.data <- dplyr::select(net, from, to, edge.weight)
+  edge.data <- net[, c("from", "to", "edge.weight")]
+
+#  net %>%
+#    tidyr::gather(to, value, -from) %>%
+#    dplyr::filter(value > 0) %>%
+#    dplyr::mutate(edge.weight = value) %>%
+#    dplyr::select(from, to, edge.weight) -> edge.data
   froms <- unique(edge.data$from)
   tos <- unique(edge.data$to)
   if (class(froms) != class(tos)){

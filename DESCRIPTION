@@ -19,11 +19,11 @@ Imports:
     sna,
     network, 
     dplyr,
-    tidyr
+    tidyr,
+    readr
 Suggests:
     ggrepel,
     knitr,
-    readr,
     igraph,
     igraphdata,
     GGally, 

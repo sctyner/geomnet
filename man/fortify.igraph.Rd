@@ -7,11 +7,13 @@
 \method{fortify}{igraph}(model, data = NULL, group = NULL, ...)
 }
 \arguments{
-\item{model.}{A an "igraph" object}
+\item{model}{A an "igraph" object}
 
-\item{data.}{NULL}
+\item{data}{NULL - not used in this function}
 
-\item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+\item{group}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+
+\item{...}{not used in this function}
 }
 \description{
 Function for converting an igraph object into the correct format for use with geomnet
@@ -19,7 +21,6 @@ Function for converting an igraph object into the correct format for use with ge
 \examples{
 # class igraph (igraph, igraphdata packages)
 library(igraph)
-library(igraphdata)
 data("USairports", package = "igraphdata")
 head(fortify(USairports))
 

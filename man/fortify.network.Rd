@@ -7,11 +7,13 @@
 \method{fortify}{network}(model, data = NULL, group = NULL, ...)
 }
 \arguments{
-\item{data}{NULL}
+\item{model}{object of class "network"}
+
+\item{data}{NULL - not used in this function}
 
 \item{group}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
 
-\item{model.}{object of class "network"}
+\item{...}{not used in this function}
 }
 \description{
 Function for converting a network object into the correct format for use with geomnet
@@ -20,7 +22,7 @@ Function for converting a network object into the correct format for use with ge
 # class network (sna, network, statnet packages)
 
 library(network)
-data(emon)
+data(emon, package = "network")
 fortify(emon$Cheyenne)
 
 }

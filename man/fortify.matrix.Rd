@@ -7,18 +7,21 @@
 \method{fortify}{matrix}(model, data = NULL, ...)
 }
 \arguments{
-\item{model.}{An adjacency matrix of class "matrix".}
+\item{model}{An adjacency matrix of class "matrix".}
 
-\item{data.}{NULL}
+\item{data}{NULL - not used in this function}
 
-\item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
-# class matrix (for adjacency matrices)
+\item{...}{not used in this function}
 
-adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
-str(adjmat)
-fortify(adjmat)}
+\item{group}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
 }
 \description{
 Function for converting a network adjacency matrix into the correct format for use with geomnet
+}
+\examples{
+data(emon, package = "network")
+adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
+str(adjmat)
+fortify(adjmat)
 }
 

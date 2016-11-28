@@ -7,11 +7,13 @@
 \method{fortify}{data.frame}(model, data, group = NULL, ...)
 }
 \arguments{
-\item{model.}{A network edgelist of class "data.frame" object. The first column should contain the "from" node column.}
+\item{model}{A network edgelist of class "data.frame" object. The first column should contain the "from" node column.}
 
-\item{data.}{Data frame containing network node list and other node information. First column should contain node ids.}
+\item{data}{Data frame containing network node list and other node information. First column should contain node ids.}
 
-\item{group.}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+\item{group}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+
+\item{...}{not used in this function}
 }
 \description{
 Function for converting a network edge list in data frame form into the correct format for use with geomnet

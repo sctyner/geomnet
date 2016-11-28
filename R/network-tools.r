@@ -7,6 +7,8 @@
 #' @param data data set
 #' @param from_id name of the variable of edge tails
 #' @param to_id name of the variable of edge heads
+#' @importFrom network as.network.matrix
+#' @importFrom network as.matrix.network
 #' @export
 #' @examples
 #' data(blood)
