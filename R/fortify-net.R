@@ -113,7 +113,6 @@ fortify.data.frame <- function(model, data, group = NULL, ...){
 #'
 #' @param model An adjacency matrix of class "matrix".
 #' @param data NULL - not used in this function
-#' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @param ...  not used in this function
 #' @export
 #' @importFrom tidyr gather
@@ -123,7 +122,7 @@ fortify.data.frame <- function(model, data, group = NULL, ...){
 #' adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
 #' str(adjmat)
 #' fortify(adjmat)
-fortify.matrix <- function(model, data = NULL, group = NULL, ...){
+fortify.matrix <- function(model, data = NULL,  ...){
   net <- model
   if (dim(net)[1] != dim(net)[2]){
     stop("Error: Please supply a square adjacency matrix.")
@@ -139,7 +138,6 @@ fortify.matrix <- function(model, data = NULL, group = NULL, ...){
   to <- NULL
   from <- NULL
   value <- NULL
-  if (!is.null(group)) cat("group argument not implemented yet\n")
 
   net <- tidyr::gather(net, to, value, -from)
 
