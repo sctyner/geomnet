@@ -98,7 +98,7 @@ compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
   #print("it would be nice at this point to check, whether layout is one of the supported functions, and if not,
 # browser()
   layoutFun <- getFromNamespace(paste('gplot.layout.',layout.alg,sep=''), asNamespace("sna"))
-  requireNamespace("sna")
+#  requireNamespace("sna")
 #  layoutFun <- paste('gplot.layout.',layout.alg,sep='')
 #  vert.coord <- data.frame(do.call(layoutFun, list(edgelist, layout.par = layout.par)))
   vert.coord <- data.frame(layoutFun(edgelist, layout.par = layout.par))

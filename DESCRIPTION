@@ -14,7 +14,7 @@ BugReports: https://github.com/sctyner/geomnet/issues
 LazyData: TRUE
 Depends:
     R (>= 2.14),
-    ggplot2 (>= 2.1.0)
+    ggplot2 (>= 2.2.0)
 Imports:
     sna,
     network, 
