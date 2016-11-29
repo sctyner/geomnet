@@ -1,6 +1,6 @@
 #' Function for converting a network object into the correct format for use with geomnet
 #'
-#' @param model object of class "network"
+#' @param model object of class \code{"network"}
 #' @param data NULL - not used in this function
 #' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @param ...  not used in this function
@@ -49,7 +49,7 @@ fortify.network <- function(model, data = NULL, group = NULL, ...){
 }
 #' Function for converting an igraph object into the correct format for use with geomnet
 #'
-#' @param model A an "igraph" object
+#' @param model A network object of class \code{"igraph"}.
 #' @param data NULL - not used in this function
 #' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @param ...  not used in this function
@@ -80,21 +80,24 @@ fortify.igraph <- function(model, data = NULL, group = NULL, ...){
 }
 #' Function for converting a network edge list in data frame form into the correct format for use with geomnet
 #'
-#' @param model A network edgelist of class "data.frame" object. The first column should contain the "from" node column.
+#' @param model A network edgelist of class \code{"edgedf"}. See \code{\link{as.edgedf}}. Can contain edge variables as well. 
 #' @param data Data frame containing network node list and other node information. First column should contain node ids.
 #' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
 #' @param ...  not used in this function
 #' @examples
-#' # class data.frame and ndata
+#'
 #' data(blood)
-#' fortify(blood$edges, blood$vertices)
+#' fortify(as.edgedf(blood$edges), blood$vertices)
 #' @export
-fortify.data.frame <- function(model, data, group = NULL, ...){
+fortify.edgedf <- function(model, data, group = NULL, ...){
   edge.data <- model
   if (is.null(data)){
     stop("Error: Must provide the node data to the data argument.")
   }
   node.data <- data
+  message(paste("Joining edge and node information by", 
+                names(edge.data)[1], "and", 
+                names(node.data)[1], "respectively."))
   if(!is.null(group)){
     nodes <- unique(node.data[,1])
     groups <- unique(edge.data[,group])
@@ -111,15 +114,15 @@ fortify.data.frame <- function(model, data, group = NULL, ...){
 }
 #' Function for converting a network adjacency matrix into the correct format for use with geomnet
 #'
-#' @param model An adjacency matrix of class "matrix".
-#' @param data NULL - not used in this function
+#' @param model An adjacency matrix of class \code{"adjmat"}.
+#' @param data not used in this function
 #' @param ...  not used in this function
 #' @export
 #' @importFrom tidyr gather
 #' @importFrom readr parse_number
 #' @examples
 #' data(emon, package = "network")
-#' adjmat <- network::as.matrix.network.adjacency(emon$MtSi)
+#' adjmat <- as.adjmat(network::as.matrix.network.adjacency(emon$MtSi))
 #' str(adjmat)
 #' fortify(adjmat)
 fortify.matrix <- function(model, data = NULL,  ...){
