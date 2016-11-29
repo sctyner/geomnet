@@ -11,7 +11,7 @@
 
 \item{data}{Data frame containing network node list and other node information. First column should contain node ids.}
 
-\item{group}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+\item{group}{character. Used for facetting. If you wish to facet on network variable provide the name of that variable here.}
 
 \item{...}{not used in this function}
 }
@@ -22,5 +22,6 @@ Function for converting a network edge list in data frame form into the correct 
 
 data(blood)
 fortify(as.edgedf(blood$edges), blood$vertices)
+fortify(as.edgedf(blood$edges), blood$vertices, group = "Ethnicity")
 }
 

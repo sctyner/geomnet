@@ -2,7 +2,7 @@
 #'
 #' @param model object of class \code{"network"}
 #' @param data NULL - not used in this function
-#' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' @param group character. Used for facetting. If you wish to facet on a network variable provide the name of that variable here.
 #' @param ...  not used in this function
 #' @examples
 #' # class network (sna, network, statnet packages)
@@ -51,7 +51,7 @@ fortify.network <- function(model, data = NULL, group = NULL, ...){
 #'
 #' @param model A network object of class \code{"igraph"}.
 #' @param data NULL - not used in this function
-#' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' @param group character. Used for facetting. If you wish to facet on a network variable provide the name of that variable here.
 #' @param ...  not used in this function
 #' @examples
 #' # class igraph (igraph, igraphdata packages)
@@ -82,12 +82,13 @@ fortify.igraph <- function(model, data = NULL, group = NULL, ...){
 #'
 #' @param model A network edgelist of class \code{"edgedf"}. See \code{\link{as.edgedf}}. Can contain edge variables as well. 
 #' @param data Data frame containing network node list and other node information. First column should contain node ids.
-#' @param group character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.
+#' @param group character. Used for facetting. If you wish to facet on network variable provide the name of that variable here.
 #' @param ...  not used in this function
 #' @examples
 #'
 #' data(blood)
 #' fortify(as.edgedf(blood$edges), blood$vertices)
+#' fortify(as.edgedf(blood$edges), blood$vertices, group = "Ethnicity")
 #' @export
 fortify.edgedf <- function(model, data, group = NULL, ...){
   edge.data <- model
@@ -100,13 +101,21 @@ fortify.edgedf <- function(model, data, group = NULL, ...){
                 names(node.data)[1], "respectively."))
   if(!is.null(group)){
     nodes <- unique(node.data[,1])
-    groups <- unique(edge.data[,group])
+    if(group %in% names(edge.data)){
+      groups <- unique(edge.data[,group])
+    } else groups <- unique(node.data[,group])
     allnodes <- expand.grid(nodes, groups, stringsAsFactors = F)
     names(allnodes) <- c("ID", group)
     names(node.data)[1] <- "ID"
     names(edge.data)[1] <- "from"
-    node.data.expanded <- merge(allnodes, node.data, by = "ID")
-    dat <- merge(edge.data, node.data.expanded, by.x = c("from", group), by.y = c("ID", group), all = T)
+    if(group %in% names(edge.data)){
+      node.data.expanded <- merge(allnodes, node.data, by = "ID")
+      dat <- merge(edge.data, node.data.expanded, by.x = c("from", group), by.y = c("ID", group), all = T)
+    } 
+    else {
+      node.data.expanded <- merge(allnodes, node.data, by = c("ID",group))
+      dat <- merge(edge.data, node.data.expanded, by.x = "from", by.y = "ID", all = T)
+    }
   } else {
    dat <- merge(edge.data, node.data, by.x = names(edge.data)[1], by.y = names(node.data)[1], all = T)
   }

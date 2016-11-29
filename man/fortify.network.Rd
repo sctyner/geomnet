@@ -11,7 +11,7 @@
 
 \item{data}{NULL - not used in this function}
 
-\item{group}{character. Used for facetting. If you wish to facet on an edge variable provide the name of that variable here.}
+\item{group}{character. Used for facetting. If you wish to facet on a network variable provide the name of that variable here.}
 
 \item{...}{not used in this function}
 }
