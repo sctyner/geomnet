@@ -6,6 +6,7 @@ This version of geomnet has been updated to account for changes in ggplot2 versi
 
 - `fortify` methods included for `"network"`, `"igraph"`, `"matrix"`, and `"data.frame"` class objects to transform network objects to data frame objects that can be visualized using `geom_net()`.
 - Legend icons are updated to better represent the network data. A micro-network is drawn instead of a single point or line.
+- Added `plotly` functionality.
 
 ## Small Usage Changes
 

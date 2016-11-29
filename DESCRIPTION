@@ -20,7 +20,8 @@ Imports:
     network, 
     dplyr,
     tidyr,
-    readr
+    readr,
+    plotly
 Suggests:
     ggrepel,
     knitr,
