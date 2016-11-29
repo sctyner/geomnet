@@ -7,7 +7,7 @@
 \method{fortify}{network}(model, data = NULL, group = NULL, ...)
 }
 \arguments{
-\item{model}{object of class "network"}
+\item{model}{object of class \code{"network"}}
 
 \item{data}{NULL - not used in this function}
 

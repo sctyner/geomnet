@@ -6,7 +6,7 @@
 \alias{StatNet}
 \alias{geom_net}
 \alias{stat_net}
-\title{Geom for network visualization within the ggplot2 framework}
+\title{Networks}
 \format{An object of class \code{GeomNet} (inherits from \code{Geom}, \code{ggproto}) of length 6.}
 \usage{
 geom_net(mapping = NULL, data = NULL, stat = "net",
@@ -46,7 +46,8 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
    the plot data. The return value must be a \code{data.frame.}, and
    will be used as the layer data.}
 
-\item{stat}{character string of the network stat corresponding to geom_net.}
+\item{stat}{The statistical transformation to use on the data for this
+layer, as a string.}
 
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
@@ -55,52 +56,48 @@ a call to a position adjustment function.}
 \code{NA}, the default, includes if any aesthetics are mapped.
 \code{FALSE} never includes, and \code{TRUE} always includes.}
 
-\item{na.rm}{If \code{FALSE} (the default), removes missing values with
-a warning. If \code{TRUE} silently removes missing values.}
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with
+a warning. If \code{TRUE}, missing values are silently removed.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
-\item{layout.alg}{character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.}
+\item{layout.alg}{character. Value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{\link[sna]{gplot.layout}} documentation for more choices.}
 
-\item{layout.par}{list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{?gplot.layout} in the package sna for other choices.}
+\item{layout.par}{list. Parameters detailing algorithmic specs. Default parameters from \pkg{sna} are used initially. See \code{\link[sna]{gplot.layout}} documentation for all options corresponding to all layouts.}
 
-\item{directed}{logical value. Should an arrow be drawn from 'from' to 'to' node?}
+\item{directed}{logical value. Should an arrow be drawn from the \code{from_id} to the \code{to_id} node? Default is \code{FALSE}.}
 
-\item{fiteach}{logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?}
+\item{fiteach}{logical. Should the network be fit in each of the panels separately, or is there going to be one fit for all?}
 
-\item{selfloops}{logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.}
+\item{selfloops}{logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? Default is \code{FALSE}.}
 
-\item{alpha}{numeric value of alpha blending of vertices.}
+\item{ecolour}{character. Colour for edges.}
 
-\item{ecolour}{colour for edges.}
-
-\item{ealpha}{numeric value of alpha blending of edges.}
+\item{ealpha}{numeric. Value from 0-1 of alpha blending of edges.}
 
 \item{arrow}{what kind of arrow should be drawn? See specification of function \code{arrow} in grid package}
 
 \item{arrowgap}{numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.}
 
-\item{arrowsize}{numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.}
+\item{arrowsize}{numeric. How big should the arrow be drawn? Multiplicative of the default, 10 points.}
 
-\item{labelon}{logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.}
+\item{labelon}{logical. Include labels for all nodes.  Labels are taken from the \code{from_id} variable, unless a \code{label} aesthetic is provided.}
 
-\item{labelcolour}{character of colour for the labels.}
+\item{labelcolour}{character. Colour for the labels. If this argument is not specified, labels have the same colour as the nodes.}
 
-\item{labelgeom}{character. Which ggplot2 \code{geom} to use to draw the labels. Either "text" or "label".}
+\item{labelgeom}{character. Which \pkg{ggplot2} \code{geom} should be used to draw the labels? Either \code{"text"} or \code{"label"}. Default is \code{"text"}}
 
-\item{repel}{logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.}
+\item{repel}{logical. If \code{TRUE}, uses the \pkg{ggrepel} package geoms to draw the node labels instead of the ggplot2 geoms.}
 
-\item{vertices}{data frame containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use a joint to include this information in the data dataframe}
+\item{vertices}{data frame. Dataset containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use the \code{\link{fortify.edgedf}} method}
 
 \item{...}{other arguments passed on to \code{\link{layer}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{color = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
-
-\item{geom}{The geometric object to use display the data}
 }
 \value{
 A data frame with additional columns:
@@ -108,7 +105,8 @@ A data frame with additional columns:
   \item{xend, yend}{coordinates end points of edges.}
 }
 \description{
-Geom for network visualization within the ggplot2 framework
+The net geom is used visualize networks within the \pkg{ggplot2} framework. \code{geom_net} combines the many parts of a network visualization
+into a single layer in \pkg{ggplot2}. It combines various other geoms, including but not limited to, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{geom_segment}}, and \code{\link[ggplot2]{geom_text}}.
 }
 \examples{
 \dontrun{

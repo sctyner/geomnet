@@ -125,7 +125,7 @@ fortify.edgedf <- function(model, data, group = NULL, ...){
 #' adjmat <- as.adjmat(network::as.matrix.network.adjacency(emon$MtSi))
 #' str(adjmat)
 #' fortify(adjmat)
-fortify.matrix <- function(model, data = NULL,  ...){
+fortify.adjmat <- function(model, data = NULL,  ...){
   net <- model
   if (dim(net)[1] != dim(net)[2]){
     stop("Error: Please supply a square adjacency matrix.")

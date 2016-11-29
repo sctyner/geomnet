@@ -1,26 +1,23 @@
-#' Geom for network visualization within the ggplot2 framework
+#' Networks
 #'
-
-#' @inheritParams ggplot2::stat_identity
-#' @param stat character string of the network stat corresponding to geom_net.
-#' @param alpha numeric value of alpha blending of vertices.
-#' @param ealpha numeric value of alpha blending of edges.
-#' @param na.rm If \code{FALSE} (the default), removes missing values with
-#'    a warning. If \code{TRUE} silently removes missing values.
-#' @param layout.alg character value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?gplot.layout} in the package sna for other choices.
-#' @param layout.par list of parameters detailing algorithmic specs. Default parameters are used initially. See \code{?gplot.layout} in the package sna for other choices.
-#' @param fiteach logical value. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
-#' @param labelon logical value. Include labels for (all) nodes. labelcolour specifies colour of labels, if they should not be the same as the nodes. labels are taken from the from_id variable, unless a label variable is given.
-#' @param labelcolour character of colour for the labels.
-#' @param labelgeom character. Which ggplot2 \code{geom} to use to draw the labels. Either "text" or "label".
-#' @param repel logical value. If \code{TRUE}, uses the ggrepel package geoms to draw the node labels instead of the ggplot2 geoms.
-#' @param ecolour colour for edges.
-#' @param directed logical value. Should an arrow be drawn from 'from' to 'to' node?
-#' @param selfloops logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? defaults to FALSE.
+#' The net geom is used visualize networks within the \pkg{ggplot2} framework. \code{geom_net} combines the many parts of a network visualization
+#' into a single layer in \pkg{ggplot2}. It combines various other geoms, including but not limited to, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{geom_segment}}, and \code{\link[ggplot2]{geom_text}}.  
+#' @inheritParams ggplot2::geom_point
+#' @param layout.alg character. Value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{\link[sna]{gplot.layout}} documentation for more choices.
+#' @param layout.par list. Parameters detailing algorithmic specs. Default parameters from \pkg{sna} are used initially. See \code{\link[sna]{gplot.layout}} documentation for all options corresponding to all layouts.
+#' @param ealpha numeric. Value from 0-1 of alpha blending of edges.
+#' @param fiteach logical. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
+#' @param labelon logical. Include labels for all nodes.  Labels are taken from the \code{from_id} variable, unless a \code{label} aesthetic is provided.
+#' @param labelcolour character. Colour for the labels. If this argument is not specified, labels have the same colour as the nodes.
+#' @param labelgeom character. Which \pkg{ggplot2} \code{geom} should be used to draw the labels? Either \code{"text"} or \code{"label"}. Default is \code{"text"}
+#' @param repel logical. If \code{TRUE}, uses the \pkg{ggrepel} package geoms to draw the node labels instead of the ggplot2 geoms.
+#' @param ecolour character. Colour for edges.
+#' @param directed logical value. Should an arrow be drawn from the \code{from_id} to the \code{to_id} node? Default is \code{FALSE}.
+#' @param selfloops logical value. Should self-references be shown (by drawing a circle adjacent to the corresponding node)? Default is \code{FALSE}.
 #' @param arrow what kind of arrow should be drawn? See specification of function \code{arrow} in grid package
-#' @param arrowsize numeric value (non-negative). How big should the arrow be drawn? Multiplicative of a pre-specified unit.
+#' @param arrowsize numeric. How big should the arrow be drawn? Multiplicative of the default, 10 points.
 #' @param arrowgap numeric value between 0 and 1 specifying how much (as a proportion of the line length) earlier the line segment should be stopped drawing before reaching the target node. This parameters is only regarded in directed networks.
-#' @param vertices data frame containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use a joint to include this information in the data dataframe
+#' @param vertices data frame. Dataset containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use the \code{\link{fortify.edgedf}} method
 #'
 #' @export
 #' @examples

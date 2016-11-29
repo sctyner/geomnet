@@ -7,7 +7,7 @@
 \method{fortify}{igraph}(model, data = NULL, group = NULL, ...)
 }
 \arguments{
-\item{model}{A an "igraph" object}
+\item{model}{A network object of class \code{"igraph"}.}
 
 \item{data}{NULL - not used in this function}
 
