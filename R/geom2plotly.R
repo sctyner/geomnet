@@ -4,13 +4,15 @@
 to_basic.GeomNet <- function(data, prestats_data, layout, params, p, ...) {
   # get x,y and xend,yend coordinates, among other things
   dat2 <- ggplot2::ggplot_build(p)$data[[1]]
-  data <- merge(data, dat2)
-  node_data <- unique(data[, c("from", "x", "y", "PANEL", "group", "shape", "colour", "label")])
+  data <- getFromNamespace("left_join", asNamespace("dplyr"))(data, dat2)
+  node_names <- names(data)[!(names(data) %in% c("to","xend", "yend", ".selfie", "weight", ".samegroup", "ymax", "xmax", "width", "linetype", "fontsize", "arrowsize", "stroke"))]
+  edge_names <- c("from","to", "x", "y","xend", "yend", ".selfie", "weight", ".samegroup", "ymax", "xmax", "width", "linetype", "linewidth", "fontsize", "arrowsize", "stroke")
+  node_data <- unique(data[, node_names])
   node_data <- getFromNamespace("prefix_class", asNamespace("plotly"))(node_data, "GeomPoint")
-  if (!is.null(node_data$label)){
-    node_data$hovertext <- node_data$label
-  } else node_data$hovertext <- node_data$from
-  edge_data <- unique(data[, c("from", "to", "x", "y", "xend", "yend", "PANEL", "group", ".selfie", "weight", ".samegroup", "width", "linewidth", "linetype", "fontsize", "arrowsize")])
+  if (is.null(node_data$label)){
+    node_data$hovertext <- node_data$from
+  } 
+  edge_data <- unique(data[, edge_names])
   edge_data <- edge_data[which(!edge_data$.selfie),]
   edge_data$size <- edge_data$linewidth
   if (params$directed){
@@ -19,7 +21,7 @@ to_basic.GeomNet <- function(data, prestats_data, layout, params, p, ...) {
   if (is.null(params$ealpha)){
     edge_data$alpha <- 1
   } else edge_data$alpha <- params$ealpha
-  edge_data$colour <- params$ecolour
+  edge_data$colour <- ifelse(is.null(params$ecolour), "grey40", params$ecolour)
   edge_data <- getFromNamespace("to_basic.GeomSegment", asNamespace("plotly"))(edge_data)
   edge_data <- getFromNamespace("prefix_class", asNamespace("plotly"))(edge_data, "GeomNet")
   data <- list(edge_data, node_data)
