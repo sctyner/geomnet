@@ -55,10 +55,10 @@ data(madmen, package = "geomnet")
 # code for geom_net
 # data step: merge edges and nodes by the "from" column
 
-MMnet <- fortify(madmen$edges, madmen$vertices)
+MMnet <- fortify(as.edgedf(madmen$edges), madmen$vertices)
 # create plot
 set.seed(10052016)
-ggplot(data = MMnet, aes(from_id = Name1, to_id = Name2)) +
+ggplot(data = MMnet, aes(from_id = from_id, to_id = to_id)) +
   geom_net(aes(colour = Gender), layout.alg = "kamadakawai", 
            size = 2, labelon = TRUE, vjust = -0.6, ecolour = "grey60",
            directed =FALSE, fontsize = 3, ealpha = 0.5) +
@@ -173,15 +173,13 @@ ggnet2(em.net, color = "curr_empl_type",
 
 ```{r email_geom_net, size="footnotesize", opts.label="codefig", echo=TRUE, out.width='\\textwidth'}
 # data step for the geomnet plot
-emailnet <- merge(
-  subset(email$edges, nrecipients < 54),
-  email$nodes,
-  by.x = "From", by.y = "label", all = TRUE)
-
-emailnet <- fortify(subset(email$edges, nrecipients < 54), email$nodes)
+email$edges <- email$edges[, c(1,5,2:4,6:9)]
+emailnet <- fortify(
+  as.edgedf(subset(email$edges, nrecipients < 54)),
+  email$nodes)
 set.seed(10312016)
 ggplot(data = emailnet,
-       aes(from_id = From, to_id = to)) +
+       aes(from_id = from_id, to_id = to_id)) +
   geom_net(layout.alg = "fruchtermanreingold",
     aes(colour = CurrentEmploymentType,
         group = CurrentEmploymentType,
@@ -251,18 +249,11 @@ grid.arrange(grobs = g, nrow = 2)
 # geomnet code for the  email network facetted by day as shown in fig.4b
 
 # data step: making sure that there is one entry for each person on each day
-employee <- data.frame(expand.grid(label = unique(email$nodes$label),
-                                   day = unique(email$edges$day)))
-employee <- merge(employee, email$nodes, by = "label")
-emailnet <- merge(subset(email$edges, nrecipients < 54), employee,
-                  by.x = c("From", "day"), by.y = c("label", "day"),
-                  all = TRUE)
-
-emailnet <- fortify(subset(email$edges, nrecipients < 54), email$nodes, group = "day")
+emailnet <- fortify(as.edgedf(subset(email$edges, nrecipients < 54)), email$nodes, group = "day")
 
 # creating the plot
 set.seed(7042016)
-ggplot(data = emailnet, aes(from_id = from, to_id = to)) +
+ggplot(data = emailnet, aes(from_id = from, to_id = to_id)) +
   geom_net(layout.alg = "kamadakawai",
     aes(colour = CurrentEmploymentType,
         group = CurrentEmploymentType,
@@ -320,20 +311,15 @@ ggnet2(te.net, label = TRUE, color = "white", label.size = "size",
 ```{r theme_geom_net, echo=TRUE, fig.width=7, fig.height = 7}
 # data step: merge nodes and edges and
 # introduce a degree-out variable
-TEnet <- merge(
-  theme_elements$edges,
-  theme_elements$vertices,
-  by.x = "parent", by.y = "name", all = TRUE)
-
-TEnet <- fortify(theme_elements$edges[,c("parent", "child")], theme_elements$vertices)
+TEnet <- fortify(as.edgedf(theme_elements$edges[,c("parent", "child")]), theme_elements$vertices)
 TEnet <- TEnet %>%
-  group_by(parent) %>%
+  group_by(from_id) %>%
   mutate(degree = sqrt(10 * n() + 1))
 
 # create plot:
 set.seed(3272016)
 ggplot(data = TEnet,
-       aes(from_id = parent, to_id = child)) +
+       aes(from_id = from_id, to_id = to_id)) +
   geom_net(layout.alg = "fruchtermanreingold",
     aes(fontsize = degree), directed = TRUE,
     labelon = TRUE, size = 1, labelcolour = 'black',
@@ -382,18 +368,16 @@ ggnet2(fb.net, mode = "fruchtermanreingold",
 ```
 ```{r football_geom_net, fig.height=10, echo=TRUE}
 # data step: merge vertices and edges
-ftnet <- merge(
-  football$edges, football$vertices,
-  by.x = "from", by.y = "label", all = TRUE)
+ftnet <- fortify(as.edgedf(football$edges), football$vertices)
 
 # create new label variable for viewing independent schools
 ftnet$schools <- ifelse(
-  ftnet$value == "Independents", ftnet$from, "")
+  ftnet$value == "Independents", ftnet$from_id, "")
 
 # create data plot
 set.seed(5232011)
 ggplot(data = ftnet,
-       aes(from_id = from, to_id = to)) +
+       aes(from_id = from_id, to_id = to_id)) +
   geom_net(layout.alg = 'fruchtermanreingold',
     aes(colour = value, group = value,
         linetype = factor(same.conf != 1),
@@ -503,16 +487,15 @@ ggplot(data = ggnetwork(bip, layout = "kamadakawai"),
 # make data accessible
 data(bikes, package = 'geomnet')
 # data step for geomnet
-tripnet <- merge(bikes$trips, bikes$stations, by.x = "Start.station",
-                 by.y = "name", all = TRUE)
+tripnet <- fortify(as.edgedf(bikes$trips), bikes$stations[,c(2,1,3:5)])
 # create variable to identify Metro Stations
 tripnet$Metro = FALSE
-idx <- grep("Metro", tripnet$Start.station)
+idx <- grep("Metro", tripnet$from_id)
 tripnet$Metro[idx] <- TRUE
 
 # plot the bike sharing network shown in Figure 7b
 set.seed(1232016)
-ggplot(aes(from_id = Start.station, to_id = End.station), data = tripnet) +
+ggplot(aes(from_id = from_id, to_id = to_id), data = tripnet) +
   geom_net(aes(linewidth = n / 15, colour = Metro),
            labelon = TRUE, repel = TRUE) +
   theme_net() +
@@ -570,8 +553,8 @@ metro_map <- get_map(location = c(left = -77.22257, bottom = 39.05721,
   ggmap(metro_map) + 
   geom_net(data = tripnet, layout.alg = NULL, labelon = TRUE,
            vjust = -0.5, ealpha = 0.5,
-           aes(from_id = Start.station,
-               to_id = End.station,
+           aes(from_id = from_id,
+               to_id = to_id,
                x = long, y = lat,
                linewidth = n / 15,
                colour = Metro)) +
