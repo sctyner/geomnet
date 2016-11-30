@@ -13,7 +13,7 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
   required_aes = c("from_id", "to_id"),
   non_missing_aes = "weight",
   setup_params = function(data, params) {
-  #  #browser()
+  #  browser()
 #    print(str(params))
 
     params

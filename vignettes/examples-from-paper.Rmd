@@ -248,7 +248,7 @@ grid.arrange(grobs = g, nrow = 2)
 ```{r email_facet_geom_net, fig.height=4.5, fig.width=8, echo=TRUE}
 # geomnet code for the  email network facetted by day as shown in fig.4b
 
-# data step: making sure that there is one entry for each person on each day
+# data step: making sure that there is one entry for each person on each day so that all employees are included in the network even on days they don't send/receive emails
 emailnet <- fortify(as.edgedf(subset(email$edges, nrecipients < 54)), email$nodes, group = "day")
 
 # creating the plot
