@@ -9,4 +9,6 @@ You can now install geomnet directly from CRAN.
 
 `install.packages('geomnet')`
 
+There are many usage examples in `?geomnet::geom_net`.
+
 Enjoy! 
