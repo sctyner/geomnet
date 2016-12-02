@@ -10,6 +10,7 @@
 #' @param layout.alg character. Value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?sna::}\code{\link[sna]{gplot.layout}} documentation for more choices.
 #' @param layout.par list. Parameters detailing algorithmic specs. Default parameters from \pkg{sna} are used initially. See  \code{?sna::}\code{\link[sna]{gplot.layout}} documentation for all options corresponding to all layouts.
 #' @param directed logical value. Should an arrow be drawn pointing to the \code{to_id} node? Default is \code{FALSE}.
+#' @param alpha numeric. Value from 0-1 of alpha blending of nodes.
 #' @param ealpha numeric. Value from 0-1 of alpha blending of edges.
 #' @param fiteach logical. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
 #' @param labelon logical. Include labels for all nodes.  Labels are taken from the \code{from_id} variable, unless a \code{label} aesthetic is provided.

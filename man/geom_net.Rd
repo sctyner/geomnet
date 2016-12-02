@@ -74,6 +74,8 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{selfloops}{logical value. Should loops (self-referencing edges) be shown (by drawing a circle adjacent to the corresponding node)? Default is \code{FALSE}.}
 
+\item{alpha}{numeric. Value from 0-1 of alpha blending of nodes.}
+
 \item{ecolour}{character. Colour for edges.}
 
 \item{ealpha}{numeric. Value from 0-1 of alpha blending of edges.}
