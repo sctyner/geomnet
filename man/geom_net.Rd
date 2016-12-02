@@ -74,6 +74,8 @@ the default plot specification, e.g. \code{\link{borders}}.}
 
 \item{selfloops}{logical value. Should loops (self-referencing edges) be shown (by drawing a circle adjacent to the corresponding node)? Default is \code{FALSE}.}
 
+\item{alpha}{numeric. Value from 0-1 of alpha blending of nodes.}
+
 \item{ecolour}{character. Colour for edges.}
 
 \item{ealpha}{numeric. Value from 0-1 of alpha blending of edges.}
@@ -193,6 +195,7 @@ ggplot(data = emailnet, aes(from_id = from_id, to_id = to_id)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
   scale_colour_brewer(palette="Set2")
 #facet by day
+
 emailnet <- fortify(emailedges, email$nodes, group = "day")
 ggplot(data = emailnet, aes(from_id = from, to_id = to_id)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
@@ -213,7 +216,8 @@ lesmisnet <- fortify(as.edgedf(lesmis$edges), lesmis$vertices[, c(2,1)])
 p <- ggplot(data=lesmisnet, aes(from_id=from_id, to_id=to_id))
 p + geom_net(layout.alg="fruchtermanreingold")
 p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5)
-p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5, aes(linewidth=degree/5))
+p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5,
+    aes(linewidth=degree/5))
 
 ## College Football Games in the Fall 2000 regular season
 # Source: http://www-/personal.umich.edu/~mejn/netdata/

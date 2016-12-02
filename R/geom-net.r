@@ -1,7 +1,7 @@
 #' Networks
 #'
 #' The net geom is used visualize networks within the \pkg{ggplot2} framework. \code{geom_net} combines the many parts of a network visualization
-#' into a single layer in \pkg{ggplot2}. It makes use of various other geoms, including but not limited to, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{geom_segment}}, and \code{\link[ggplot2]{geom_text}}.  
+#' into a single layer in \pkg{ggplot2}. It makes use of various other geoms, including but not limited to, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{geom_segment}}, and \code{\link[ggplot2]{geom_text}}.
 #'
 #' @section Aesthetics:
 #' \code{geom_net} understands the following aesthetics (required aesthetics are in bold):
@@ -21,10 +21,12 @@
 #'  \item \code{size} 
 #'  }
 #' 
+#'
 #' @inheritParams ggplot2::geom_point
 #' @param layout.alg character. Value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?sna::}\code{\link[sna]{gplot.layout}} documentation for more choices.
 #' @param layout.par list. Parameters detailing algorithmic specs. Default parameters from \pkg{sna} are used initially. See  \code{?sna::}\code{\link[sna]{gplot.layout}} documentation for all options corresponding to all layouts.
 #' @param directed logical value. Should an arrow be drawn pointing to the \code{to_id} node? Default is \code{FALSE}.
+#' @param alpha numeric. Value from 0-1 of alpha blending of nodes.
 #' @param ealpha numeric. Value from 0-1 of alpha blending of edges.
 #' @param fiteach logical. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
 #' @param labelon logical. Include labels for all nodes.  Labels are taken from the \code{from_id} variable, unless a \code{label} aesthetic is provided.
@@ -105,6 +107,7 @@
 #'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
 #'   scale_colour_brewer(palette="Set2")
 #' #facet by day
+#'
 #' emailnet <- fortify(emailedges, email$nodes, group = "day")
 #' ggplot(data = emailnet, aes(from_id = from, to_id = to_id)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
@@ -125,7 +128,8 @@
 #' p <- ggplot(data=lesmisnet, aes(from_id=from_id, to_id=to_id))
 #' p + geom_net(layout.alg="fruchtermanreingold")
 #' p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5)
-#' p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5, aes(linewidth=degree/5))
+#' p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5,
+#'     aes(linewidth=degree/5))
 #'
 #' ## College Football Games in the Fall 2000 regular season
 #' # Source: http://www-/personal.umich.edu/~mejn/netdata/
@@ -137,12 +141,12 @@
 #'   theme(legend.position="bottom")
 #'   }
 
-geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = FALSE, inherit.aes = TRUE,
-                      layout.alg="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
-                      alpha = 0.25,
-                      ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
-                      labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
-                       vertices=NULL, ...) {
+geom_net <- function (
+  mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = FALSE, inherit.aes = TRUE,
+  layout.alg="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
+  alpha = 0.25, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
+  labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
+  vertices=NULL, ...) {
 ##browser()
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,

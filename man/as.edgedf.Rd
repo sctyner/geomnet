@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{as.edgedf}
 \alias{as.edgedf}
-\title{Create and assign a new class for use of \code{geomnet}'s \code{\link{fortify.edgedf}} function.}
+\title{Cast a data frame to an edgedf}
 \usage{
 as.edgedf(dat)
 }
