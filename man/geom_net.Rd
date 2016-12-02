@@ -110,7 +110,22 @@ into a single layer in \pkg{ggplot2}. It makes use of various other geoms, inclu
 }
 \section{Aesthetics}{
 
-\aesthetics{geom}{net}
+\code{geom_net} understands the following aesthetics (required aesthetics are in bold):
+\itemize{
+ \item \code{\strong{from_id}}
+ \item \code{\strong{to_id}}
+ \item \code{x}
+ \item \code{y} 
+ \item \code{alpha}  
+ \item \code{colour} 
+ \item \code{fontsize}
+ \item \code{group}
+ \item \code{label}
+ \item \code{linetype} 
+ \item \code{linewidth} 
+ \item \code{shape}
+ \item \code{size} 
+ }
 }
 \examples{
 \dontrun{
@@ -124,8 +139,9 @@ p <- ggplot(data = bloodnet, aes(from_id = from_id, to_id = to_id))
 p + geom_net()
 p + geom_net(aes(colour=rho)) + theme_net()
 p + geom_net(aes(colour=rho), labelon=TRUE, vjust = -0.5)
-p + geom_net(aes(colour=rho, linetype = group_to, label = from_id),  vjust=-0.5, labelcolour="black",
-             directed=TRUE) + theme_net()
+p + geom_net(aes(colour=rho, linetype = group_to, label = from_id),  
+             vjust=-0.5, labelcolour="black", directed=TRUE) + 
+     theme_net()
 p + geom_net(colour = "orange", layout.alg = 'circle', size = 6)
 p + geom_net(colour = "orange", layout.alg = 'circle', size = 6, linewidth=.75)
 p + geom_net(colour = "orange", layout.alg = 'circle', size = 0, linewidth=.75,
@@ -170,14 +186,14 @@ ggplot(data = TEnet, aes(from_id = from_id, to_id = to_id)) +
 # care has to be taken to make sure that for each panel all nodes are included with
 # the necessary information.
 # Otherwise line segments show on the plot without nodes.
-
-emailnet <- fortify(as.edgedf(subset(email$edges, nrecipients < 54)[,c(1,5,2:4,6:9)]), email$nodes)
+emailedges <- as.edgedf(subset(email$edges, nrecipients < 54)[,c(1,5,2:4,6:9)])
+emailnet <- fortify(emailedges, email$nodes)
 #no facets
 ggplot(data = emailnet, aes(from_id = from_id, to_id = to_id)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
   scale_colour_brewer(palette="Set2")
 #facet by day
-emailnet <- fortify(as.edgedf(subset(email$edges, nrecipients < 54)[,c(1,5,2:4,6:9)]), email$nodes, group = "day")
+emailnet <- fortify(emailedges, email$nodes, group = "day")
 ggplot(data = emailnet, aes(from_id = from, to_id = to_id)) +
   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
   scale_colour_brewer(palette="Set2") +

@@ -7,7 +7,7 @@
 as.edgedf(dat)
 }
 \arguments{
-\item{dat.}{A network edgelist of class \code{"data.frame"} for use with \code{\link{fortify.edgedf}}.}
+\item{dat}{A network edgelist of class \code{"data.frame"} for use with \code{\link{fortify.edgedf}}.}
 }
 \description{
 Create and assign a new class for use of \code{geomnet}'s \code{\link{fortify.edgedf}} function.
