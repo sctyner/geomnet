@@ -6,8 +6,8 @@
 #' @section Aesthetics:
 #' \code{geom_net} understands the following aesthetics (required aesthetics are in bold):
 #' \itemize{
-#'  \item \code{\strong{from_id}}
-#'  \item \code{\strong{to_id}}
+#'  \item \strong{\code{from_id}}
+#'  \item \strong{\code{to_id}}
 #'  \item \code{x}
 #'  \item \code{y} 
 #'  \item \code{alpha}  

@@ -180,11 +180,12 @@ compute_layer = function(self, data, params, layout, na.rm = FALSE, layout.alg,
 
 #' @rdname geom_net
 #'
+#' @param geom \code{geom_net}, the geom attached to \code{stat_net} is called \code{"net"}.
 #' @return A data frame with additional columns:
 #'   \item{x, y}{coordinates of the nodes, beginning of edges,}
 #'   \item{xend, yend}{coordinates end points of edges.}
 #' @export
-stat_net <- function(mapping = NULL, data = NULL, geom = "point",
+stat_net <- function(mapping = NULL, data = NULL, geom = "net",
                      position = "identity", show.legend = NA,
                      inherit.aes = TRUE, layout.alg="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL,
                      na.rm=FALSE, ...) {

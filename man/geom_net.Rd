@@ -21,7 +21,7 @@ GeomNet
 
 StatNet
 
-stat_net(mapping = NULL, data = NULL, geom = "point",
+stat_net(mapping = NULL, data = NULL, geom = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   layout.alg = "kamadakawai", layout.par = list(), fiteach = FALSE,
   vertices = NULL, na.rm = FALSE, ...)
@@ -100,6 +100,8 @@ the default plot specification, e.g. \code{\link{borders}}.}
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{color = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
+
+\item{geom}{\code{geom_net}, the geom attached to \code{stat_net} is called \code{"net"}.}
 }
 \value{
 A data frame with additional columns:
@@ -114,8 +116,8 @@ into a single layer in \pkg{ggplot2}. It makes use of various other geoms, inclu
 
 \code{geom_net} understands the following aesthetics (required aesthetics are in bold):
 \itemize{
- \item \code{\strong{from_id}}
- \item \code{\strong{to_id}}
+ \item \strong{\code{from_id}}
+ \item \strong{\code{to_id}}
  \item \code{x}
  \item \code{y} 
  \item \code{alpha}  
