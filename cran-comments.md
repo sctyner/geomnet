@@ -2,7 +2,7 @@ This update corresponds to the newest update of `ggplot2`, version 2.2.0.
 
 # Test Environments
 * local OS X El Capitan install, R 3.3.2
-
+* win-builder
 
 # R CMD check results
 
