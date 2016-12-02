@@ -1,11 +1,11 @@
 #' Networks
 #'
 #' The net geom is used visualize networks within the \pkg{ggplot2} framework. \code{geom_net} combines the many parts of a network visualization
-#' into a single layer in \pkg{ggplot2}. It makes use of various other geoms, including but not limited to, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{geom_segment}}, and \code{\link[ggplot2]{geom_text}}.  
+#' into a single layer in \pkg{ggplot2}. It makes use of various other geoms, including but not limited to, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{geom_segment}}, and \code{\link[ggplot2]{geom_text}}.
 #'
 #' @section Aesthetics:
 #' \aesthetics{geom}{net}
-#' 
+#'
 #' @inheritParams ggplot2::geom_point
 #' @param layout.alg character. Value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?sna::}\code{\link[sna]{gplot.layout}} documentation for more choices.
 #' @param layout.par list. Parameters detailing algorithmic specs. Default parameters from \pkg{sna} are used initially. See  \code{?sna::}\code{\link[sna]{gplot.layout}} documentation for all options corresponding to all layouts.
@@ -36,7 +36,8 @@
 #' p + geom_net()
 #' p + geom_net(aes(colour=rho)) + theme_net()
 #' p + geom_net(aes(colour=rho), labelon=TRUE, vjust = -0.5)
-#' p + geom_net(aes(colour=rho, linetype = group_to, label = from_id),  vjust=-0.5, labelcolour="black",
+#' p + geom_net(aes(colour=rho, linetype = group_to, label = from_id),
+#'              vjust=-0.5, labelcolour="black",
 #'              directed=TRUE) + theme_net()
 #' p + geom_net(colour = "orange", layout.alg = 'circle', size = 6)
 #' p + geom_net(colour = "orange", layout.alg = 'circle', size = 6, linewidth=.75)
@@ -83,13 +84,17 @@
 #' # the necessary information.
 #' # Otherwise line segments show on the plot without nodes.
 #'
-#' emailnet <- fortify(as.edgedf(subset(email$edges, nrecipients < 54)[,c(1,5,2:4,6:9)]), email$nodes)
+#' emailnet <- fortify(as.edgedf(
+#'                subset(email$edges, nrecipients < 54)[,c(1,5,2:4,6:9)]
+#'              ),  email$nodes)
 #' #no facets
 #' ggplot(data = emailnet, aes(from_id = from_id, to_id = to_id)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5) +
 #'   scale_colour_brewer(palette="Set2")
 #' #facet by day
-#' emailnet <- fortify(as.edgedf(subset(email$edges, nrecipients < 54)[,c(1,5,2:4,6:9)]), email$nodes, group = "day")
+#' emailnet <- fortify(as.edgedf(
+#'                 subset(email$edges, nrecipients < 54)[,c(1,5,2:4,6:9)]
+#'              ), email$nodes, group = "day")
 #' ggplot(data = emailnet, aes(from_id = from, to_id = to_id)) +
 #'   geom_net(aes(colour= CurrentEmploymentType), linewidth=0.5, fiteach=TRUE) +
 #'   scale_colour_brewer(palette="Set2") +
@@ -109,7 +114,8 @@
 #' p <- ggplot(data=lesmisnet, aes(from_id=from_id, to_id=to_id))
 #' p + geom_net(layout.alg="fruchtermanreingold")
 #' p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5)
-#' p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5, aes(linewidth=degree/5))
+#' p + geom_net(layout.alg="fruchtermanreingold", labelon=TRUE, vjust=-0.5,
+#'     aes(linewidth=degree/5))
 #'
 #' ## College Football Games in the Fall 2000 regular season
 #' # Source: http://www-/personal.umich.edu/~mejn/netdata/
@@ -121,12 +127,12 @@
 #'   theme(legend.position="bottom")
 #'   }
 
-geom_net <- function (mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = FALSE, inherit.aes = TRUE,
-                      layout.alg="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
-                      alpha = 0.25,
-                      ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
-                      labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
-                       vertices=NULL, ...) {
+geom_net <- function (
+  mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = FALSE, inherit.aes = TRUE,
+  layout.alg="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
+  alpha = 0.25, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
+  labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
+  vertices=NULL, ...) {
 ##browser()
     ggplot2::layer(
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,

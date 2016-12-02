@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{as.adjmat}
 \alias{as.adjmat}
-\title{Create and assign a new class for use of \code{geomnet}'s \code{\link{fortify.adjmat}} function.}
+\title{Cast matrix to an adjacency matrix}
 \usage{
 as.adjmat(dat)
 }
 \arguments{
-\item{dat.}{A square adjacency matrix.}
+\item{dat}{A square adjacency matrix.}
 }
 \description{
 Create and assign a new class for use of \code{geomnet}'s \code{\link{fortify.adjmat}} function.
