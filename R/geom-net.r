@@ -100,7 +100,7 @@
 #' # care has to be taken to make sure that for each panel all nodes are included with
 #' # the necessary information.
 #' # Otherwise line segments show on the plot without nodes.
-#' emailedges <- as.edgedf(subset(email$edges, nrecipients < 54)[,c(1,5,2:4,6:9)])
+#' emailedges <- as.edgedf(subset(email$edges, nrecipients < 54))
 #' emailnet <- fortify(emailedges, email$nodes)
 #' #no facets
 #' ggplot(data = emailnet, aes(from_id = from_id, to_id = to_id)) +
