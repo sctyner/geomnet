@@ -1,13 +1,168 @@
 ---
+title: "The `geomnet` package"
+author: Sam Tyner, Heike Hofmann
+date: "`r Sys.Date()`"
 output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+[![CRAN Status](http://www.r-pkg.org/badges/version/geomnet)](https://cran.r-project.org/package=geomnet)
+[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/geomnet)](http://www.r-pkg.org/pkg/geomnet)
+[![Travis-CI Build Status](https://travis-ci.org/sctyner/geomnet.svg?branch=master)](https://travis-ci.org/sctyner/geomnet)
 
+`geomnet` is a package built on top of the most recent major `ggplot2` release. It provides a `ggplot2` `geom` called `geom_net` to visualize graphs and networks. It also include the function `stat_net` to calculate network layouts with the `sna` package. Finally, the function `geom_circle` is included to draw circles using `ggplot2`.
+
+You can install `geomnet` directly from CRAN
+`install.packages('geomnet')`
+or from Github
+`devtools::install_github("sctyner/geomnet")`
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "README-"
 )
+```
+
+# Examples
+
+## `ggplot2` Theme Elements
+
+This example shows the theme inheritance properties of the theme elements of `ggplot2`. Note: this example has not been updated since the release of `ggplot2 2.2.0` and as such the content may have changed. 
+
+```{r theme, fig.align='center', message=FALSE, warning=FALSE}
+library(dplyr)
+library(geomnet)
+data(theme_elements)
+# data step
+TEnet <- fortify(as.edgedf(theme_elements$edges[,c("parent", "child")]), theme_elements$vertices)
+# create a degree variable for use later
+TEnet <- TEnet %>%
+  group_by(from_id) %>%
+  mutate(degree = sqrt(10 * n() + 1))
+# plot
+ggplot(data = TEnet,
+       aes(from_id = from_id, to_id = to_id)) +
+  geom_net(layout.alg = "fruchtermanreingold",
+    aes(fontsize = degree), directed = TRUE,
+    labelon = TRUE, size = 1, labelcolour = 'black',
+    ecolour = "grey70", arrowsize = 0.5,
+    linewidth = 0.5, repel = TRUE) +
+  theme_net() +
+  xlim(c(-0.05, 1.05))
+```
+
+## Blood Donation Diagram
+
+In this example, we reimagine the [traditional blood donation diagram](http://www.redcrossblood.org/learn-about-blood/blood-types) as a directed network. Arrows point to the blood type that receives. This example provides two data frames to `geom_net()`.  
+
+```{r blood, fig.align='center'}
+library(geomnet)
+data(blood)
+ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
+  geom_net(colour = "darkred", layout.alg = "circle", labelon = TRUE, 
+           size = 15, directed = TRUE, vjust = 0.5, labelcolour = "grey80",
+           arrowsize = 1.5, linewidth = 0.5, arrowgap = 0.05,
+           selfloops = TRUE, ecolour = "grey40") + 
+  theme_net() 
+```
+
+## Harry Potter Peer Support Network
+
+In this fun example from [this website](http://www.stats.ox.ac.uk/~snijders/siena/siena.html), there is a tie between two students if one provides emotional support to the other at some point in the book. It is a directed network, so in the visualization, the arrow points to the student receiving support. 
+
+```{r HP, echo = FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+temp <- tempfile()
+download.file("http://www.stats.ox.ac.uk/~snijders/siena/bossaert_meidert_harrypotter.zip",temp)
+hp1 <- read.table(unz(temp, "hpbook1.txt"))
+hp1 <- as.matrix(hp1)
+diag(hp1) <- 0
+hp1 <- data.frame(hp1)
+hp1$id <- 1:64
+hp1 <- hp1 %>% tidyr::gather(var, value, -id) %>%
+               dplyr::filter(value == 1) %>% 
+               dplyr::select(-value) %>% 
+               dplyr::mutate(var = readr::parse_number(var), book = 1) %>% 
+               dplyr::rename(from = id, to = var)
+hp2 <- read.table(unz(temp, "hpbook2.txt"))
+hp2 <- as.matrix(hp2)
+diag(hp2) <- 0
+hp2 <- data.frame(hp2)
+hp2$id <- 1:64
+hp2 <- hp2 %>% tidyr::gather(var, value, -id) %>%
+               dplyr::filter(value == 1) %>% 
+               dplyr::select(-value) %>% 
+               dplyr::mutate(var = readr::parse_number(var), book = 2) %>% 
+               dplyr::rename(from = id, to = var)
+hp3 <- read.table(unz(temp, "hpbook3.txt"))
+hp3 <- as.matrix(hp3)
+diag(hp3) <- 0
+hp3 <- data.frame(hp3)
+hp3$id <- 1:64
+hp3 <- hp3 %>% tidyr::gather(var, value, -id) %>%
+               dplyr::filter(value == 1) %>% 
+               dplyr::select(-value) %>% 
+               dplyr::mutate(var = readr::parse_number(var), book = 3) %>% 
+               dplyr::rename(from = id, to = var)
+hp4 <- read.table(unz(temp, "hpbook4.txt"))
+hp4 <- as.matrix(hp4)
+diag(hp4) <- 0
+hp4 <- data.frame(hp4)
+hp4$id <- 1:64
+hp4 <- hp4 %>% tidyr::gather(var, value, -id) %>%
+               dplyr::filter(value == 1) %>% 
+               dplyr::select(-value) %>% 
+               dplyr::mutate(var = readr::parse_number(var), book = 4) %>% 
+               dplyr::rename(from = id, to = var)
+hp5 <- read.table(unz(temp, "hpbook5.txt"))
+hp5 <- as.matrix(hp5)
+diag(hp5) <- 0
+hp5 <- data.frame(hp5)
+hp5$id <- 1:64
+hp5 <- hp5 %>% tidyr::gather(var, value, -id) %>%
+               dplyr::filter(value == 1) %>% 
+               dplyr::select(-value) %>% 
+               dplyr::mutate(var = readr::parse_number(var), book = 5) %>% 
+               dplyr::rename(from = id, to = var)
+hp6 <- read.table(unz(temp, "hpbook6.txt"))
+hp6 <- as.matrix(hp6)
+diag(hp6) <- 0
+hp6 <- data.frame(hp6)
+hp6$id <- 1:64
+hp6 <- hp6 %>% tidyr::gather(var, value, -id) %>%
+               dplyr::filter(value == 1) %>% 
+               dplyr::select(-value) %>% 
+               dplyr::mutate(var = readr::parse_number(var), book = 6) %>% 
+               dplyr::rename(from = id, to = var)
+hp <- rbind(hp1, hp2, hp3, hp4, hp5, hp6)
+hp.attributes <- read.table(unz(temp, "hpattributes.txt"), header=TRUE, stringsAsFactors = F)
+hp.names <- read.table(unz(temp, "hpnames.txt"), header=TRUE, stringsAsFactors = F)
+hp.names[,1] <- as.integer(hp.names[,1])
+hp.1 <- merge(hp, hp.names, by.x = "from", by.y = "id")
+names(hp.1)[4] <- "name1"
+hp.2 <- merge(hp.1, hp.names, by.x = "to", by.y = "id")
+names(hp.2)[5] <- "name2"
+hp.edges <- hp.2[, c("name1", "name2", "book")] %>% dplyr::arrange(book, name1, name2)
+hp.chars <- merge(hp.names, hp.attributes)
+hp.chars$house <- factor(hp.chars$house, labels = c("Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"))
+hp.chars$gender <- factor(hp.chars$gender, labels = c("M", "F"))
+unlink(temp)
+hp.chars <- hp.chars[,-1]
+```
+
+```{r HPplot, fig.width=10, fig.align='center'}
+library(geomnet)
+head(hp.edges)
+head(hp.chars)
+hp.all <- fortify(as.edgedf(hp.edges), hp.chars, group = "book")
+ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) + 
+  geom_net(fiteach=T, directed = T, size = 2, linewidth = .5, 
+           ealpha = .5, labelon = T, fontsize = 2, repel = T, 
+           labelcolour = "black", arrowsize = .5,
+           aes(colour = house, group = house, shape = gender)) + 
+  scale_colour_manual(values = c("#941B08","#F1F31C", 
+                                 "#071A80", "#154C07")) + 
+  facet_wrap(~book, labeller = "label_both") + 
+  theme_net() + theme(panel.background = element_rect(colour = 'black'))
 ```
