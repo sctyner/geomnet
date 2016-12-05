@@ -209,7 +209,7 @@
 #' This information was pulled from Google Maps using the \pkg{ggmap} package.
 #'
 #' @references D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2.
-#' The R Journal, 5(1), 144-161. \url{http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
+#' The R Journal, 5(1), 144-161. \url{https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
 #' @format An object of class "ggmap" and "raster" containing a map of the Rockville, MD, area.
 #' @examples
 #' \dontrun{
@@ -227,7 +227,7 @@
 #' The variables are as follows:
 #'
 #' @references Winston Chang (2012). gcookbook: Data for "R Graphics Cookbook". R package
-#' version 1.0. \url{http://CRAN.R-project.org/package=gcookbook}
+#' version 1.0. \url{https://CRAN.R-project.org/package=gcookbook}
 #' @format A list of two data frames:
 #' \itemize{
 #' \item the edges data set consists of two variables of length 87:

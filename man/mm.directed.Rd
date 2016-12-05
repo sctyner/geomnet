@@ -28,7 +28,7 @@ The variables are as follows:
 }
 \references{
 Winston Chang (2012). gcookbook: Data for "R Graphics Cookbook". R package
-version 1.0. \url{http://CRAN.R-project.org/package=gcookbook}
+version 1.0. \url{https://CRAN.R-project.org/package=gcookbook}
 }
 \keyword{datasets}
 
