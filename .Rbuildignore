@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 visual_test
 cran-comments.md
+^README\.Rmd$
+^README-.*\.png$
