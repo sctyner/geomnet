@@ -29,6 +29,7 @@
 #' @param alpha numeric. Value from 0-1 of alpha blending of nodes.
 #' @param ealpha numeric. Value from 0-1 of alpha blending of edges.
 #' @param fiteach logical. Should the network be fit in each of the panels separately, or is there going to be one fit for all?
+#' @param singletons logical. Should singletons (nodes with no incoming or outgoing ties) be plotted? Default is \code{TRUE}.
 #' @param labelon logical. Include labels for all nodes.  Labels are taken from the \code{from_id} variable, unless a \code{label} aesthetic is provided.
 #' @param labelcolour character. Colour for the labels. If this argument is not specified, labels have the same colour as the nodes.
 #' @param labelgeom character. Which \pkg{ggplot2} \code{geom} should be used to draw the labels? Either \code{"text"} or \code{"label"}. Default is \code{"text"}
@@ -143,7 +144,7 @@
 
 geom_net <- function (
   mapping = NULL, data = NULL, stat = "net", position = "identity", show.legend = NA, na.rm = FALSE, inherit.aes = TRUE,
-  layout.alg="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE,
+  layout.alg="kamadakawai", layout.par=list(), directed = FALSE, fiteach=FALSE,  selfloops = FALSE, singletons = TRUE,
   alpha = 0.25, ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01, arrowsize=1,
   labelon=FALSE, labelcolour=NULL, labelgeom = 'text', repel = FALSE,
   vertices=NULL, ...) {
@@ -152,8 +153,8 @@ geom_net <- function (
     geom = GeomNet, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, layout.alg=layout.alg, layout.par=layout.par, fiteach=fiteach, labelon=labelon, labelgeom=labelgeom,
-                  ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed, repel = repel,
-                  arrowsize=arrowsize,
+                  ecolour = ecolour, ealpha=ealpha, arrow=arrow, arrowgap=arrowgap, directed=directed, repel=repel,
+                  arrowsize=arrowsize, singletons=singletons,
                   labelcolour=labelcolour, vertices=vertices, selfloops = selfloops,
                   ...)
   )
@@ -223,10 +224,11 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
   },
 
   draw_panel = function(data, panel_scales, coord,  ecolour=NULL, ealpha=NULL, arrow=NULL, arrowgap=0.01,
-                        directed=FALSE, arrowsize=1, repel = FALSE,
+                        directed=FALSE, arrowsize=1, repel = FALSE, singletons = TRUE,
                         labelon=FALSE, labelgeom='text', labelcolour=NULL, selfloops = FALSE) {
 
-# #browser()
+
+#     browser()
 #    data$self <- as.character(data$to) == as.character(data$from)
     edges <- data.frame(
       x = data$x,
@@ -248,7 +250,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
     edges <- subset(edges, selfie != TRUE) # what are we going to do with self references?
     edges <- subset(edges, !is.na(xend))
 
-
+#   if (singletons) {
     vertices <- data.frame(
       x = data$x,
       y = data$y,
@@ -261,6 +263,26 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
       stringsAsFactors = FALSE
     )
     vertices <- unique(vertices)
+   # } else {
+   #   vertices <- data.frame(
+   #     from = data$from,
+   #     to = data$to,
+   #     x = data$x,
+   #     y = data$y,
+   #     colour = data$colour,
+   #     shape = data$shape,
+   #     size = data$size,
+   #     fill = NA,
+   #     alpha = data$alpha,
+   #     stroke = 0.5,
+   #     stringsAsFactors = FALSE
+   #   )
+   #   all_singletons <- vertices$from[vertices$from == vertices$to]
+   #   true_singletons <- all_singletons[!all_singletons %in% vertices$to[vertices$from != vertices$to]]
+   #   vertices <- vertices[!vertices$from %in% true_singletons,]
+   #   vertices <- vertices[,-c(1,2)]
+   #   vertices <- unique(vertices)
+   # }
 
     if (directed) {
       if (any(data$curvature != 0)) {
@@ -313,6 +335,7 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
 
     label_grob <- NULL
     if (labelon | !is.null(data$label)) {
+ #     if (singletons){
       labels <- data.frame(
         x = data$x,
         y = data$y,
@@ -328,6 +351,27 @@ GeomNet <- ggplot2::ggproto("GeomNet", ggplot2::Geom,
         stringsAsFactors = FALSE
       )
       labels <- unique(labels)
+      # } else {
+      #   labels <- data.frame(
+      #     from = data$from,
+      #     to = data$to,
+      #     x = data$x,
+      #     y = data$y,
+      #     label = data$label %||% data$from,
+      #     colour = labelcolour %||% data$colour,
+      #     shape = data$shape,
+      #     size = data$fontsize,
+      #     angle = data$angle,
+      #     alpha = data$alpha,
+      #     hjust = data$hjust,
+      #     fill = data$colour,
+      #     vjust = data$vjust,
+      #     stringsAsFactors = FALSE
+      #   )
+      #   labels <- labels[!labels$from %in% true_singletons,]
+      #   labels <- labels[,-c(1,2)]
+      #   labels <- unique(labels)
+      # }
 #       if (labelgeom=='label'){
 #       label_grob <- GeomLabel$draw_panel(labels, panel_scales, coord)
 #       }

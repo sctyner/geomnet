@@ -12,10 +12,11 @@
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = FALSE,
   inherit.aes = TRUE, layout.alg = "kamadakawai", layout.par = list(),
-  directed = FALSE, fiteach = FALSE, selfloops = FALSE, alpha = 0.25,
-  ecolour = NULL, ealpha = NULL, arrow = NULL, arrowgap = 0.01,
-  arrowsize = 1, labelon = FALSE, labelcolour = NULL,
-  labelgeom = "text", repel = FALSE, vertices = NULL, ...)
+  directed = FALSE, fiteach = FALSE, selfloops = FALSE,
+  singletons = TRUE, alpha = 0.25, ecolour = NULL, ealpha = NULL,
+  arrow = NULL, arrowgap = 0.01, arrowsize = 1, labelon = FALSE,
+  labelcolour = NULL, labelgeom = "text", repel = FALSE,
+  vertices = NULL, ...)
 
 GeomNet
 
@@ -24,7 +25,7 @@ StatNet
 stat_net(mapping = NULL, data = NULL, geom = "net",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   layout.alg = "kamadakawai", layout.par = list(), fiteach = FALSE,
-  vertices = NULL, na.rm = FALSE, ...)
+  vertices = NULL, singletons = TRUE, na.rm = FALSE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
@@ -73,6 +74,8 @@ the default plot specification, e.g. \code{\link{borders}}.}
 \item{fiteach}{logical. Should the network be fit in each of the panels separately, or is there going to be one fit for all?}
 
 \item{selfloops}{logical value. Should loops (self-referencing edges) be shown (by drawing a circle adjacent to the corresponding node)? Default is \code{FALSE}.}
+
+\item{singletons}{logical. Should singletons (nodes with no incoming or outgoing ties) be plotted? Default is \code{TRUE}.}
 
 \item{alpha}{numeric. Value from 0-1 of alpha blending of nodes.}
 

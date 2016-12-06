@@ -62,11 +62,16 @@ StatNet <- ggplot2::ggproto("StatNet", ggplot2::Stat,
     data
   },
 
-compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
+compute_network = function(data, layout.alg="kamadakawai", layout.par=list(), singletons = TRUE) {
 # cat("compute_network\n")
-#browser()
+# browser()
 
   edges <- subset(data, to_id != "..NA..")[,c('from_id', 'to_id')]
+  if (!singletons){
+    all_singletons <- edges$from_id[edges$from_id == edges$to_id]
+    true_singletons <- all_singletons[!all_singletons %in% edges$to_id[edges$from_id != edges$to_id]]
+    edges <- edges[!edges$from_id %in% true_singletons,]
+  }
   edges <- dplyr::group_by(edges, from_id, to_id)
   edges <- dplyr::summarise(edges, wt = n())
 
@@ -130,12 +135,12 @@ compute_network = function(data, layout.alg="kamadakawai", layout.par=list()) {
 },
 
 compute_panel = function(self, data, scales, na.rm = FALSE,
-                         layout.alg="kamadakawai", layout.par=list(),
+                         layout.alg="kamadakawai", layout.par=list(), singletons=TRUE,
                          fiteach=FALSE, vertices=NULL) {
 #  cat("compute_panel in stat_net\n")
 #  browser()
 #    if (fiteach)
-      data <- self$compute_network(data, layout.alg =layout.alg, layout.par=layout.par)
+      data <- self$compute_network(data, layout.alg =layout.alg, layout.par=layout.par, singletons=singletons)
 
     #    data <- plyr::ddply(data, "group", plyr::mutate, .samegroup = to %in% unique(from))
     if (any(data$group) != -1) {
@@ -163,7 +168,7 @@ compute_layer = function(self, data, params, layout, na.rm = FALSE, layout.alg,
       self$compute_panel(data = data, scales = scales,
                          na.rm=params$na.rm, layout.alg=params$layout.alg,
                          layout.par=params$layout.par, fiteach=params$fiteach,
-                         vertices=params$vertices)
+                         vertices=params$vertices, singletons=params$singletons)
     })
   }
   else {
@@ -174,7 +179,7 @@ compute_layer = function(self, data, params, layout, na.rm = FALSE, layout.alg,
     self$compute_panel(data = data, scales = scales,
                        na.rm=params$na.rm, layout.alg=params$layout.alg,
                        layout.par=params$layout.par, fiteach=params$fiteach,
-                       vertices=params$vertices)
+                       vertices=params$vertices, singletons=params$singletons)
   }
 })
 
@@ -187,13 +192,13 @@ compute_layer = function(self, data, params, layout, na.rm = FALSE, layout.alg,
 #' @export
 stat_net <- function(mapping = NULL, data = NULL, geom = "net",
                      position = "identity", show.legend = NA,
-                     inherit.aes = TRUE, layout.alg="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL,
+                     inherit.aes = TRUE, layout.alg="kamadakawai", layout.par=list(), fiteach=FALSE, vertices=NULL, singletons = TRUE, 
                      na.rm=FALSE, ...) {
 # #browser()
     ggplot2::layer(
     stat = StatNet, data = data, mapping = mapping, geom = geom, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(layout.alg=layout.alg, layout.par=layout.par, fiteach=fiteach,
+    params = list(layout.alg=layout.alg, layout.par=layout.par, fiteach=fiteach, singletons=singletons,
                   na.rm=na.rm, vertices=vertices, ...
     )
   )

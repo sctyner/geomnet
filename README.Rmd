@@ -151,24 +151,16 @@ unlink(temp)
 hp.chars <- hp.chars[,-1]
 ```
 
-```{r HPplot, fig.width=10, fig.height=8, fig.align='center'}
+```{r HPplot, fig.width=10, fig.height=8, fig.align='center', warning = FALSE}
 library(geomnet)
 head(hp.edges)
 head(hp.chars)
 hp.all <- fortify(as.edgedf(hp.edges), hp.chars, group = "book")
 # only plot the characters with any connections in a given book. 
-hp.sub <- NULL
-for (i in 1:6){
-  dat <- filter(hp.all, book == i)
-  singletons <- dat$from[is.na(dat$to_id)]
-  true_singletons <- singletons[!singletons %in% unique(dat$to_id)[-1]]
-  dat2 <- dat[!dat$from %in% true_singletons,]
-  hp.sub <- rbind(hp.sub, dat2)
-}
-ggplot(data=hp.sub, aes(from_id = from, to_id = to_id)) + 
-  geom_net(fiteach=T, directed = T, size = 2, linewidth = .5, 
-           ealpha = .5, labelon = T, fontsize = 2, repel = T, 
-           labelcolour = "black", arrowsize = .5,
+ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) + 
+  geom_net(fiteach=T, directed = T, size = 3, linewidth = .5, 
+           ealpha = .5, labelon = T, fontsize = 3, repel = T, 
+           labelcolour = "black", arrowsize = .5, singletons = FALSE,
            aes(colour = house, group = house, shape = gender)) + 
   scale_colour_manual(values = c("#941B08","#F1F31C", 
                                  "#071A80", "#154C07")) + 
