@@ -100,3 +100,31 @@ ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) +
 ```
 
 <img src="README-HPplot-1.png" style="display: block; margin: auto;" />
+
+Interactivity with `plotly`!
+----------------------------
+
+Now including interactivity with `ggplotly()`!
+
+``` r
+library(geomnet)
+# devtools::install_github("ropensci/plotly")
+library(plotly)
+data("football")
+# data step: merge vertices and edges
+ftnet <- fortify(as.edgedf(football$edges), football$vertices)
+
+# create data plot
+gg <- ggplot(data = ftnet,
+       aes(from_id = from_id, to_id = to_id)) +
+  geom_net(layout.alg = 'fruchtermanreingold',
+    aes(colour = value, group = value,
+        linetype = factor(same.conf != 1)),
+    linewidth = 0.5,
+    size = 5, vjust = -0.75, alpha = 0.3) +
+  theme_net() +
+  theme(legend.position = "bottom") +
+  scale_colour_brewer("Conference", palette = "Paired")  +
+  guides(linetype = FALSE)
+ggplotly(gg)
+```
