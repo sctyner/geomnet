@@ -7,7 +7,7 @@ This version of geomnet has been updated to account for changes in ggplot2 versi
 - Introduction of `"adjmat"` and `"edgedf"` classes for newly added `fortify` methods. 
 - `fortify` methods included for `"network"`, `"igraph"`, `"adjmat"`, and `"edgedf"` class objects to transform network objects to data frame objects that can be visualized using `geom_net()`.
 - Legend icons are updated to better represent the network data. A micro-network is drawn instead of a single point or line.
-- Added `plotly` functionality. 
+- Added `plotly` functionality. Hovertext describes edges and provides node labels. Note that arrows are not currently supported in `plotly`, so directed networks will appear as undirected.
 - New logical parameter `singletons` added for plotting all nodes in a network even if they have indegree and outdegree of zero. This is most likely to be useful when facetting. The default is `TRUE`, so all nodes are plotted in all panels. When `singletons = FALSE`, nodes are only plotted in the panel(s) in which they have at least one incoming or outgoing edge.  
 
 ## Small Usage Changes
