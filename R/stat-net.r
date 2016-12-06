@@ -133,7 +133,7 @@ compute_panel = function(self, data, scales, na.rm = FALSE,
                          layout.alg="kamadakawai", layout.par=list(),
                          fiteach=FALSE, vertices=NULL) {
 #  cat("compute_panel in stat_net\n")
-#  #browser()
+#  browser()
 #    if (fiteach)
       data <- self$compute_network(data, layout.alg =layout.alg, layout.par=layout.par)
 

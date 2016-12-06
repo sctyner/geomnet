@@ -1,7 +1,7 @@
 The `geomnet` package
 ================
 Sam Tyner, Heike Hofmann
-2016-12-05
+2016-12-06
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN Status](http://www.r-pkg.org/badges/version/geomnet)](https://cran.r-project.org/package=geomnet) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/geomnet)](http://www.r-pkg.org/pkg/geomnet) [![Travis-CI Build Status](https://travis-ci.org/sctyner/geomnet.svg?branch=master)](https://travis-ci.org/sctyner/geomnet)
@@ -87,7 +87,16 @@ hp.all <- fortify(as.edgedf(hp.edges), hp.chars, group = "book")
 #> Using name1 as the from node column and name2 as the to node column.
 #> If this is not correct, rewrite dat so that the first 2 columns are from and to node, respectively.
 #> Joining edge and node information by from_id and name respectively.
-ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) + 
+# only plot the characters with any connections in a given book. 
+hp.sub <- NULL
+for (i in 1:6){
+  dat <- filter(hp.all, book == i)
+  singletons <- dat$from[is.na(dat$to_id)]
+  true_singletons <- singletons[!singletons %in% unique(dat$to_id)[-1]]
+  dat2 <- dat[!dat$from %in% true_singletons,]
+  hp.sub <- rbind(hp.sub, dat2)
+}
+ggplot(data=hp.sub, aes(from_id = from, to_id = to_id)) + 
   geom_net(fiteach=T, directed = T, size = 2, linewidth = .5, 
            ealpha = .5, labelon = T, fontsize = 2, repel = T, 
            labelcolour = "black", arrowsize = .5,
