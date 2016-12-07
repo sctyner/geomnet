@@ -26,11 +26,6 @@ Suggests:
     ggrepel,
     knitr,
     igraph,
-    igraphdata,
-    GGally, 
-    ggmap,
-    ggnetwork,
-    scales,
-    tnet
+    ggmap
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
