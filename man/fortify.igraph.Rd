@@ -21,8 +21,10 @@ Function for converting an igraph object into the correct format for use with ge
 \examples{
 # class igraph (igraph, igraphdata packages)
 library(igraph)
-data("USairports", package = "igraphdata")
-head(fortify(USairports))
+data(blood, package = "geomnet")
+blood.igraph <- graph_from_data_frame(d = blood$edges, 
+   directed = TRUE, vertices = unique(blood$vertices[, 1:3]))
+fortify(blood.igraph)
 
 }
 

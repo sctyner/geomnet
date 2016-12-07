@@ -56,8 +56,10 @@ fortify.network <- function(model, data = NULL, group = NULL, ...){
 #' @examples
 #' # class igraph (igraph, igraphdata packages)
 #' library(igraph)
-#' data("USairports", package = "igraphdata")
-#' head(fortify(USairports))
+#' data(blood, package = "geomnet")
+#' blood.igraph <- graph_from_data_frame(d = blood$edges, 
+#'    directed = TRUE, vertices = unique(blood$vertices[, 1:3]))
+#' fortify(blood.igraph)
 #'
 #' @export
 fortify.igraph <- function(model, data = NULL, group = NULL, ...){
