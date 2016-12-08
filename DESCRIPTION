@@ -28,4 +28,3 @@ Suggests:
     igraph,
     ggmap
 RoxygenNote: 5.0.1
-VignetteBuilder: knitr
