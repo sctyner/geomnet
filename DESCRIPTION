@@ -1,7 +1,7 @@
 Package: geomnet
 Type: Package
 Title: Network Visualization in the 'ggplot2' Framework
-Version: 0.2.0
+Version: 0.2.0.9001
 Date: 2016-11-14
 Author: Samantha Tyner, Heike Hofmann
 Maintainer: Samantha Tyner <sctyner@iastate.edu>

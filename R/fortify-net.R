@@ -136,6 +136,7 @@ fortify.edgedf <- function(model, data, group = NULL, ...){
 #' adjmat <- as.adjmat(network::as.matrix.network.adjacency(emon$MtSi))
 #' str(adjmat)
 #' fortify(adjmat)
+#' @export
 fortify.adjmat <- function(model, data = NULL,  ...){
   net <- model
   if (dim(net)[1] != dim(net)[2]){
