@@ -48,4 +48,3 @@ ggplot(data = soccernet, aes(from_id = home, to_id = away)) +
   theme_net()
 }
 \keyword{datasets}
-

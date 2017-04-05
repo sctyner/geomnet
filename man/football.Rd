@@ -57,4 +57,3 @@ ggplot(data = ftnet,
 M. Girvan and M. E. J. Newman, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002).
 }
 \keyword{datasets}
-

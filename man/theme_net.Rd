@@ -23,4 +23,3 @@ p + geom_net()
 p + geom_net() + theme_net()
 
 }
-

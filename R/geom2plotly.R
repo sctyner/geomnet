@@ -2,17 +2,22 @@
 #' @importFrom plotly to_basic
 #' @export
 to_basic.GeomNet <- function(data, prestats_data, layout, params, p, ...) {
+  #browser()
+  if (params$directed){
+    message("Note: the plotly package does not yet support arrows for segments.\nSee https://github.com/ropensci/plotly/issues/469 for updates")
+  }
   # get x,y and xend,yend coordinates, among other things
   dat2 <- ggplot2::ggplot_build(p)$data[[1]]
   data <- getFromNamespace("left_join", asNamespace("dplyr"))(data, dat2)
   node_names <- names(data)[!(names(data) %in% c("to","xend", "yend", ".selfie", "weight", ".samegroup", "ymax", "xmax", "width", "linetype", "fontsize", "arrowsize", "stroke"))]
-  edge_names <- c("from","to", "x", "y","xend", "yend", ".selfie", "weight", ".samegroup", "ymax", "xmax", "width", "linetype", "linewidth", "fontsize", "arrowsize", "stroke")
+  # edge_names <- c("from","to", "x", "y","xend", "yend", ".selfie", "weight", ".samegroup", "ymax", "xmax", "width", "linetype", "linewidth", "fontsize", "arrowsize", "stroke", "PANEL")
   node_data <- unique(data[, node_names])
   node_data <- getFromNamespace("prefix_class", asNamespace("plotly"))(node_data, "GeomPoint")
-  if (is.null(node_data$label)){
-    node_data$hovertext <- node_data$from
-  } 
-  edge_data <- unique(data[, edge_names])
+  htext <- apply(t(apply(do.call("rbind",strsplit(node_data$hovertext, "<br>")), 1, unique)), 1, paste, collapse = "<br>")
+  node_data$hovertext <- paste0("Node ID:", node_data$from,
+                                 "<br>", htext)
+  # edge_data <- unique(data[, edge_names])
+  edge_data <- data
   edge_data <- edge_data[which(!edge_data$.selfie),]
   edge_data$size <- edge_data$linewidth
   edge_data$hovertext <- NULL

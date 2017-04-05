@@ -26,4 +26,3 @@ jtt(blood$edges, "from", "to")
 # this number is very high compared to the overall number of edges that are not self-loops
 nrow(subset(blood$edges, from != to))
 }
-

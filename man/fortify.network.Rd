@@ -26,4 +26,3 @@ data(emon, package = "network")
 fortify(emon$Cheyenne)
 
 }
-

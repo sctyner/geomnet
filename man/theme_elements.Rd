@@ -24,4 +24,3 @@ A list of two datasets, vertices and edges, containing data on the inheritance s
 The variables are as follows:
 }
 \keyword{datasets}
-

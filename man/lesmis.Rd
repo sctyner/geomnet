@@ -47,4 +47,3 @@ ggplot(data = lesmisnet, aes(from_id = from, to_id = to,
 D. E. Knuth, The Stanford GraphBase: A Platform for Combinatorial Computing, Addison-Wesley, Reading, MA (1993).
 }
 \keyword{datasets}
-

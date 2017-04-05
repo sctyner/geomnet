@@ -24,4 +24,3 @@ D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2.
 The R Journal, 5(1), 144-161. \url{https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf}
 }
 \keyword{datasets}
-

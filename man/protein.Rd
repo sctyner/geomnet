@@ -23,4 +23,3 @@ The variables are as follows:
 H. Jeong, S. Mason, A.L. Barabasi and Z.N. Oltvai, Centrality and lethality of protein networks Nature 411, 41 (2001)
 }
 \keyword{datasets}
-

@@ -29,4 +29,3 @@ The variables are as follows:
 Winston Chang. 2013. R Graphics Cookbook. O'Reilly Media, Inc..
 }
 \keyword{datasets}
-

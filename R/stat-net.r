@@ -130,6 +130,7 @@ compute_network = function(data, layout.alg="kamadakawai", layout.par=list(), si
 
     edges <- rbind(edges, fromonly[, names(edges)])
   }
+
   edges <- mutate(group_by(edges, from, to), weight = n())
   unique(edges)
 },
@@ -147,7 +148,7 @@ compute_panel = function(self, data, scales, na.rm = FALSE,
       data <- mutate(group_by(data, group), .samegroup = to %in% unique(from))
     }
 
-   # #browser()
+#    browser()
     data.frame(data)
   },
 

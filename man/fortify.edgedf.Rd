@@ -24,4 +24,3 @@ data(blood)
 fortify(as.edgedf(blood$edges), blood$vertices)
 fortify(as.edgedf(blood$edges), blood$vertices, group = "Ethnicity")
 }
-

@@ -28,4 +28,3 @@ A list of two datasets, vertices and edges, containing information on blood type
 The variables are as follows:
 }
 \keyword{datasets}
-

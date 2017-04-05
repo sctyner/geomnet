@@ -5,7 +5,7 @@
 \alias{GeomCircle}
 \alias{geom_circle}
 \title{Geom for drawing circles in the ggplot2 framework}
-\format{An object of class \code{GeomCircle} (inherits from \code{Geom}, \code{ggproto}) of length 5.}
+\format{An object of class \code{GeomCircle} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 5.}
 \usage{
 GeomCircle
 
@@ -72,4 +72,3 @@ ggplot(mpg, aes(displ, hwy)) + geom_circle(linetype=2, radius=0.05, alpha=0.5)
 ggplot(mpg, aes(displ, hwy)) + geom_circle(aes(linetype=factor(cyl)), radius=0.05, alpha=0.5)
 }
 \keyword{datasets}
-

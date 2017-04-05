@@ -12,4 +12,3 @@ as.adjmat(dat)
 \description{
 Create and assign a new class for use of \code{geomnet}'s \code{\link{fortify.adjmat}} function.
 }
-

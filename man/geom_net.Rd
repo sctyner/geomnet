@@ -2,12 +2,12 @@
 % Please edit documentation in R/geom-net.r, R/stat-net.r
 \docType{data}
 \name{geom_net}
+\alias{geom_net}
 \alias{GeomNet}
 \alias{StatNet}
-\alias{geom_net}
 \alias{stat_net}
 \title{Networks}
-\format{An object of class \code{GeomNet} (inherits from \code{Geom}, \code{ggproto}) of length 6.}
+\format{An object of class \code{GeomNet} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 6.}
 \usage{
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = FALSE,
@@ -134,6 +134,7 @@ into a single layer in \pkg{ggplot2}. It makes use of various other geoms, inclu
  \item \code{size} 
  }
 }
+
 \examples{
 \dontrun{
 library(geomnet)
@@ -235,4 +236,3 @@ p + geom_net(aes(colour=value), linewidth=0.75, size=4.5, ecolour="grey80") +
   }
 }
 \keyword{datasets}
-

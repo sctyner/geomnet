@@ -27,4 +27,3 @@ blood.igraph <- graph_from_data_frame(d = blood$edges,
 fortify(blood.igraph)
 
 }
-

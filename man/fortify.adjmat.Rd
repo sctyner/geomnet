@@ -22,4 +22,3 @@ adjmat <- as.adjmat(network::as.matrix.network.adjacency(emon$MtSi))
 str(adjmat)
 fortify(adjmat)
 }
-
