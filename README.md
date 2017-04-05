@@ -1,7 +1,7 @@
 The `geomnet` package
 ================
 Sam Tyner, Heike Hofmann
-2016-12-08
+2017-04-05
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN Status](http://www.r-pkg.org/badges/version/geomnet)](https://cran.r-project.org/package=geomnet) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/geomnet)](http://www.r-pkg.org/pkg/geomnet) [![Travis-CI Build Status](https://travis-ci.org/sctyner/geomnet.svg?branch=master)](https://travis-ci.org/sctyner/geomnet)
@@ -110,21 +110,14 @@ Now including interactivity with `ggplotly()`!
 library(geomnet)
 # devtools::install_github("ropensci/plotly")
 library(plotly)
-data("football")
-# data step: merge vertices and edges
-ftnet <- fortify(as.edgedf(football$edges), football$vertices)
+data(blood)
+bloodnet <- fortify(as.edgedf(blood$edges), blood$vertices)
+p <- ggplot(data = bloodnet, aes(from_id = from_id, to_id = to_id))
 
 # create data plot
-gg <- ggplot(data = ftnet,
-       aes(from_id = from_id, to_id = to_id)) +
-  geom_net(layout.alg = 'fruchtermanreingold',
-    aes(colour = value, group = value,
-        linetype = factor(same.conf != 1)),
-    linewidth = 0.5,
-    size = 5, vjust = -0.75, alpha = 0.3) +
-  theme_net() +
-  theme(legend.position = "bottom") +
-  scale_colour_brewer("Conference", palette = "Paired")  +
-  guides(linetype = FALSE)
-ggplotly(gg)
+p2 <- p + geom_net(aes(size=Predominance, colour=type, shape=rho, linetype=group_to),
+             linewidth=0.75, labelon =TRUE, directed = TRUE, labelcolour="black") +
+  facet_wrap(~Ethnicity) +
+  scale_colour_brewer(palette="Set2") 
+ggplotly(p2)
 ```
