@@ -21,10 +21,10 @@ Imports:
     dplyr,
     tidyr,
     readr,
-    plotly
+    plotly (>= 4.5.6.9)
 Suggests:
     ggrepel,
     knitr,
     igraph,
     ggmap
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
