@@ -13,9 +13,10 @@ to_basic.GeomNet <- function(data, prestats_data, layout, params, p, ...) {
   # edge_names <- c("from","to", "x", "y","xend", "yend", ".selfie", "weight", ".samegroup", "ymax", "xmax", "width", "linetype", "linewidth", "fontsize", "arrowsize", "stroke", "PANEL")
   node_data <- unique(data[, node_names])
   node_data <- getFromNamespace("prefix_class", asNamespace("plotly"))(node_data, "GeomPoint")
-  htext <- apply(t(apply(do.call("rbind",strsplit(node_data$hovertext, "<br>")), 1, unique)), 1, paste, collapse = "<br>")
+  
+  htext <- apply(t(apply(do.call("rbind",strsplit(node_data$hovertext, "<br />")), 1, unique)), 1, paste, collapse = "<br />")
   node_data$hovertext <- paste0("Node ID:", node_data$from,
-                                 "<br>", htext)
+                                 "<br />", htext)
   # edge_data <- unique(data[, edge_names])
   edge_data <- data
   edge_data <- edge_data[which(!edge_data$.selfie),]
