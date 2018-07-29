@@ -1,3 +1,7 @@
+# geomnet 0.3.0
+
+Update to account for changes in ggplot2 version 3.0.0
+
 # geomnet 0.2.0
 
 This version of geomnet has been updated to account for changes in ggplot2 version 2.2.0.

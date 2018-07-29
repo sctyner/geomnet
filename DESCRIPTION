@@ -1,9 +1,13 @@
 Package: geomnet
 Type: Package
 Title: Network Visualization in the 'ggplot2' Framework
-Version: 0.2.0.9001
-Date: 2016-11-14
+Version: 0.3.0
+Date: 2018-07-29
 Author: Samantha Tyner, Heike Hofmann
+Authors@R: c(
+    person("Samantha", "Tyner", email = "sctyner@iastate.edu", role = c("aut", "cre")),
+    person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "ctb"))
+  )
 Maintainer: Samantha Tyner <sctyner@iastate.edu>
 Description: Network visualization in the 'ggplot2' framework. Network
     functionality is provided in a single 'ggplot2' layer by calling the geom 'net'.
@@ -13,8 +17,8 @@ URL: http://github.com/sctyner/geomnet
 BugReports: https://github.com/sctyner/geomnet/issues
 LazyData: TRUE
 Depends:
-    R (>= 2.14),
-    ggplot2 (>= 2.2.0)
+    R (>= 3.5),
+    ggplot2 (>= 3.0.0)
 Imports:
     sna,
     network, 
@@ -27,4 +31,5 @@ Suggests:
     knitr,
     igraph,
     ggmap
+VignetteBuilder: knitr
 RoxygenNote: 6.0.1
