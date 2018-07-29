@@ -1,6 +1,9 @@
 # geomnet 0.3.0
 
 Update to account for changes in ggplot2 version 3.0.0
+- website added
+- vignette added
+- minor bug fixes
 
 # geomnet 0.2.0
 

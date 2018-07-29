@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">geomnet</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0.9001</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
       </span>
     </div>
 
@@ -102,8 +102,8 @@
 <a class="sourceLine" id="cb1-5" data-line-number="5">TEnet &lt;-<span class="st"> </span><span class="kw">fortify</span>(<span class="kw"><a href="reference/as.edgedf.html">as.edgedf</a></span>(theme_elements<span class="op">$</span>edges[,<span class="kw">c</span>(<span class="st">"parent"</span>, <span class="st">"child"</span>)]), theme_elements<span class="op">$</span>vertices)</a>
 <a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co"># create a degree variable for use later</span></a>
 <a class="sourceLine" id="cb1-7" data-line-number="7">TEnet &lt;-<span class="st"> </span>TEnet <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(from_id) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">degree =</span> <span class="kw">sqrt</span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/n.html">n</a></span>() <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/group_by">group_by</a></span>(from_id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/mutate">mutate</a></span>(<span class="dt">degree =</span> <span class="kw">sqrt</span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/n">n</a></span>() <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))</a>
 <a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co"># plot</span></a>
 <a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">ggplot</span>(<span class="dt">data =</span> TEnet,</a>
 <a class="sourceLine" id="cb1-12" data-line-number="12">       <span class="kw">aes</span>(<span class="dt">from_id =</span> from_id, <span class="dt">to_id =</span> to_id)) <span class="op">+</span></a>
