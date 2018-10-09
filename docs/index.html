@@ -102,8 +102,8 @@
 <a class="sourceLine" id="cb1-5" data-line-number="5">TEnet &lt;-<span class="st"> </span><span class="kw">fortify</span>(<span class="kw"><a href="reference/as.edgedf.html">as.edgedf</a></span>(theme_elements<span class="op">$</span>edges[,<span class="kw">c</span>(<span class="st">"parent"</span>, <span class="st">"child"</span>)]), theme_elements<span class="op">$</span>vertices)</a>
 <a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co"># create a degree variable for use later</span></a>
 <a class="sourceLine" id="cb1-7" data-line-number="7">TEnet &lt;-<span class="st"> </span>TEnet <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/group_by">group_by</a></span>(from_id) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/mutate">mutate</a></span>(<span class="dt">degree =</span> <span class="kw">sqrt</span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/dplyr/topics/n">n</a></span>() <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(from_id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">degree =</span> <span class="kw">sqrt</span>(<span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/n.html">n</a></span>() <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))</a>
 <a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co"># plot</span></a>
 <a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">ggplot</span>(<span class="dt">data =</span> TEnet,</a>
 <a class="sourceLine" id="cb1-12" data-line-number="12">       <span class="kw">aes</span>(<span class="dt">from_id =</span> from_id, <span class="dt">to_id =</span> to_id)) <span class="op">+</span></a>
@@ -114,7 +114,7 @@
 <a class="sourceLine" id="cb1-17" data-line-number="17">    <span class="dt">linewidth =</span> <span class="fl">0.5</span>, <span class="dt">repel =</span> <span class="ot">TRUE</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb1-18" data-line-number="18"><span class="st">  </span><span class="kw"><a href="reference/theme_net.html">theme_net</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb1-19" data-line-number="19"><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="op">-</span><span class="fl">0.05</span>, <span class="fl">1.05</span>))</a></code></pre></div>
-<p><img src="README-theme-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="index_files/figure-html/theme-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div id="blood-donation-diagram" class="section level2">
 <h2 class="hasAnchor">
@@ -128,7 +128,7 @@
 <a class="sourceLine" id="cb2-6" data-line-number="6">           <span class="dt">arrowsize =</span> <span class="fl">1.5</span>, <span class="dt">linewidth =</span> <span class="fl">0.5</span>, <span class="dt">arrowgap =</span> <span class="fl">0.05</span>,</a>
 <a class="sourceLine" id="cb2-7" data-line-number="7">           <span class="dt">selfloops =</span> <span class="ot">TRUE</span>, <span class="dt">ecolour =</span> <span class="st">"grey40"</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb2-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="reference/theme_net.html">theme_net</a></span>() </a></code></pre></div>
-<p><img src="README-blood-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="index_files/figure-html/blood-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div id="harry-potter-peer-support-network" class="section level2">
 <h2 class="hasAnchor">
@@ -165,7 +165,7 @@
 <a class="sourceLine" id="cb3-29" data-line-number="29">                                 <span class="st">"#071A80"</span>, <span class="st">"#154C07"</span>)) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb3-30" data-line-number="30"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>book, <span class="dt">labeller =</span> <span class="st">"label_both"</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb3-31" data-line-number="31"><span class="st">  </span><span class="kw"><a href="reference/theme_net.html">theme_net</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">'black'</span>))</a></code></pre></div>
-<p><img src="README-HPplot-1.png" width="960" style="display: block; margin: auto;"></p>
+<p><img src="index_files/figure-html/HPplot-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div id="interactivity-with-plotly" class="section level2">
 <h2 class="hasAnchor">

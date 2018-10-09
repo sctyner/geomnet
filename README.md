@@ -1,22 +1,34 @@
 The `geomnet` package
 ================
 Sam Tyner, Heike Hofmann
-2017-04-05
+2018-10-09
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN Status](http://www.r-pkg.org/badges/version/geomnet)](https://cran.r-project.org/package=geomnet) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/geomnet)](http://www.r-pkg.org/pkg/geomnet) [![Travis-CI Build Status](https://travis-ci.org/sctyner/geomnet.svg?branch=master)](https://travis-ci.org/sctyner/geomnet)
 
-`geomnet` is a package built on top of the most recent major `ggplot2` release. It provides a `ggplot2` `geom` called `geom_net` to visualize graphs and networks. It also include the function `stat_net` to calculate network layouts with the `sna` package. Finally, the function `geom_circle` is included to draw circles using `ggplot2`.
+[![CRAN
+Status](http://www.r-pkg.org/badges/version/geomnet)](https://cran.r-project.org/package=geomnet)
+[![CRAN RStudio mirror
+downloads](http://cranlogs.r-pkg.org/badges/geomnet)](http://www.r-pkg.org/pkg/geomnet)
+[![Travis-CI Build
+Status](https://travis-ci.org/sctyner/geomnet.svg?branch=master)](https://travis-ci.org/sctyner/geomnet)
 
-You can install `geomnet` directly from CRAN `install.packages('geomnet')` or from Github `devtools::install_github("sctyner/geomnet")`
+`geomnet` is a package built on top of the most recent major `ggplot2`
+release. It provides a `ggplot2` `geom` called `geom_net` to visualize
+graphs and networks. It also include the function `stat_net` to
+calculate network layouts with the `sna` package. Finally, the function
+`geom_circle` is included to draw circles using `ggplot2`.
 
-Examples
-========
+You can install `geomnet` directly from CRAN
+`install.packages('geomnet')` or from Github
+`devtools::install_github("sctyner/geomnet")`
 
-`ggplot2` Theme Elements
-------------------------
+# Examples
 
-This example shows the theme inheritance properties of the theme elements of `ggplot2`. Note: this example has not been updated since the release of `ggplot2 2.2.0` and as such the content may have changed.
+## `ggplot2` Theme Elements
+
+This example shows the theme inheritance properties of the theme
+elements of `ggplot2`. Note: this example has not been updated since the
+release of `ggplot2 2.2.0` and as such the content may have changed.
 
 ``` r
 library(dplyr)
@@ -40,12 +52,14 @@ ggplot(data = TEnet,
   xlim(c(-0.05, 1.05))
 ```
 
-<img src="README-theme-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/theme-1.png" style="display: block; margin: auto;" />
 
-Blood Donation Diagram
-----------------------
+## Blood Donation Diagram
 
-In this example, we reimagine the [traditional blood donation diagram](http://www.redcrossblood.org/learn-about-blood/blood-types) as a directed network. Arrows point to the blood type that receives. This example provides two data frames to `geom_net()`.
+In this example, we reimagine the [traditional blood donation
+diagram](http://www.redcrossblood.org/learn-about-blood/blood-types) as
+a directed network. Arrows point to the blood type that receives. This
+example provides two data frames to `geom_net()`.
 
 ``` r
 library(geomnet)
@@ -58,12 +72,15 @@ ggplot(data = blood$edges, aes(from_id = from, to_id = to)) +
   theme_net() 
 ```
 
-<img src="README-blood-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/blood-1.png" style="display: block; margin: auto;" />
 
-Harry Potter Peer Support Network
----------------------------------
+## Harry Potter Peer Support Network
 
-In this fun example from [this website](http://www.stats.ox.ac.uk/~snijders/siena/siena.html), there is a tie between two students if one provides emotional support to the other at some point in the book. It is a directed network, so in the visualization, the arrow points to the student receiving support.
+In this fun example from [this
+website](http://www.stats.ox.ac.uk/~snijders/siena/siena.html), there is
+a tie between two students if one provides emotional support to the
+other at some point in the book. It is a directed network, so in the
+visualization, the arrow points to the student receiving support.
 
 ``` r
 library(geomnet)
@@ -99,14 +116,14 @@ ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) +
   theme_net() + theme(panel.background = element_rect(colour = 'black'))
 ```
 
-<img src="README-HPplot-1.png" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/HPplot-1.png" style="display: block; margin: auto;" />
 
-Interactivity with `plotly`!
-----------------------------
+## Interactivity with `plotly`\!
 
-Now including interactivity with `ggplotly()`!
+Now including interactivity with `ggplotly()`\!
 
 ``` r
+# blood donation example
 library(geomnet)
 # devtools::install_github("ropensci/plotly")
 library(plotly)
@@ -119,5 +136,24 @@ p2 <- p + geom_net(aes(size=Predominance, colour=type, shape=rho, linetype=group
              linewidth=0.75, labelon =TRUE, directed = TRUE, labelcolour="black") +
   facet_wrap(~Ethnicity) +
   scale_colour_brewer(palette="Set2") 
-ggplotly(p2)
+ggplotly(p2) %>% hide_legend()
+
+# Classic College Football Example
+data("football")
+# data step: merge vertices and edges
+ftnet <- fortify(as.edgedf(football$edges), football$vertices)
+
+# create data plot
+gg <- ggplot(data = ftnet,
+       aes(from_id = from_id, to_id = to_id)) +
+  geom_net(layout.alg = 'fruchtermanreingold',
+    aes(colour = value, group = value,
+        linetype = factor(same.conf != 1)),
+    linewidth = 0.5,
+    size = 5, vjust = -0.75, alpha = 0.3) +
+  theme_net() +
+  theme(legend.position = "bottom") +
+  scale_colour_brewer("Conference", palette = "Paired")  +
+  guides(linetype = FALSE)
+ggplotly(gg)
 ```

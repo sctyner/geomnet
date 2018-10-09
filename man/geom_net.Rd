@@ -11,12 +11,12 @@
 \usage{
 geom_net(mapping = NULL, data = NULL, stat = "net",
   position = "identity", show.legend = NA, na.rm = FALSE,
-  inherit.aes = TRUE, layout.alg = "kamadakawai", layout.par = list(),
-  directed = FALSE, fiteach = FALSE, selfloops = FALSE,
-  singletons = TRUE, alpha = 0.25, ecolour = NULL, ealpha = NULL,
-  arrow = NULL, arrowgap = 0.01, arrowsize = 1, labelon = FALSE,
-  labelcolour = NULL, labelgeom = "text", repel = FALSE,
-  vertices = NULL, ...)
+  inherit.aes = TRUE, layout.alg = "kamadakawai",
+  layout.par = list(), directed = FALSE, fiteach = FALSE,
+  selfloops = FALSE, singletons = TRUE, alpha = 0.25,
+  ecolour = NULL, ealpha = NULL, arrow = NULL, arrowgap = 0.01,
+  arrowsize = 1, labelon = FALSE, labelcolour = NULL,
+  labelgeom = "text", repel = FALSE, vertices = NULL, ...)
 
 GeomNet
 
