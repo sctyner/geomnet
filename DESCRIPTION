@@ -3,9 +3,9 @@ Type: Package
 Title: Network Visualization in the 'ggplot2' Framework
 Version: 0.3.0
 Date: 2018-07-29
-Author: Samantha Tyner, Heike Hofmann
+Author: Sam Tyner, Heike Hofmann
 Authors@R: c(
-    person("Samantha", "Tyner", email = "sctyner@iastate.edu", role = c("aut", "cre")),
+    person("Sam", "Tyner", email = "sctyner@iastate.edu", role = c("aut", "cre")),
     person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "ctb"))
   )
 Maintainer: Samantha Tyner <sctyner@iastate.edu>
