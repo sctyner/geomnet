@@ -16,10 +16,12 @@ You can install `geomnet` directly from CRAN
 `install.packages('geomnet')`
 or from Github
 `devtools::install_github("sctyner/geomnet")`
+
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.path = "man/figures/README-"
 )
 ```
 

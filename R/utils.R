@@ -4,7 +4,7 @@
 #' @param dat A square adjacency matrix.
 #' @export
 as.adjmat <- function(dat){
-  if (class(dat) != "matrix"){
+  if (!inherits(dat, "matrix")){
     stop("as.adjmat requires a matrix object")
   }
   if (nrow(dat) != ncol(dat)){

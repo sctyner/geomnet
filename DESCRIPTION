@@ -1,7 +1,7 @@
 Package: geomnet
 Type: Package
 Title: Network Visualization in the 'ggplot2' Framework
-Version: 0.3.0
+Version: 0.3.1
 Date: 2018-07-29
 Author: Sam Tyner, Heike Hofmann
 Authors@R: c(
@@ -30,6 +30,9 @@ Suggests:
     ggrepel,
     knitr,
     igraph,
-    ggmap
+    ggmap,
+    spelling
 VignetteBuilder: knitr
+Encoding: UTF-8
+Language: en-US
 RoxygenNote: 6.1.0
