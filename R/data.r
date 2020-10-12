@@ -142,9 +142,9 @@
 #'   scale_colour_brewer("Conference", palette = "Paired")
 "football"
 
-#' Coappearance network of characters in Les Miserables (undirected)
+#' Co-appearance network of characters in Les Miserables (undirected)
 #'
-#' A list of two datasets, vertices and edges, containing data on characters and their coapperance in chapters in Victor Hugo's Les Miserables.
+#' A list of two datasets, vertices and edges, containing data on characters and their co-appearance in chapters in Victor Hugo's Les Miserables.
 #' The variables are as follows:
 #'
 #' @references D. E. Knuth, The Stanford GraphBase: A Platform for Combinatorial Computing, Addison-Wesley, Reading, MA (1993).

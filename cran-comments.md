@@ -1,9 +1,9 @@
-This update corresponds to the newest update of `ggplot2`, version 2.2.0.
+This update corresponds to the newest update of `dplyr`, version 1.0.2.
 
 # Test Environments
-* local OS X (El Capitan) install, R 3.3.2
+* local OS X (El Capitan) install, R 4.0.2
 * win-builder (devel and release)
-* ubuntu 12.04 (on travis-ci), R 3.3.1
+* ubuntu 12.04 (on travis-ci), R 4.0.2
 
 # R CMD check results
 

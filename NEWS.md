@@ -1,3 +1,9 @@
+# geomnet 0.3.1
+
+- Update to fix changes in dplyr - specifically use `dplyr::n()`
+- Use `inhereits(dat, "matrix")` instead of `class(x) =! "matrix"`
+- Adds spell check WORDLIST
+
 # geomnet 0.3.0
 
 Update to account for changes in ggplot2 version 3.0.0
