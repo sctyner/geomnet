@@ -3,8 +3,9 @@
 \docType{data}
 \name{lesmis}
 \alias{lesmis}
-\title{Coappearance network of characters in Les Miserables (undirected)}
-\format{A list of two data frames:
+\title{Co-appearance network of characters in Les Miserables (undirected)}
+\format{
+A list of two data frames:
 \itemize{
 \item the edges data set consists of three variables of length 254:
 \itemize{
@@ -17,12 +18,13 @@
   \item id: Character ID number
   \item label: Character name
 }
-}}
+}
+}
 \usage{
 lesmis
 }
 \description{
-A list of two datasets, vertices and edges, containing data on characters and their coapperance in chapters in Victor Hugo's Les Miserables.
+A list of two datasets, vertices and edges, containing data on characters and their co-appearance in chapters in Victor Hugo's Les Miserables.
 The variables are as follows:
 }
 \examples{

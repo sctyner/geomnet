@@ -4,7 +4,8 @@
 \name{madmen}
 \alias{madmen}
 \title{Network of romantic relationships in the TV show Mad Men (undirected)}
-\format{A list of two data frames:
+\format{
+A list of two data frames:
 \itemize{
 \item the edges data set consists of two variables of length 39:
 \itemize{
@@ -15,7 +16,8 @@
   \item label: Factor variable with name of the character,
   \item Gender: Factor variable of the gender of the character.
 }
-}}
+}
+}
 \usage{
 madmen
 }

@@ -5,8 +5,9 @@ Version: 0.3.1
 Date: 2018-07-29
 Author: Sam Tyner, Heike Hofmann
 Authors@R: c(
-    person("Sam", "Tyner", email = "sctyner@iastate.edu", role = c("aut", "cre")),
-    person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "ctb"))
+    person("Sam", "Tyner", email = "sctyner90@gmail.com", role = c("aut", "cre")),
+    person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "ctb")),
+    person("Nicholas", "Tierney", email = "nicholas.tierney@gmail.com",  role = "ctb")
   )
 Maintainer: Samantha Tyner <sctyner@iastate.edu>
 Description: Network visualization in the 'ggplot2' framework. Network
@@ -35,4 +36,4 @@ Suggests:
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.0

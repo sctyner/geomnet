@@ -7,29 +7,63 @@
 \alias{StatNet}
 \alias{stat_net}
 \title{Networks}
-\format{An object of class \code{GeomNet} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 6.}
+\format{
+An object of class \code{GeomNet} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 6.
+
+An object of class \code{StatNet} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 8.
+}
 \usage{
-geom_net(mapping = NULL, data = NULL, stat = "net",
-  position = "identity", show.legend = NA, na.rm = FALSE,
-  inherit.aes = TRUE, layout.alg = "kamadakawai",
-  layout.par = list(), directed = FALSE, fiteach = FALSE,
-  selfloops = FALSE, singletons = TRUE, alpha = 0.25,
-  ecolour = NULL, ealpha = NULL, arrow = NULL, arrowgap = 0.01,
-  arrowsize = 1, labelon = FALSE, labelcolour = NULL,
-  labelgeom = "text", repel = FALSE, vertices = NULL, ...)
+geom_net(
+  mapping = NULL,
+  data = NULL,
+  stat = "net",
+  position = "identity",
+  show.legend = NA,
+  na.rm = FALSE,
+  inherit.aes = TRUE,
+  layout.alg = "kamadakawai",
+  layout.par = list(),
+  directed = FALSE,
+  fiteach = FALSE,
+  selfloops = FALSE,
+  singletons = TRUE,
+  alpha = 0.25,
+  ecolour = NULL,
+  ealpha = NULL,
+  arrow = NULL,
+  arrowgap = 0.01,
+  arrowsize = 1,
+  labelon = FALSE,
+  labelcolour = NULL,
+  labelgeom = "text",
+  repel = FALSE,
+  vertices = NULL,
+  ...
+)
 
 GeomNet
 
 StatNet
 
-stat_net(mapping = NULL, data = NULL, geom = "net",
-  position = "identity", show.legend = NA, inherit.aes = TRUE,
-  layout.alg = "kamadakawai", layout.par = list(), fiteach = FALSE,
-  vertices = NULL, singletons = TRUE, na.rm = FALSE, ...)
+stat_net(
+  mapping = NULL,
+  data = NULL,
+  geom = "net",
+  position = "identity",
+  show.legend = NA,
+  inherit.aes = TRUE,
+  layout.alg = "kamadakawai",
+  layout.par = list(),
+  fiteach = FALSE,
+  vertices = NULL,
+  singletons = TRUE,
+  na.rm = FALSE,
+  ...
+)
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
-\code{\link[=aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
+\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply \code{mapping} if there is no plot mapping.}
 
@@ -37,15 +71,16 @@ plot. You must supply \code{mapping} if there is no plot mapping.}
 options:
 
 If \code{NULL}, the default, the data is inherited from the plot
-data as specified in the call to \code{\link[=ggplot]{ggplot()}}.
+data as specified in the call to \code{\link[ggplot2:ggplot]{ggplot()}}.
 
 A \code{data.frame}, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-\code{\link[=fortify]{fortify()}} for which variables will be created.
+\code{\link[ggplot2:fortify]{fortify()}} for which variables will be created.
 
 A \code{function} will be called with a single argument,
-the plot data. The return value must be a \code{data.frame.}, and
-will be used as the layer data.}
+the plot data. The return value must be a \code{data.frame}, and
+will be used as the layer data. A \code{function} can be created
+from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{stat}{The statistical transformation to use on the data for this
 layer, as a string.}
@@ -65,7 +100,7 @@ a warning. If \code{TRUE}, missing values are silently removed.}
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
 \item{layout.alg}{character. Value specifying the layout algorithm to use. Defaults to "kamadakawai". See \code{?sna::}\code{\link[sna]{gplot.layout}} documentation for more choices.}
 
@@ -101,9 +136,9 @@ the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 
 \item{vertices}{data frame. Dataset containing vertex information. Usage is a bit awkward, because every variable in this data set can only be used with the ggplot2 double dot representation ..varname.. Better: use the \code{\link{fortify.edgedf}} method}
 
-\item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
+\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
-\code{color = "red"} or \code{size = 3}. They may also be parameters
+\code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 
 \item{geom}{\code{geom_net}, the geom attached to \code{stat_net} is called \code{"net"}.}

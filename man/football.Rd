@@ -4,7 +4,8 @@
 \name{football}
 \alias{football}
 \title{College football games network (undirected)}
-\format{A list of two data frames:
+\format{
+A list of two data frames:
 \itemize{
 \item the edges data set consists of three variables of length 613:
 \itemize{
@@ -16,7 +17,8 @@
   \item label: Character variable containing the school names
   \item value: Character variable containing the conference of the schools
 }
-}}
+}
+}
 \usage{
 football
 }

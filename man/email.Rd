@@ -4,7 +4,8 @@
 \name{email}
 \alias{email}
 \title{Email network (directed)}
-\format{A list of two data frames:
+\format{
+A list of two data frames:
 \itemize{
 \item the edges data set consists of ten variables of length 9063:
 \itemize{
@@ -38,7 +39,8 @@
   \item MilitaryServiceBranch: Branch of the (fictional) military in which the employee serves
   \item MilitaryDischargeType: General or honorable discharge from military service?
 }
-}}
+}
+}
 \usage{
 email
 }

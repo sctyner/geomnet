@@ -4,7 +4,8 @@
 \name{mm.directed}
 \alias{mm.directed}
 \title{A directed network of Mad Men relationships}
-\format{A list of two data frames:
+\format{
+A list of two data frames:
 \itemize{
 \item the edges data set consists of two variables of length 87:
 \itemize{
@@ -16,7 +17,8 @@
   \item label: Factor variable with name of the character
   \item Gender: Factor variable with gender of the character
 }
-}}
+}
+}
 \usage{
 mm.directed
 }

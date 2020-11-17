@@ -4,7 +4,8 @@
 \name{theme_elements}
 \alias{theme_elements}
 \title{\pkg{ggplot2} theme attribute inheritance network (directed)}
-\format{A list of two data frames:
+\format{
+A list of two data frames:
 \itemize{
 \item the edges data frame consists of two variables of length 48:
 \itemize{
@@ -15,7 +16,8 @@
 \itemize{
   \item name: Name of the theme element
 }
-}}
+}
+}
 \usage{
 theme_elements
 }

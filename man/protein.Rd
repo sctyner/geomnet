@@ -4,14 +4,16 @@
 \name{protein}
 \alias{protein}
 \title{A protein interaction network (undirected)}
-\format{A list of two data frames:
+\format{
+A list of two data frames:
 \itemize{
 \item the edges data set consists of two variables of length 4480:
 \itemize{
   \item from, to: Integer variables describing interactions between proteins, which are identified integers
 }
 \item the vertices vector consists of the corresponding IDs of 2113 proteins in the edges data set
-}}
+}
+}
 \usage{
 protein
 }

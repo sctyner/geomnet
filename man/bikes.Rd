@@ -4,7 +4,8 @@
 \name{bikes}
 \alias{bikes}
 \title{Bike sharing network (directed)}
-\format{A list of two data frames:
+\format{
+A list of two data frames:
 \itemize{
 \item the trips data set consists of four variables of length 53:
 \itemize{
@@ -22,7 +23,8 @@
   \item long: Longitude of station location
   \item nbDocks: Number of bike docks at the station
 }
-}}
+}
+}
 \usage{
 bikes
 }
