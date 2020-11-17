@@ -9,7 +9,7 @@ Authors@R: c(
     person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "ctb")),
     person("Nicholas", "Tierney", email = "nicholas.tierney@gmail.com",  role = "ctb")
   )
-Maintainer: Samantha Tyner <sctyner@iastate.edu>
+Maintainer: Samantha Tyner <sctyner90@gmail.com>
 Description: Network visualization in the 'ggplot2' framework. Network
     functionality is provided in a single 'ggplot2' layer by calling the geom 'net'.
     Layouts are calculated using the 'sna' package, example networks are included.
