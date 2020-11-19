@@ -46,7 +46,7 @@ email
 }
 \description{
 A list of two datasets, vertices and edges, containing data on employees and (fictitious)
-email headers from two weeks of internal GAStech company email between employees made available as part of the VAST challenge 2014 (K. Cook, G. Grinstein, M. Whiting, see \url{http://hcil2.cs.umd.edu/newvarepository/benchmarks.php}).
+email headers from two weeks of internal GAStech company email between employees made available as part of the VAST challenge 2014 (K. Cook, G. Grinstein, M. Whiting, see \url{http://www.cs.umd.edu/hcil/varepository/benchmarks.php}).
 The variables are as follows:
 }
 \keyword{datasets}

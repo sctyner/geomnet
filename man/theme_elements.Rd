@@ -22,7 +22,7 @@ A list of two data frames:
 theme_elements
 }
 \description{
-A list of two datasets, vertices and edges, containing data on the inheritance structure of theme elements in \pkg{ggplot2} (see \url{http://docs.ggplot2.org/current/theme.html})
+A list of two datasets, vertices and edges, containing data on the inheritance structure of theme elements in \pkg{ggplot2} (see \url{https://ggplot2.tidyverse.org/reference/theme.html})
 The variables are as follows:
 }
 \keyword{datasets}

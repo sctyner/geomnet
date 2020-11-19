@@ -2,8 +2,7 @@ Package: geomnet
 Type: Package
 Title: Network Visualization in the 'ggplot2' Framework
 Version: 0.3.1
-Date: 2018-07-29
-Author: Sam Tyner, Heike Hofmann
+Date: 2020-11-19
 Authors@R: c(
     person("Sam", "Tyner", email = "sctyner90@gmail.com", role = c("aut", "cre")),
     person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "ctb")),
@@ -13,7 +12,7 @@ Description: Network visualization in the 'ggplot2' framework. Network
     functionality is provided in a single 'ggplot2' layer by calling the geom 'net'.
     Layouts are calculated using the 'sna' package, example networks are included.
 License: GPL (>= 2)
-URL: http://github.com/sctyner/geomnet
+URL: https://github.com/sctyner/geomnet
 BugReports: https://github.com/sctyner/geomnet/issues
 LazyData: TRUE
 Depends:
@@ -31,7 +30,8 @@ Suggests:
     knitr,
     igraph,
     ggmap,
-    spelling
+    spelling,
+    rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
