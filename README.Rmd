@@ -1,11 +1,11 @@
 ---
-title: "The `geomnet` package"
-author: Sam Tyner, Heike Hofmann
-date: "`r Sys.Date()`"
 output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# geomnet <img src="man/figures/logo.png" align="right" width="120" />
+
 [![CRAN Status](http://www.r-pkg.org/badges/version/geomnet)](https://cran.r-project.org/package=geomnet)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/geomnet)](https://www.r-pkg.org/pkg/geomnet)
 [![Travis-CI Build Status](https://travis-ci.org/sctyner/geomnet.svg?branch=master)](https://travis-ci.org/sctyner/geomnet)
