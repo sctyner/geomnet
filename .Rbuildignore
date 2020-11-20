@@ -6,3 +6,4 @@ cran-comments.md
 ^README-.*\.png$
 ^\.travis\.yml$
 ^docs$
+pkgdown
