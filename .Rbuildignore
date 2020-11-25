@@ -7,3 +7,4 @@ cran-comments.md
 ^\.travis\.yml$
 ^docs$
 pkgdown
+^CRAN-RELEASE$

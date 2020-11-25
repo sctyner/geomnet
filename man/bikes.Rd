@@ -29,12 +29,12 @@ A list of two data frames:
 bikes
 }
 \description{
-This network is a summary of the bike trips taken by customers of the bike sharing company Capital Bikeshare (\url{https://secure.capitalbikeshare.com/}) during the second quarter of 2015.
+This network is a summary of the bike trips taken by customers of the bike sharing company Capital Bikeshare (\url{https://secure.capitalbikeshare.com/profile/}) during the second quarter of 2015.
 Only trips between stations in the vicinity of Rockville, MD, are included.
 The data is organized as a list of two datasets, vertices (stations) and edges (trips between stations),
 as follows:
 }
 \references{
-\url{https://secure.capitalbikeshare.com/}
+\url{https://secure.capitalbikeshare.com/profile/}
 }
 \keyword{datasets}

@@ -1,3 +1,11 @@
+## Resubmission
+This is a resubmission. I have corrected the following: 
+
+- Possibly invalid URL https://secure.capitalbikeshare.com/ changed to 
+https://secure.capitalbikeshare.com/profile/
+
+# Submission on 2020-11-19
+
 This update corresponds to the newest update of `dplyr`, version 1.0.2.
 
 # Test Environments
