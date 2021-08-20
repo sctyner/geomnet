@@ -38,9 +38,9 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 
 
   draw_panel = function(data, panel_scales, coord,  radius.fixed, na.rm = TRUE) {
-    print("---")
+    #print("---")
     print(radius.fixed)
-    print("---")
+    #print("---")
     
     if(radius.fixed) {
       dx <- abs(panel_scales$x.range[2] - panel_scales$x.range[1])
@@ -76,6 +76,7 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' It is not explored for any more general use, so use with caution!
 #' @inheritParams ggplot2::geom_point
 #' @param radius numeric value giving the radius of the circle to be drawn (0-1 normalized scale)
+#' @param radius.fixed Make the size of the radius fixed to grid coordinates instead of xlim and ylim (T/F)
 #' @export
 #' @examples
 #' # circles are drawn centered at x and y
@@ -92,9 +93,9 @@ geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
                         position = "identity", na.rm = FALSE, show.legend = NA,
                         inherit.aes = TRUE, radius = 0.05, radius.fixed = F, ...) {
   
-  print(":::")
+  #print(":::")
   print(radius.fixed)
-  print(":::")
+  #print(":::")
   
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
