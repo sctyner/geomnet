@@ -38,6 +38,10 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 
 
   draw_panel = function(data, panel_scales, coord, radius.fixed, na.rm = TRUE) {
+    print("---")
+    print(radius.fixed)
+    print("---")
+    
     if(radius.fixed) {
       dx <- abs(panel_scales$x.range[2] - panel_scales$x.range[1])
       dy <- abs(panel_scales$y.range[2] - panel_scales$y.range[1])
@@ -90,6 +94,10 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
                               position = "identity", na.rm = FALSE, show.legend = NA,
                               inherit.aes = TRUE, radius = 0.05, radius.fixed=F, ...) {
+  print(":::")
+  print(radius.fixed)
+  print(":::")
+
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
