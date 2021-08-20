@@ -20,6 +20,7 @@ geom_circle(
   show.legend = NA,
   inherit.aes = TRUE,
   radius = 0.05,
+  radius.fixed = F,
   ...
 )
 }
@@ -66,6 +67,8 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
 \item{radius}{numeric value giving the radius of the circle to be drawn (0-1 normalized scale)}
 
+\item{radius.fixed}{Make the size of the radius fixed to grid coordinates instead of xlim and ylim (T/F)}
+
 \item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
@@ -83,5 +86,8 @@ data(mpg)
 ggplot(mpg, aes(displ, hwy)) + geom_circle(radius=0.1) + geom_point()
 ggplot(mpg, aes(displ, hwy)) + geom_circle(linetype=2, radius=0.05, alpha=0.5)
 ggplot(mpg, aes(displ, hwy)) + geom_circle(aes(linetype=factor(cyl)), radius=0.05, alpha=0.5)
+df = data.frame(x = 0, y = 0)
+ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=1, col="red", radius.fixed=T) + xlim(-3,3) + ylim(-3,3)
+ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=0.55, col="red", radius.fixed=F) + xlim(-3,3) + ylim(-3,3)
 }
 \keyword{datasets}

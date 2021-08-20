@@ -31,8 +31,9 @@ Suggests:
     igraph,
     ggmap,
     spelling,
-    rmarkdown
+    rmarkdown,
+    markdown
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1.9001
