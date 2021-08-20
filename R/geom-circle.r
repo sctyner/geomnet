@@ -37,7 +37,7 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
   },
 
 
-  draw_panel = function(data, panel_scales, coord,  na.rm = TRUE) {
+  draw_panel = function(data, panel_scales, coord, radius.fixed, na.rm = TRUE) {
     if(radius.fixed) {
       dx <- abs(panel_scales$x.range[2] - panel_scales$x.range[1])
       dy <- abs(panel_scales$y.range[2] - panel_scales$y.range[1])
