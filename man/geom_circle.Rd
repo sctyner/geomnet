@@ -19,7 +19,6 @@ geom_circle(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  radius = 0.05,
   radius.fixed = F,
   ...
 )
@@ -65,14 +64,14 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
-\item{radius}{numeric value giving the radius of the circle to be drawn (0-1 normalized scale)}
-
 \item{radius.fixed}{Make the size of the radius fixed to grid coordinates instead of xlim and ylim (T/F)}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
+
+\item{radius}{numeric value giving the radius of the circle to be drawn (0-1 normalized scale)}
 }
 \description{
 Circles are drawn with a specified radius centered at (x, y).

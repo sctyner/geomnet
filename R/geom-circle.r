@@ -19,7 +19,7 @@ scaleRadius <- function(data) {
 GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
   required_aes = c("x", "y", "radius", "radius.fixed"),
   default_aes = ggplot2::aes(
-    colour = "grey30", fill=NA, alpha=NA, linewidth=1, linetype="solid"),
+    colour = "grey30", fill=NA, alpha=NA, linewidth=1, linetype="solid", radius=0.5 ),
 
   draw_key = function (data, params, size)
   {
@@ -96,9 +96,11 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=1, col="red", radius.fixed=T) + xlim(-3,3) + ylim(-3,3)
 #' ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=0.55, col="red", radius.fixed=F) + xlim(-3,3) + ylim(-3,3)
 
+# radius = 0.05, 
+
 geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
                         position = "identity", na.rm = FALSE, show.legend = NA,
-                        inherit.aes = TRUE, radius = 0.05, radius.fixed = F, ...) {
+                        inherit.aes = TRUE, radius.fixed = F, ...) {
   
   print(":::")
   print(radius.fixed)
@@ -107,7 +109,7 @@ geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, radius = radius, radius.fixed=radius.fixed, ...)
+    params = list(na.rm = na.rm, radius.fixed=radius.fixed, ...) # radius = radius, 
   )
 }
 
