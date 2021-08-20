@@ -47,6 +47,8 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
       dy <- abs(panel_scales$y.range[2] - panel_scales$y.range[1])
       d <- min(dx, dy)
       
+      print(paste0("D = min("dx,,", ",dy,") = ", d))
+      
       coords <- coord$transform(data, panel_scales)
       print(coords)
       
