@@ -81,10 +81,15 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' ggplot(mpg, aes(displ, hwy)) + geom_circle(radius=0.1) + geom_point()
 #' ggplot(mpg, aes(displ, hwy)) + geom_circle(linetype=2, radius=0.05, alpha=0.5)
 #' ggplot(mpg, aes(displ, hwy)) + geom_circle(aes(linetype=factor(cyl)), radius=0.05, alpha=0.5)
+#' df = data.frame(x = 0, y = 0)
+#' ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=1, col="red", radius.fixed=T) + xlim(-3,3) + ylim(-3,3)
+#' ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=0.55, col="red", radius.fixed=F) + xlim(-3,3) + ylim(-3,3)
+
+
 
 geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
                               position = "identity", na.rm = FALSE, show.legend = NA,
-                              inherit.aes = TRUE, radius = 0.05, ...) {
+                              inherit.aes = TRUE, radius = 0.05, radius.fixed=F, ...) {
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
