@@ -17,7 +17,7 @@ scaleRadius <- function(data) {
 #' @rdname geom_circle
 #' @export
 GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
-  required_aes = c("x", "y", "radius"),
+  required_aes = c("x", "y", "radius", "radius.fixed"),
   default_aes = ggplot2::aes(
     colour = "grey30", fill=NA, alpha=NA, linewidth=1, linetype="solid"),
 
@@ -38,8 +38,19 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 
 
   draw_panel = function(data, panel_scales, coord,  na.rm = TRUE) {
-    coords <- coord$transform(data, panel_scales)
-    coords <- scaleRadius(coords)
+    if(radius.fixed) {
+      dx <- abs(panel_scales$x.range[2] - panel_scales$x.range[1])
+      dy <- abs(panel_scales$y.range[2] - panel_scales$y.range[1])
+      d <- min(dx, dy)
+      
+      coords <- coord$transform(data, panel_scales)
+      coords$radius <- coords$radius / d # scale proportional to screen
+      #coords <- scaleRadius(coords) # scaling to reset to [0, 1] unnecessary
+    } else {
+      coords <- coord$transform(data, panel_scales)
+      coords <- scaleRadius(coords)
+    }
+
     grid::circleGrob(
       x=coords$x, y=coords$y,
       r=coords$radius,
@@ -61,6 +72,7 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' It is not explored for any more general use, so use with caution!
 #' @inheritParams ggplot2::geom_point
 #' @param radius numeric value giving the radius of the circle to be drawn (0-1 normalized scale)
+#' @param radius.fixed whether or not to fixed the radius to grid coordinates (T/F)
 #' @export
 #' @examples
 #' # circles are drawn centered at x and y
@@ -76,7 +88,7 @@ geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, radius = radius, ...)
+    params = list(na.rm = na.rm, radius = radius, radius.fixed=radius.fixed, ...)
   )
 }
 
