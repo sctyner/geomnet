@@ -37,7 +37,7 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
   },
 
 
-  draw_panel = function(data, panel_scales, coord, radius.fixed, na.rm = TRUE) {
+  draw_panel = function(data, panel_scales, coord,  radius.fixed, na.rm = TRUE) {
     print("---")
     print(radius.fixed)
     print("---")
@@ -76,7 +76,6 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' It is not explored for any more general use, so use with caution!
 #' @inheritParams ggplot2::geom_point
 #' @param radius numeric value giving the radius of the circle to be drawn (0-1 normalized scale)
-#' @param radius.fixed whether or not to fixed the radius to grid coordinates (T/F)
 #' @export
 #' @examples
 #' # circles are drawn centered at x and y
@@ -89,19 +88,19 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=1, col="red", radius.fixed=T) + xlim(-3,3) + ylim(-3,3)
 #' ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=0.55, col="red", radius.fixed=F) + xlim(-3,3) + ylim(-3,3)
 
-
-
 geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
-                              position = "identity", na.rm = FALSE, show.legend = NA,
-                              inherit.aes = TRUE, radius = 0.05, radius.fixed=F, ...) {
+                        position = "identity", na.rm = FALSE, show.legend = NA,
+                        inherit.aes = TRUE, radius = 0.05, radius.fixed = F, ...) {
+  
   print(":::")
   print(radius.fixed)
   print(":::")
-
+  
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, radius = radius, radius.fixed=radius.fixed, ...)
   )
 }
+
 
