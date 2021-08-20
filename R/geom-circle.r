@@ -39,7 +39,7 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 
   draw_panel = function(data, panel_scales, coord,  radius.fixed, na.rm = TRUE) {
     #print("---")
-    print(radius.fixed)
+    #print(radius.fixed)
     #print("---")
     
     if(radius.fixed) {
@@ -94,7 +94,7 @@ geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
                         inherit.aes = TRUE, radius = 0.05, radius.fixed = F, ...) {
   
   #print(":::")
-  print(radius.fixed)
+  #print(radius.fixed)
   #print(":::")
   
   ggplot2::layer(
