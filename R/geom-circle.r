@@ -17,9 +17,9 @@ scaleRadius <- function(data) {
 #' @rdname geom_circle
 #' @export
 GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
-  required_aes = c("x", "y", "radius"),
+  required_aes = c("x", "y", "radius", "radius.fixed"),
   default_aes = ggplot2::aes(
-    colour = "grey30", fill=NA, alpha=NA, linewidth=1, linetype="solid"),
+    colour = "grey30", fill=NA, alpha=NA, linewidth=1, linetype="solid", radius=0.5 ),
 
   draw_key = function (data, params, size)
   {
@@ -37,9 +37,22 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
   },
 
 
-  draw_panel = function(data, panel_scales, coord,  na.rm = TRUE) {
-    coords <- coord$transform(data, panel_scales)
-    coords <- scaleRadius(coords)
+  draw_panel = function(data, panel_scales, coord,  radius.fixed, na.rm = TRUE) {
+    
+    if(radius.fixed) {
+      dx <- abs(panel_scales$x.range[2] - panel_scales$x.range[1])
+      dy <- abs(panel_scales$y.range[2] - panel_scales$y.range[1])
+      d <- min(dx, dy)
+      
+      coords <- coord$transform(data, panel_scales)
+      
+      coords$radius <- coords$radius / d # scale proportional to grid
+      #coords <- scaleRadius(coords) # scaling to reset to [0, 1] unnecessary
+    } else {
+      coords <- coord$transform(data, panel_scales)
+      coords <- scaleRadius(coords)
+    }
+
     grid::circleGrob(
       x=coords$x, y=coords$y,
       r=coords$radius,
@@ -61,6 +74,7 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' It is not explored for any more general use, so use with caution!
 #' @inheritParams ggplot2::geom_point
 #' @param radius numeric value giving the radius of the circle to be drawn (0-1 normalized scale)
+#' @param radius.fixed Make the size of the radius fixed to grid coordinates instead of xlim and ylim (T/F)
 #' @export
 #' @examples
 #' # circles are drawn centered at x and y
@@ -69,14 +83,19 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 #' ggplot(mpg, aes(displ, hwy)) + geom_circle(radius=0.1) + geom_point()
 #' ggplot(mpg, aes(displ, hwy)) + geom_circle(linetype=2, radius=0.05, alpha=0.5)
 #' ggplot(mpg, aes(displ, hwy)) + geom_circle(aes(linetype=factor(cyl)), radius=0.05, alpha=0.5)
+#' df = data.frame(x = 0, y = 0)
+#' ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=1, col="red", radius.fixed=T) + xlim(-3,3) + ylim(-3,3)
+#' ggplot(df, aes(x=x, y=y)) + geom_point(cex=4) + geom_circle(radius=0.55, col="red", radius.fixed=F) + xlim(-3,3) + ylim(-3,3)
 
 geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
-                              position = "identity", na.rm = FALSE, show.legend = NA,
-                              inherit.aes = TRUE, radius = 0.05, ...) {
+                        position = "identity", na.rm = FALSE, show.legend = NA,
+                        inherit.aes = TRUE, radius.fixed = F, ...) {
+  
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, radius = radius, ...)
+    params = list(na.rm = na.rm, radius.fixed=radius.fixed, ...)
   )
 }
+
 
