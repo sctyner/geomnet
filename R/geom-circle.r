@@ -38,28 +38,19 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 
 
   draw_panel = function(data, panel_scales, coord,  radius.fixed, na.rm = TRUE) {
-    print("---")
-    print(radius.fixed)
-    print("---")
     
     if(radius.fixed) {
       dx <- abs(panel_scales$x.range[2] - panel_scales$x.range[1])
       dy <- abs(panel_scales$y.range[2] - panel_scales$y.range[1])
       d <- min(dx, dy)
       
-      print(paste0("D = min(", dx, ", ", dy, ") = ", d))
-      
       coords <- coord$transform(data, panel_scales)
-      print(coords)
       
-      coords$radius <- coords$radius / d # scale proportional to screen
+      coords$radius <- coords$radius / d # scale proportional to grid
       #coords <- scaleRadius(coords) # scaling to reset to [0, 1] unnecessary
-      print(coords)
     } else {
       coords <- coord$transform(data, panel_scales)
-      print(coords)
       coords <- scaleRadius(coords)
-      print(coords)
     }
 
     grid::circleGrob(
@@ -101,10 +92,6 @@ GeomCircle <- ggplot2::ggproto("GeomCircle", ggplot2::Geom,
 geom_circle <- function(mapping = NULL, data = NULL, stat = "identity",
                         position = "identity", na.rm = FALSE, show.legend = NA,
                         inherit.aes = TRUE, radius.fixed = F, ...) {
-  
-  print(":::")
-  print(radius.fixed)
-  print(":::")
   
   ggplot2::layer(
     geom = GeomCircle, mapping = mapping,  data = data, stat = stat,
